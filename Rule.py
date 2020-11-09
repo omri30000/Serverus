@@ -5,6 +5,9 @@ class Rule:
         self.is_temp = level > 2
 
     def write_rule(self):
-        return ""
-        
+        stop_date = ""
+        if is_temp:
+            stop_date ="" 
+        return "-m mac --mac-source " + self.mac_add + 
+
        
