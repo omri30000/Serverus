@@ -1,16 +1,16 @@
 class Defender():
-    def init():
-    
-    def defend(entity,level):
+    def __init__(self):
         pass
-    def cancelAction(entity,level):
+    def defend(self,entity,level):
         pass
-
-    def close_socket(enetity):
+    def cancelAction(self, entity,level):
         pass
 
-    def block(rule):
+    def close_socket(self, enetity):
         pass
 
-    def inform(rule):
+    def block(self, rule):
+        pass
+
+    def inform(self, rule):
         pass
