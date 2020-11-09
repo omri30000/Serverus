@@ -9,4 +9,6 @@ class Packet:
         protocol = "UDP"
         data = "abcdefg"
 
+    def to_string(self):
+        pass
     

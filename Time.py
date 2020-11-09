@@ -9,4 +9,7 @@ class Time:
         seconds = 0
         miliseconds = 0
 
+    def to_string(self):
+        pass
+
     
