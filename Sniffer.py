@@ -4,20 +4,44 @@
 
 from scapy.all import *
 import socket
-import datetime
 import os
-import Packet
+
+import datetime
 import time
 
-def main():
-    sniff(prn=parse_packet)
+from Packet import *
 
+import csv
+import queue
+import threading
+
+
+packets_queue = queue.Queue()
+
+def main():
+    threading.Thread(target=handle_packets_queue, daemon=True).start()
+    sniff(prn=parse_packet)
+    
+
+def handle_packets_queue():
+    global packets_queue
+    while True:
+        if not packets_queue.empty()
+            pack = packets_queue.get()
+            # todo: add to csv file
+            packets_queue.task_done()
 
 def parse_packet(pkt):
+    global packets_queue
+
     # get the packet arrival time
     time = datetime.datetime.now()
-    pkt.show()
 
+    try:
+        packets_queue.put(Packet(time, pkt))
+    except:
+        print("An error occoured while parsing packet")
+    
 
 
 if __name__ == '__main__':
