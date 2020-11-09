@@ -20,12 +20,12 @@ packets_queue = queue.Queue()
 
 def main():
     threading.Thread(target=handle_packets_queue, daemon=True).start()
-    sniff(prn=parse_packet)
+    sniff(prn=parse_packet, count=20)
     
 
 def handle_packets_queue():
     global packets_queue
-    with open('sniffs.csv', 'w', newline='') as csvfile:
+    with open('sniffs.csv', 'a', newline='') as csvfile:
         fieldnames = ['source_mac', 'source_IP', 'dest_IP', 'source_port', 
         'dest_port', 'protocol', 'length', 'data', 'arrival_time']
         writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
@@ -42,13 +42,18 @@ def handle_packets_queue():
 def parse_packet(pkt):
     global packets_queue
 
+    # print('hello')
     # get the packet arrival time
-    time = datetime.datetime.now()
+
+    # todo: fix time issues and send it to Packet
+    # time = datetime.datetime.now()
 
     try:
-        packets_queue.put(Packet(time, pkt))
-    except:
-        print("An error occoured while parsing packet")
+        packets_queue.put(Packet(15, pkt))
+    except Exception as e:
+        print(e)
+
+    packets_queue.join()
     
 
 
