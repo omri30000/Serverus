@@ -6,8 +6,6 @@ class Packet:
         time: the arrival time of the packet
         all_data: the whole data of the packet
         """
-        self.arrival_time = time
-
         if Ether in pack:
             self.source_mac = pack[Ether].src
         else:
@@ -36,6 +34,7 @@ class Packet:
             self.data = pack[Raw].load
         except:
             raise Exception("can't create packet")
-
+        
+        self.arrival_time = time
     def to_string(self):
         pass
