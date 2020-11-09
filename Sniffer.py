@@ -25,11 +25,12 @@ def main():
 
 def handle_packets_queue():
     global packets_queue
-    while True:
-        if not packets_queue.empty()
-            pack = packets_queue.get()
-            # todo: add to csv file
-            packets_queue.task_done()
+    with open('sniffs.csv', 'w', newline='\n') as file:
+        while True:
+            if not packets_queue.empty():
+                pack = packets_queue.get()
+                # todo: add to csv file
+                packets_queue.task_done()
 
 def parse_packet(pkt):
     global packets_queue
