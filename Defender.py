@@ -1,6 +1,6 @@
 import os
 from enum import enum
-
+from crontab import CronTan
 import Rule
 
 
@@ -31,7 +31,9 @@ class Defender():
         None
     """
     def __cancelAction(self, entity):
-        os.system("iptables -D input {} -j DROP"%(Rule.Rule(entity).write_rule()))
+        msg  = ""
+        while "256" not in msg: 
+            msg = os.system("iptables -D input {} -j DROP"%(Rule.Rule(entity).write_rule()))
 
     """
     This function closes a specific socket.
@@ -53,7 +55,8 @@ class Defender():
     """
     def ___block(self, rule):
         if rule.is_temp:
-            #create crontab 
+            job = cron.new(command = "iptables -D input {} -j DROP"%(rule.write_rule))
+            #TODO: set date for 10 minutes from now
             pass
 
         os.system("iptables -A INPUT {} -j ACCEPT"%(rule.write_rules()))
