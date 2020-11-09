@@ -37,5 +37,8 @@ class Packet:
         
         self.arrival_time = time
     
-    def to_string(self):
-        pass
+    def asdict(self):
+        return {'source_mac': self.source_mac, 'source_IP': self.source_IP, 'dest_IP': self.dest_IP, 
+        'source_port': self.source_port, 'dest_port': self.dest_port, 'protocol': self.protocol, 'length': self.length, 
+        'data': self.data, 'arrival_time': self.arrival_time}
+

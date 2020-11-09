@@ -25,11 +25,18 @@ def main():
 
 def handle_packets_queue():
     global packets_queue
-    with open('sniffs.csv', 'w', newline='\n') as file:
+    with open('sniffs.csv', 'w', newline='') as csvfile:
+        fieldnames = ['source_mac', 'source_IP', 'dest_IP', 'source_port', 
+        'dest_port', 'protocol', 'length', 'data', 'arrival_time']
+        writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
+        writer.writeheader()
+
         while True:
             if not packets_queue.empty():
                 pack = packets_queue.get()
-                # todo: add to csv file
+                
+                writer.writerow(pack.asdict())
+                
                 packets_queue.task_done()
 
 def parse_packet(pkt):
