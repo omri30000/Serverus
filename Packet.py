@@ -36,5 +36,6 @@ class Packet:
             raise Exception("can't create packet")
         
         self.arrival_time = time
+    
     def to_string(self):
         pass
