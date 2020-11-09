@@ -12,7 +12,7 @@ class Defender():
     def defend(self,entity,level):
         self.__close_socket(entity)
 
-        if(level == 1):
+        if level == 1:
             return
 
         rule = Rule.Rule(entity,level)
@@ -31,7 +31,7 @@ class Defender():
         None
     """
     def __cancelAction(self, entity):
-        os.system("iptables")
+        os.system("iptables -D input {} -j DROP"%(Rule.Rule(entity).write_rule()))
 
     """
     This function closes a specific socket.
@@ -58,6 +58,6 @@ class Defender():
 
         os.system("iptables -A INPUT {} -j ACCEPT"%(rule.write_rules()))
 
-
+    #level 3 (not in this sprint)
     def __inform(self, rule):
         pass
