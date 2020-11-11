@@ -11,6 +11,12 @@ class Defender():
     def __init__(self):
         pass
     
+    """
+    Primary function, provides the defence from hostile entity, according to the anomaly level
+    Input:
+    entity - the hostile entity
+    level - the anomaly level {1-4}
+    """
     def defend(self,entity,level):
         self.__close_socket(entity)
 
