@@ -16,8 +16,14 @@ import queue
 import threading
 
 class Sniffer:
+    amount = 0
     def __init__(self):
-        self._packets_queue = queue.Queue()
+        if Sniffer.amount == 0:
+            Sniffer.amount += 1
+            self._packets_queue = queue.Queue()
+
+        else:
+            raise Exception("can't create more than one sniffer!")
 
 
     def start_sniffing(self):
@@ -41,9 +47,7 @@ class Sniffer:
                     self._packets_queue.task_done()
 
     def __parse_packet(self, pkt):
-        # print('hello')
-        # get the packet arrival time
-
+        
         # todo: fix time issues and send it to Packet
         # time = datetime.datetime.now()
 
