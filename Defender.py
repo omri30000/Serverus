@@ -33,7 +33,7 @@ class Defender():
     def cancel_action(self, entity):
         msg  = ""
         while "256" not in msg: 
-            msg = os.system("iptables -D input {} -j DROP"%(Rule.Rule(entity).write_rule()))
+            msg = os.system("iptables -D input {} -j DROP"%(Rule.Rule(entity,3).write_rule()))
 
     """
     This function closes a specific socket.
@@ -44,7 +44,7 @@ class Defender():
     """
     def __close_socket(self, enetity):
         #check if the socket exists -- try and catch
-        os.system("ss --kill -nt dst {}{}"%(entity.ip,entity.port))
+        os.system("ss --kill -nt dst %s %d"%(entity.ip,entity.port))
 
     """
     This function blocks an entity at the fire-wall
@@ -60,7 +60,7 @@ class Defender():
             rule = "iptables -D input {} -j DROP"%(rule.write_rule)
 
             job = cron.new(command = rule + "| grep -v  " +rule + "| crontab -" )
-            job.setall(" %d %d * * *"%(time_to_delete.minutes,time_to_delete.hours))
+            job.setall("%d %d * * *"%(time_to_delete.minutes,time_to_delete.hours))
             cron.write()
 
 
