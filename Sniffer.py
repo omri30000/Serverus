@@ -16,9 +16,15 @@ import threading
 
 class Sniffer:
     amount = 0
-    
 
     def __init__(self):
+        """
+        The initializer of the Sniffer object. allow the user to create a Sniffer and initial it. 
+        :param self: the instance of Sniffer
+        :type self: sniffer
+	    :return: no return value
+	    :rtype: None
+	    """
         if Sniffer.amount == 0:
             Sniffer.amount += 1
             
@@ -39,17 +45,37 @@ class Sniffer:
 
 
     def __del__(self):
+        """
+        The destructor of the Sniffer object
+        :param self: the instance of Sniffer
+        :type self: sniffer
+	    :return: no return value
+	    :rtype: None
+	    """
         self.csvfile.close()
         
 
     def start_sniffing(self):
+        """
+        The function allow the user to start the sniffer work
+        :param self: the instance of Sniffer
+        :type self: sniffer
+	    :return: no return value
+	    :rtype: None
+	    """
         sniff(prn=self.__write_packet, count=20)
     
 
     def __write_packet(self, pkt):
         """
-        this callback function will write a single packet to the csv file
-        """
+        The callback function will write a single packet to the csv file
+        :param self: the instance of Sniffer
+        :type self: sniffer
+        :param pkt: the packet that will be written to the file
+        :type pkt: scapy.packet
+	    :return: no return value
+	    :rtype: None
+	    """
         try:
             self.lock.acquire()
             pack = Packet(datetime.now(), pkt)
