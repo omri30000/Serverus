@@ -30,7 +30,7 @@ class Defender():
     Output:
         None
     """
-    def __cancelAction(self, entity):
+    def __cancel_action(self, entity):
         msg  = ""
         while "256" not in msg: 
             msg = os.system("iptables -D input {} -j DROP"%(Rule.Rule(entity).write_rule()))
@@ -54,7 +54,7 @@ class Defender():
     None
     """
     def ___block(self, rule):
-        if rule.is_temp:
+        if rule.is_temp():
             job = cron.new(command = "iptables -D input {} -j DROP"%(rule.write_rule))
             #TODO: set date for 10 minutes from now
             pass
