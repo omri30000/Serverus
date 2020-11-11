@@ -4,6 +4,7 @@ import datetime
 
 import Rule
 
+# This is the Defender class, which will execute the defensive actions against hostile entities.
 
 class Defender():
     #TODO : add single-tone feature
@@ -65,6 +66,6 @@ class Defender():
 
         os.system("iptables -A INPUT {} -j DROP"%(rule.write_rules()))
 
-    #level 3 (not in this sprint)
+    #level 4 (not in this sprint)
     def __inform(self, rule):
         pass

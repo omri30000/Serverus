@@ -6,10 +6,16 @@ class Rule:
         self.mac_add = entity.get_mac_add()
         self.temp = level == 2 #TODO: take away levels from here
 
-
+    """
+    This function returns the parameters for the iptables rule
+    Input: none
+    Output: the parameters : string
+    """
     def write_rule(self):
         return "-m mac --mac-source {}"%self.mac_add
 
+
+    #getters functions 
     def is_temp(self):
         return self.is_temp
        
