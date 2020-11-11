@@ -29,8 +29,6 @@ class Sniffer:
     def start_sniffing(self):
         threading.Thread(target=self.__handle_packets_queue, daemon=True).start()
         sniff(prn=self.__parse_packet, count=20)
-
-        self._packets_queue.join()
     
 
     def __handle_packets_queue(self):
@@ -45,7 +43,6 @@ class Sniffer:
                     pack = self._packets_queue.get()
                     
                     writer.writerow(pack.asdict())
-                    print(1)
                     
                     self._packets_queue.task_done()
 
@@ -57,7 +54,7 @@ class Sniffer:
         except Exception as e:
             print(e)
 
-        # self._packets_queue.join()
+        self._packets_queue.join()
 
 
 def main():

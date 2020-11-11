@@ -12,7 +12,6 @@ from datetime import datetime
 from Packet import *
 
 import csv
-import queue
 import threading
 
 class Sniffer:
