@@ -32,8 +32,9 @@ class Defender():
         None
     """
     def cancel_action(self, entity):
+        ERROR_CODE = "256"
         msg  = ""
-        while "256" not in msg: 
+        while ERROR_CODE not in msg: 
             msg = os.system("iptables -D input {} -j DROP"%(Rule.Rule(entity,3).write_rule()))
 
     """
@@ -44,9 +45,10 @@ class Defender():
         none
     """
     def __close_socket(self, entity):
-        os.system("ss --kill -nt dst %s %d"%(entity.get_ip(),entity.get_port()))
+        #terminates all sockets with entity
+        os.system("ss --kill -nt dst %s "%(entity.ip_add))
 
-    """
+    """ 
     This function blocks an entity at the fire-wall
     Input: 
         entity: The entity to block

@@ -3,7 +3,7 @@ import datetime
 class Rule:
     def __init__(self,entity,level):
         self.date = datetime.datetime.now()
-        self.mac_add = entity.get_mac_add()
+        self.mac_add = entity.mac_add
         self.temp = level == 2 #TODO: take away levels from here
 
     """
