@@ -6,8 +6,8 @@ from scapy.all import *
 import socket
 import os
 
-import datetime
 import time
+from datetime import datetime
 
 from Packet import *
 
@@ -17,46 +17,48 @@ import threading
 
 class Sniffer:
     amount = 0
+    
+
     def __init__(self):
         if Sniffer.amount == 0:
             Sniffer.amount += 1
-            self._packets_queue = queue.Queue()
+            
+            self.lock = threading.Lock()
+            
+            self.lock.acquire()
+
+            self.csvfile = open('sniffs.csv', 'w', newline='')
+            fieldnames = ['source_mac', 'source_IP', 'dest_IP', 'source_port', 
+            'dest_port', 'protocol', 'length', 'data', 'arrival_time']
+            self.csv_writer = csv.DictWriter(self.csvfile, fieldnames=fieldnames)
+            self.csv_writer.writeheader()
+
+            self.lock.release()
 
         else:
             raise Exception("can't create more than one sniffer!")
 
 
+    def __del__(self):
+        self.csvfile.close()
+        
+
     def start_sniffing(self):
-        threading.Thread(target=self.__handle_packets_queue, daemon=True).start()
-        sniff(prn=self.__parse_packet, count=20)
+        sniff(prn=self.__write_packet, count=20)
     
 
-    def __handle_packets_queue(self):
-        with open('sniffs.csv', 'a', newline='') as csvfile:
-            fieldnames = ['source_mac', 'source_IP', 'dest_IP', 'source_port', 
-            'dest_port', 'protocol', 'length', 'data', 'arrival_time']
-            writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
-            writer.writeheader()
-
-            while True:
-                if not self._packets_queue.empty():
-                    pack = self._packets_queue.get()
-                    
-                    writer.writerow(pack.asdict())
-                    
-                    self._packets_queue.task_done()
-
-    def __parse_packet(self, pkt):
-        
-        # todo: fix time issues and send it to Packet
-        # time = datetime.datetime.now()
-
+    def __write_packet(self, pkt):
+        """
+        this callback function will write a single packet to the csv file
+        """
         try:
-            self._packets_queue.put(Packet(15, pkt))
+            self.lock.acquire()
+            pack = Packet(datetime.now(), pkt)
+            self.csv_writer.writerow(pack.asdict())
         except Exception as e:
             print(e)
-
-        self._packets_queue.join()
+        finally:
+            self.lock.release()
 
 
 def main():
