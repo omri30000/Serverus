@@ -1,5 +1,5 @@
 class Entity():
-    def __init__(self):
-        self.ip_add = ""
-        self.mac_add = ""
+    def __init__(self,ip,mac):
+        self.ip_add = ip
+        self.mac_add = mac
         #maybe more
