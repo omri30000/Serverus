@@ -6,7 +6,7 @@ import Rule
 
 
 class Defender():
-    
+    #TODO : add single-tone feature
     def __init__(self):
         pass
     
@@ -42,9 +42,8 @@ class Defender():
     Output:
         none
     """
-    def __close_socket(self, enetity):
-        #check if the socket exists -- try and catch
-        os.system("ss --kill -nt dst %s %d"%(entity.ip,entity.port))
+    def __close_socket(self, entity):
+        os.system("ss --kill -nt dst %s %d"%(entity.get_ip(),entity.get_port()))
 
     """
     This function blocks an entity at the fire-wall
