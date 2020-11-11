@@ -1,6 +1,7 @@
 import os
-from enum import enum
-from crontab import CronTan
+from crontab import CronTab
+import datetime
+
 import Rule
 
 
@@ -21,8 +22,7 @@ class Defender():
         if level == 4:
             self.__inform(entity)
 
-             
-        
+
     """
     This function cancel entity blocking
     Input:
@@ -30,7 +30,7 @@ class Defender():
     Output:
         None
     """
-    def __cancel_action(self, entity):
+    def cancel_action(self, entity):
         msg  = ""
         while "256" not in msg: 
             msg = os.system("iptables -D input {} -j DROP"%(Rule.Rule(entity).write_rule()))
@@ -53,13 +53,18 @@ class Defender():
     Output:
     None
     """
-    def ___block(self, rule):
+    def __block(self, rule):
         if rule.is_temp():
-            job = cron.new(command = "iptables -D input {} -j DROP"%(rule.write_rule))
-            #TODO: set date for 10 minutes from now
-            pass
+            cron = CronTab(user='root')
+            time_to_delete = rule.get_date() + datetime.timedelta(hours=2) #time to disable blocking
+            rule = "iptables -D input {} -j DROP"%(rule.write_rule)
 
-        os.system("iptables -A INPUT {} -j ACCEPT"%(rule.write_rules()))
+            job = cron.new(command = rule + "| grep -v  " +rule + "| crontab -" )
+            job.setall(" %d %d * * *"%(time_to_delete.minutes,time_to_delete.hours))
+            cron.write()
+
+
+        os.system("iptables -A INPUT {} -j DROP"%(rule.write_rules()))
 
     #level 3 (not in this sprint)
     def __inform(self, rule):
