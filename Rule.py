@@ -12,7 +12,7 @@ class Rule:
     Output: the parameters : string
     """
     def write_rule(self):
-        return "-m mac --mac-source {}"%self.mac_add
+        return "-m mac --mac-source "+self.mac_add
 
 
     #getters functions 

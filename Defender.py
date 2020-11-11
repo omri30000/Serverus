@@ -3,7 +3,7 @@ from crontab import CronTab
 import datetime
 
 import Rule
-
+import Entity
 # This is the Defender class, which will execute the defensive actions against hostile entities.
 
 class Defender():
@@ -39,10 +39,9 @@ class Defender():
     """
     def cancel_action(self, entity):
         ERROR_CODE = "256"
-        msg  = ""
-        while ERROR_CODE not in msg: 
-            msg = os.system("iptables -D input {} -j DROP"%(Rule.Rule(entity,3).write_rule()))
-
+        msg = ""
+        while str(msg).find(ERROR_CODE) < 0: 
+            msg = os.system("iptables -D INPUT %s -j DROP"%(Rule.Rule(entity,3).write_rule()))
     """
     This function closes a specific socket.
     input:
@@ -64,15 +63,15 @@ class Defender():
     def __block(self, rule):
         if rule.is_temp():
             cron = CronTab(user='root')
-            time_to_delete = rule.get_date() + datetime.timedelta(hours=2) #time to disable blocking
-            rule = "iptables -D input {} -j DROP"%(rule.write_rule)
+            time_to_delete = rule.get_date() + datetime.timedelta(minutes=2) #time to disable blocking
+            rule_to_write = "sudo iptables -D INPUT %s -j DROP"%(rule.write_rule())
 
-            job = cron.new(command = rule + "| grep -v  " +rule + "| crontab -" )
-            job.setall("%d %d * * *"%(time_to_delete.minutes,time_to_delete.hours))
+            job = cron.new(command = (rule_to_write + "| grep -v  " +rule_to_write + "| crontab -"))
+            job.setall("%d %d * * *"%(time_to_delete.minute,time_to_delete.hour))
             cron.write()
 
 
-        os.system("iptables -A INPUT {} -j DROP"%(rule.write_rules()))
+        os.system("iptables -A INPUT %s -j DROP"%(rule.write_rule()))
 
     #level 4 (not in this sprint)
     def __inform(self, rule):
