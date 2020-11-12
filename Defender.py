@@ -42,6 +42,7 @@ class Defender():
         msg = ""
         while str(msg).find(ERROR_CODE) < 0: 
             msg = os.system("iptables -D INPUT %s -j DROP"%(Rule.Rule(entity,3).write_rule()))
+    
     """
     This function closes a specific socket.
     input:
@@ -51,7 +52,7 @@ class Defender():
     """
     def __close_socket(self, entity):
         #terminates all sockets with entity
-        os.system("ss --kill -nt dst %s "%(entity.ip_add))
+        os.system("ss --kill -nt dst %s "%(entity.get_ip_add()))
 
     """ 
     This function blocks an entity at the fire-wall
@@ -66,7 +67,7 @@ class Defender():
             time_to_delete = rule.get_date() + datetime.timedelta(minutes=2) #time to disable blocking
             rule_to_write = "sudo iptables -D INPUT %s -j DROP"%(rule.write_rule())
 
-            job = cron.new(command = (rule_to_write + "| grep -v  " +rule_to_write + "| crontab -"))
+            job = cron.new(command = (rule_to_write + "; sudo crontab -l | grep -v  " +rule_to_write + "| crontab -"))
             job.setall("%d %d * * *"%(time_to_delete.minute,time_to_delete.hour))
             cron.write()
 
