@@ -64,10 +64,10 @@ class Defender():
     def __block(self, rule):
         if rule.is_temp():
             cron = CronTab(user='root')
-            time_to_delete = rule.get_date() + datetime.timedelta(minutes=2) #time to disable blocking
+            time_to_delete = rule.get_date() + datetime.timedelta(minutes=1) #time to disable blocking
             rule_to_write = "sudo iptables -D INPUT %s -j DROP"%(rule.write_rule())
 
-            job = cron.new(command = (rule_to_write + "; sudo crontab -l | grep -v  " +rule_to_write + "| crontab -"))
+            job = cron.new(command = (rule_to_write + "; sudo crontab -l | grep \"" +rule_to_write + "\" | sudo crontab -r"))
             job.setall("%d %d * * *"%(time_to_delete.minute,time_to_delete.hour))
             cron.write()
 
