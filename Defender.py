@@ -7,9 +7,14 @@ import Entity
 # This is the Defender class, which will execute the defensive actions against hostile entities.
 
 class Defender():
+
+    count = 0 #amount of objects created
     #TODO : add single-tone feature
     def __init__(self):
+        if Defender.count > 0:
+            raise Exception("Cant create more than one Defender (Singletone Class)")
         pass
+    
     
     """
     Primary function, provides the defence from hostile entity, according to the anomaly level
