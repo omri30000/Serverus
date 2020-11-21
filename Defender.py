@@ -9,7 +9,6 @@ import Entity
 class Defender():
 
     count = 0 #amount of objects created
-    #TODO : add single-tone feature
     def __init__(self):
         if Defender.count > 0:
             raise Exception("Cant create more than one Defender (Singletone Class)")
@@ -67,17 +66,18 @@ class Defender():
     None
     """
     def __block(self, rule):
+        
         if rule.is_temp():
             cron = CronTab(user='root')
             time_to_delete = rule.get_date() + datetime.timedelta(minutes=1) #time to disable blocking
-            rule_to_write = "sudo iptables -D INPUT %s -j DROP"%(rule.write_rule())
+            rule_to_write = "/sbin/iptables -D INPUT %s -j DROP"%(rule.write_rule())
 
-            job = cron.new(command = (rule_to_write + "; sudo crontab -l | grep \"" +rule_to_write + "\" | sudo crontab -r"))
+            job = cron.new(command = rule_to_write +"; crontab -l | grep \"" +rule_to_write + "\" | crontab -r")
             job.setall("%d %d * * *"%(time_to_delete.minute,time_to_delete.hour))
             cron.write()
 
 
-        os.system("iptables -A INPUT %s -j DROP"%(rule.write_rule()))
+        os.system("/sbin/iptables -A INPUT %s -j DROP"%(rule.write_rule()))
 
     #level 4 (not in this sprint)
     def __inform(self, rule):
