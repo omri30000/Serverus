@@ -9,19 +9,26 @@ import Entity
 class Defender():
 
     count = 0 #amount of objects created
+
     def __init__(self):
+        """Constructor
+
+        Raises:
+            Exception: If a Defender object was already created
+        """    
+        
         if Defender.count > 0:
             raise Exception("Cant create more than one Defender (Singletone Class)")
         pass
     
     
-    """
-    Primary function, provides the defence from hostile entity, according to the anomaly level
-    Input:
-    entity - the hostile entity
-    level - the anomaly level {1-4}
-    """
     def defend(self,entity,level):
+        """ 
+        Primary function, provides the defence from hostile entity, according to the anomaly level.
+        Args:
+            entity ({Entity}): The hostile entity to block
+            level ({int}): The Blocking level {1...4}
+        """       
         self.__close_socket(entity)
 
         if level == 1:
@@ -34,39 +41,34 @@ class Defender():
             self.__inform(entity)
 
 
-    """
-    This function cancel entity blocking
-    Input:
-        entity: Entity the cancel the block for
-    Output:
-        None
-    """
     def cancel_action(self, entity):
+        """This function cancel fire-wall blocking
+
+        Args:
+            entity ({Entity}): which Entity to cancel the block for
+        """        
         ERROR_CODE = "256"
         msg = ""
         while str(msg).find(ERROR_CODE) < 0: 
             msg = os.system("iptables -D INPUT %s -j DROP"%(Rule.Rule(entity,3).write_rule()))
     
-    """
-    This function closes a specific socket.
-    input:
-        entity:The entity at the end of the socket 
-    Output:
-        none
-    """
+
     def __close_socket(self, entity):
+        """The function closes a specific socket
+
+        Args:
+            entity ({Entity}): Entity to block
+        """        
         #terminates all sockets with entity
         os.system("ss --kill -nt dst %s "%(entity.get_ip_add()))
 
-    """ 
-    This function blocks an entity at the fire-wall
-    Input: 
-        entity: The entity to block
-    Output:
-    None
-    """
+
     def __block(self, rule):
-        
+        """This function blocks an entity at the firewall
+
+        Args:
+            rule ({Rule}): The rule to write in the firewall 
+        """        
         if rule.is_temp():
             cron = CronTab(user='root')
             time_to_delete = rule.get_date() + datetime.timedelta(minutes=1) #time to disable blocking
@@ -81,4 +83,9 @@ class Defender():
 
     #level 4 (not in this sprint)
     def __inform(self, rule):
+        """[summary]
+
+        Args:
+            rule ([type]): [description]
+        """        
         pass
