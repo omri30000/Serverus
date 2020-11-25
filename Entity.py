@@ -1,5 +1,7 @@
+# This is the Entity class
+
 class Entity():
-    
+
     def __init__(self,ip,mac):
         """Constructor
 

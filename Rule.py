@@ -1,16 +1,17 @@
 import datetime
+# This is the Rule class, which handles firewall rules
 
 class Rule:
-    def __init__(self,entity,level):
+    def __init__(self,entity,temp):
         """Constructor
 
         Args:
             entity ({Entity}): Hostile Entity to block
-            level ([{int}]): Anomaly Level
+            temp ({bool}): Is the rule temporally
         """        
         self.date = datetime.datetime.now()
         self.mac_add = entity.get_mac_add()
-        self.temp = level == 2 #TODO: take away levels from here
+        self.temp = temp 
 
     """
     This function returns the parameters for the iptables rule

@@ -4,6 +4,7 @@ import datetime
 
 import Rule
 import Entity
+
 # This is the Defender class, which will execute the defensive actions against hostile entities.
 
 class Defender():
@@ -16,7 +17,7 @@ class Defender():
         Raises:
             Exception: If a Defender object was already created
         """    
-        
+
         if Defender.count > 0:
             raise Exception("Cant create more than one Defender (Singletone Class)")
         pass
@@ -34,7 +35,7 @@ class Defender():
         if level == 1:
             return
 
-        rule = Rule.Rule(entity,level)
+        rule = Rule.Rule(entity,level == 2)
         self.__block(rule)
 
         if level == 4:
