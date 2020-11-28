@@ -57,6 +57,7 @@ class Sniffer:
 	    """
         self.db.commit()
         self.db.close()
+        Sniffer.amount -= 1
         
 
     def start_sniffing(self):
@@ -84,6 +85,7 @@ class Sniffer:
             self.lock.acquire()
             pack = Packet(datetime.now(), pkt)
             self.db_cursor.execute(pack.cast_to_sql_statement())
+            print("written to DB")
         except Exception as e:
             print(e)
         finally:

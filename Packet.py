@@ -38,14 +38,14 @@ class Packet:
             
         try:
             self.length = pack.len
-            self.data = pack[Raw].load
+            self.data = str(pack[Raw].load)
         except:
             self.length = 0
             self.data = ''
         
         self.arrival_time = time
 
-        print("created successfuly")
+        # print("created successfuly")
     
 
     def asdict(self):
@@ -60,3 +60,20 @@ class Packet:
         'source_port': str(self.source_port), 'dest_port': str(self.dest_port), 'protocol': self.protocol, 'length': str(self.length), 
         'data': self.data, 'arrival_time': str(self.arrival_time)}
 
+
+    def cast_to_sql_statement(self):
+        """
+        The function will cast this Packet instance to a SQL statement that will be written to the Database.
+        :param self: the instance of Packet
+        :type self: Packet
+	    :return: a sql insert statement represents the current Packet object
+	    :rtype: string
+	    """
+        
+        statement = "INSERT INTO packets VALUES (\'" + self.source_mac + "\',\'" + self.source_IP + "\',\'" + self.dest_IP + \
+        "\'," + str(self.source_port) + "," + str(self.dest_port) + ",\'" + self.protocol + "\'," + str(self.length) + \
+        ",\'" + self.data + "\',\'" + str(self.arrival_time) + "\')"
+
+        # print(statement)
+        
+        return statement
