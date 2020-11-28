@@ -32,18 +32,12 @@ class Sniffer:
             self.lock = threading.Lock()
             
             self.lock.acquire()
-
-            self.csvfile = open('sniffs.csv', 'w', newline='')
-            fieldnames = ['source_mac', 'source_IP', 'dest_IP', 'source_port', 
-            'dest_port', 'protocol', 'length', 'data', 'arrival_time']
-            self.csv_writer = csv.DictWriter(self.csvfile, fieldnames=fieldnames)
-            self.csv_writer.writeheader()
             
-            db = sqlite3.connect('db_file.db')
-            cursor = db.cursor()
+            self.db = sqlite3.connect('db_file.db')
+            self.db_cursor = self.db.cursor()
 
-            # Create table
-            cursor.execute('''CREATE TABLE packets
+            # Create packets table
+            self.db_cursor.execute('''CREATE TABLE packets
                         (source_mac text, source_IP text, dest_IP text, source_port real, 
                         dest_port real, protocol text, length real, data text, arrival_time text)''')
 
@@ -61,7 +55,8 @@ class Sniffer:
 	    :return: no return value
 	    :rtype: None
 	    """
-        self.csvfile.close()
+        self.db.commit()
+        self.db.close()
         
 
     def start_sniffing(self):
@@ -88,7 +83,7 @@ class Sniffer:
         try:
             self.lock.acquire()
             pack = Packet(datetime.now(), pkt)
-            self.csv_writer.writerow(pack.asdict())
+            self.db_cursor.execute(pack.cast_to_sql_statement())
         except Exception as e:
             print(e)
         finally:
