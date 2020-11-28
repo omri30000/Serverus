@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 
 # This is the sniffer file, it will parse the data from the sniffs to a data for the model
+# This version contains the packets' data in csv file
 
 from scapy.all import *
 import socket
@@ -39,14 +40,6 @@ class Sniffer:
             self.csv_writer = csv.DictWriter(self.csvfile, fieldnames=fieldnames)
             self.csv_writer.writeheader()
             
-            db = sqlite3.connect('db_file.db')
-            cursor = db.cursor()
-
-            # Create table
-            cursor.execute('''CREATE TABLE packets
-                        (source_mac text, source_IP text, dest_IP text, source_port real, 
-                        dest_port real, protocol text, length real, data text, arrival_time text)''')
-
             self.lock.release()
 
         else:
