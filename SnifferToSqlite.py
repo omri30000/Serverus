@@ -37,9 +37,13 @@ class Sniffer:
             self.db_cursor = self.db.cursor()
 
             # Create packets table
-            self.db_cursor.execute('''CREATE TABLE packets
+            try:
+                self.db_cursor.execute('''CREATE TABLE packets
                         (source_mac text, source_IP text, dest_IP text, source_port real, 
                         dest_port real, protocol text, length real, data text, arrival_time text)''')
+
+            except Exception:
+                pass
 
             self.lock.release()
 
@@ -68,8 +72,7 @@ class Sniffer:
 	    :return: no return value
 	    :rtype: None
 	    """
-        sniff(prn=self.__write_packet, count=20)
-    
+        sniff(prn=self.__write_packet, count=50)
 
     def __write_packet(self, pkt):
         """

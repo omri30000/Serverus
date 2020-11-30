@@ -38,14 +38,17 @@ class Packet:
             
         try:
             self.length = pack.len
-            self.data = str(pack[Raw].load)
+            self.data = pack[Raw].load.decode()
+            print("##data##")
+            print(type(self.data))
+            print("########")
         except:
             self.length = 0
             self.data = ''
         
         self.arrival_time = time
 
-        # print("created successfuly")
+
     
 
     def asdict(self):
@@ -69,11 +72,9 @@ class Packet:
 	    :return: a sql insert statement represents the current Packet object
 	    :rtype: string
 	    """
-        
+
         statement = "INSERT INTO packets VALUES (\'" + self.source_mac + "\',\'" + self.source_IP + "\',\'" + self.dest_IP + \
         "\'," + str(self.source_port) + "," + str(self.dest_port) + ",\'" + self.protocol + "\'," + str(self.length) + \
         ",\'" + self.data + "\',\'" + str(self.arrival_time) + "\')"
-
-        # print(statement)
         
         return statement
