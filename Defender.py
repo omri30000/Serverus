@@ -36,6 +36,11 @@ class Defender():
             return
 
         rule = Rule.Rule(entity,level == 2)
+       
+        #for upgrading
+        if level >2:
+            delete_cron()
+       
         self.__block(rule)
 
         if level == 4:
@@ -64,12 +69,25 @@ class Defender():
         os.system("ss --kill -nt dst %s "%(entity.get_ip_add()))
 
 
+
     def __block(self, rule):
+
         """This function blocks an entity at the firewall
 
         Args:
             rule ({Rule}): The rule to write in the firewall 
-        """        
+        """     
+
+        RULE_NOT_FOUND = 256
+        #check if rule already exists
+        try:
+            if os.system("iptables -C INPUT %s -j DROP"%(rule.write_rule())) != 256:
+                if 
+                #rule already exists
+                return
+        except Exception as e:
+            pass
+
         if rule.is_temp():
             cron = CronTab(user='root')
             time_to_delete = rule.get_date() + datetime.timedelta(minutes=1) #time to disable blocking
