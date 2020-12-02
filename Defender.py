@@ -20,7 +20,8 @@ class Defender():
 
         if Defender.count > 0:
             raise Exception("Cant create more than one Defender (Singletone Class)")
-        pass
+        
+        self.cron = CronTab(user="root")
     
     
     def defend(self,entity,level):
@@ -38,8 +39,6 @@ class Defender():
         rule = Rule.Rule(entity,level == 2)
        
         #for upgrading
-        if level >2:
-            delete_cron()
        
         self.__block(rule)
 
@@ -81,25 +80,40 @@ class Defender():
         RULE_NOT_FOUND = 256
         #check if rule already exists
         try:
-            if os.system("iptables -C INPUT %s -j DROP"%(rule.write_rule())) != 256:
-                if 
+            if int(os.system("iptables -C INPUT %s -j DROP"%(rule.write_rule()))) != RULE_NOT_FOUND:
                 #rule already exists
+                if not rule.is_temp():
+                    self.__delete_cron(rule.write_rule())
                 return
+        
         except Exception as e:
             pass
 
         if rule.is_temp():
-            cron = CronTab(user='root')
-            time_to_delete = rule.get_date() + datetime.timedelta(minutes=1) #time to disable blocking
+            time_to_delete = rule.get_date() + datetime.timedelta(minutes=2) #time to disable blocking
             rule_to_write = "/sbin/iptables -D INPUT %s -j DROP"%(rule.write_rule())
 
-            job = cron.new(command = rule_to_write +"; crontab -l | grep \"" +rule_to_write + "\" | crontab -r")
+            job = self.cron.new(command = rule_to_write +"; crontab -l | grep \"" +rule_to_write + "\" | crontab -r")
             job.setall("%d %d * * *"%(time_to_delete.minute,time_to_delete.hour))
-            cron.write()
+            self.cron.write()
 
 
         os.system("/sbin/iptables -A INPUT %s -j DROP"%(rule.write_rule()))
 
+    
+    def __delete_cron(self,data):
+        """
+        This function deletes a cron from the crontab lists
+
+        Args:
+            data ({str}): The cron action - the data of the cron
+        """
+        for job in self.cron:
+            print(job.command)
+            if data in job.command:       
+                self.cron.remove(job)
+        self.cron.write()
+    
     #level 4 (not in this sprint)
     def __inform(self, rule):
         """[summary]

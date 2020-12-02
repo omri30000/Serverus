@@ -32,7 +32,7 @@ class Rule:
     """getters functions""" 
 
     def is_temp(self):
-        return self.is_temp
+        return self.temp
        
     def get_date(self):
         return self.date
