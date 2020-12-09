@@ -10,7 +10,7 @@ class Rule:
             temp ({bool}): Is the rule temporally
         """        
         self.date = datetime.datetime.now()
-        self.mac_add = entity.get_mac_add()
+        self.ent = entity.get_mac_add()
         self.temp = temp 
 
     """
@@ -26,7 +26,9 @@ class Rule:
             [str]: the rule parameters
         """        
 
-        return "-m mac --mac-source "+self.mac_add
+        #return "-m mac --mac-source "+self.ent.get_mac_add()
+        return " -s " + self.ent.get_ip_add()
+        
 
 
     """getters functions""" 
