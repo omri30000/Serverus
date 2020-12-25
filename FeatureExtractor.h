@@ -1,7 +1,8 @@
 #pragma once
 
+#include "IncStatsData.h"
+
 #include <vector>
-//TODO: add local includes
 using std::vector;
 
 class FeatureExtractor:
