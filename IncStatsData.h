@@ -14,7 +14,6 @@ using std::string;
 class IncStatsData
 {
 protected:
-
     map<string,vector<IncStats>> _incStatsCollection;
     
 public:
