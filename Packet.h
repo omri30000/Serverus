@@ -1,7 +1,7 @@
 #pragma once
 
 #include "Time.h"
-#include "string"
+#include <string>
 
 using std::string;
 
@@ -38,9 +38,4 @@ class Packet
         bool getProtocol();
         void setData(string data);
         string getData();
-
-
-
-
-
 }
