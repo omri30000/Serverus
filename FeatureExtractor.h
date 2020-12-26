@@ -23,4 +23,4 @@ public:
     FeatureExtractor(vector<float> lambdas);
 
     vector<float> extractNewFeaturesVector(Packet pack);
-}
+};
