@@ -24,6 +24,6 @@ public:
     IncStats(float decayFactor);
     void insertElement(float element, Time timeStemp);
 
-}
+};
 
 

@@ -34,5 +34,5 @@ class Time{
         int getMiliSec();
 
 
-}
+};
 

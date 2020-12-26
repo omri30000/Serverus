@@ -15,4 +15,4 @@ class PacketsReader
         PacketsReader();
         Packet getNextPacket();
 
-}
+};

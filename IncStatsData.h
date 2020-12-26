@@ -22,4 +22,4 @@ public:
     void insertPacket(string key, float value, Time timestamp, int lambdaindex);
     vector<float> getStats(string key);
 
-}
+};

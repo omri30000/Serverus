@@ -1,11 +1,13 @@
 #pragma once
 
 #include "IncStatsData.h"
+#include "Packet.h"
+
 
 #include <vector>
 using std::vector;
 
-class FeatureExtractor:
+class FeatureExtractor
 {
 protected:
     vector<float> _lambdas;
