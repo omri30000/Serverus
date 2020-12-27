@@ -15,6 +15,7 @@ class Time{
     #TODO: check time format comes from the data base
     */
     public:
+        Time() = default;
         Time(int year, int month, int day, int hour, int minute, int second, int miliSec);
         
         //Set & Get
@@ -34,5 +35,5 @@ class Time{
         int getMiliSec();
 
 
-}
+};
 

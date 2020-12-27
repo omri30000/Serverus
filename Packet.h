@@ -38,4 +38,4 @@ class Packet
         bool getProtocol();
         void setData(string data);
         string getData();
-}
+};

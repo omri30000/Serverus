@@ -2,6 +2,10 @@
 
 #include "Time.h"
 
+#include <vector>
+
+using std::vector;
+
 
 class IncStats
 {
@@ -9,21 +13,22 @@ protected:
     int _instanceNumber;
     float _weight;
     float _linearSum;
-    float _squareSum;
+    float _squaredSum;
     Time _timeStamp;
     float _decayFactor;
     float _variance;
     float _standardDeviation;
 
     void performDecay(Time timeStamp);
+
+    //stats
     float calcMean();
-    float calcVariance();
     float calcStandardDeviation();
 
 public:
     IncStats(float decayFactor);
     void insertElement(float element, Time timeStemp);
-
-}
+    vector<float> getStats() const;
+};
 
 

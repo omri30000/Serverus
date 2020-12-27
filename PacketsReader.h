@@ -18,4 +18,4 @@ class PacketsReader
         PacketsReader(string filePath);
         virtual Packet getNextPacket() = 0;
 
-}
+};
