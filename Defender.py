@@ -4,6 +4,7 @@ import datetime
 
 import Rule
 import Entity
+import Log
 
 # This is the Defender class, which will execute the defensive actions against hostile entities.
 
@@ -22,6 +23,10 @@ class Defender():
             raise Exception("Cant create more than one Defender (Singletone Class)")
         
         self.cron = CronTab(user="root")
+        try:
+            self.log = Log.Log(input("Enter log file name: "))
+        except Exception as e:
+            raise e
     
     
     def defend(self,entity,level):
@@ -33,6 +38,7 @@ class Defender():
         """       
         self.__close_socket(entity)
 
+        self.log.add_record(entity,level)
         if level == 1:
             return
 
