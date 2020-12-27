@@ -5,4 +5,5 @@ test.py
 /cmake-build-debug
 /.idea
 *.txt
+TestLog.py
 
