@@ -38,7 +38,6 @@ class Defender():
         """       
         self.__close_socket(entity)
 
-        self.log.add_record(entity,level)
         if level == 1:
             return
 
@@ -46,10 +45,11 @@ class Defender():
        
         #for upgrading
        
-        self.__block(rule)
+        self.__block(entity, rule)
 
         if level == 4:
-            self.__inform(entity)
+            # TODO: check when relevant
+            self.__inform(entity, rule)
 
 
     def cancel_action(self, entity):
@@ -62,6 +62,8 @@ class Defender():
         msg = ""
         while str(msg).find(ERROR_CODE) < 0: 
             msg = os.system("iptables -D INPUT %s -j DROP"%(Rule.Rule(entity,3).write_rule()))
+        self.log.add_unblock_record(entity)
+        
     
 
     def __close_socket(self, entity):
@@ -72,10 +74,11 @@ class Defender():
         """        
         #terminates all sockets with entity
         os.system("ss --kill -nt dst %s "%(entity.get_ip_add()))
+        self.log.add_block_record(entity,1)
 
 
 
-    def __block(self, rule):
+    def __block(self, entity, rule):
 
         """This function blocks an entity at the firewall
 
@@ -93,7 +96,8 @@ class Defender():
                 return
         
         except Exception as e:
-            pass
+            self.log.add_error_record(e)
+
 
         if rule.is_temp():
             time_to_delete = rule.get_date() + datetime.timedelta(minutes=2) #time to disable blocking
@@ -102,6 +106,9 @@ class Defender():
             job = self.cron.new(command = rule_to_write +"; crontab -l | grep \"" +rule_to_write + "\" | crontab -r")
             job.setall("%d %d * * *"%(time_to_delete.minute,time_to_delete.hour))
             self.cron.write()
+            self.log.add_block_record(entity, 2)
+        else:
+            self.log.add_block_record(entity, 3)
 
 
         os.system("/sbin/iptables -A INPUT %s -j DROP"%(rule.write_rule()))
@@ -121,10 +128,11 @@ class Defender():
         self.cron.write()
     
     #level 4 (not in this sprint)
-    def __inform(self, rule):
+    def __inform(self, entity, rule):
         """[summary]
 
         Args:
             rule ([type]): [description]
-        """        
+        """ 
+        self.log.add_block_record(entity, 4)       
         pass

@@ -18,6 +18,15 @@ class Log():
         self.log_file.close()
 
 
-    def add_record(self, entity, level):
+    def add_block_record(self, entity, level):
         st = "Entity in IP address " + entity.get_ip_add() + ", is blocked in blocking level " + str(level) + "!\n"
+        self.log_file.write(st)
+
+
+    def add_unblock_record(self, entity):
+        st = "Entity in IP address " + entity.get_ip_add() + ", is unblocked!\n"
+        self.log_file.write(st)
+
+    def add_error_record(self, exep):
+        st = "an error has occoured: " + exep + "\n"
         self.log_file.write(st)
