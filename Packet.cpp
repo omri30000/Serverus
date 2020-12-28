@@ -14,6 +14,21 @@ Packet::Packet(Time arrivalTime, string sourceIP, string destIP, int sourcePort,
     this->_data = data;
 }
 
+Packet::Packet(vector<string> record)
+{
+    //todo: create this function
+    /*
+    this->_arrivalTime = arrivalTime;
+    this->_sourceIP = sourceIP;
+    this->_destIP = destIP;
+    this->_sourcePort = sourcePort;
+    this->_destPort = destPort;
+    this->_length = length;
+    this->_protocol = protocol;
+    this->_data = data;
+    */
+}
+
 void Packet::setArrivalTime(Time arrivalTime) { this->_arrivalTime = arrivalTime; } 
 Time Packet::getArrivalTime() { return this->_arrivalTime; }
 void Packet::setSourceIP(string sourceIP) { this->_sourceIP = sourceIP; } 

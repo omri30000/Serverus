@@ -22,7 +22,7 @@ class Packet
     public:
         Packet(Time arrivalTime, string sourceIP, string destIP, int sourcePort, 
             int destPort, int length, bool protocol, string data);
-        Packet(vector<string> row);//row of data from csv file
+        Packet(vector<string> record);//row of data from csv file
         
         //Set & Get
         void setArrivalTime(Time arrivalTime);
