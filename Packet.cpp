@@ -16,17 +16,14 @@ Packet::Packet(Time arrivalTime, string sourceIP, string destIP, int sourcePort,
 
 Packet::Packet(vector<string> record)
 {
-    //todo: create this function
-    /*
-    this->_arrivalTime = arrivalTime;
-    this->_sourceIP = sourceIP;
-    this->_destIP = destIP;
-    this->_sourcePort = sourcePort;
-    this->_destPort = destPort;
-    this->_length = length;
-    this->_protocol = protocol;
-    this->_data = data;
-    */
+    this->_sourceIP = record[1];
+    this->_destIP = record[2];
+    this->_sourcePort = stoi(record[3]);
+    this->_destPort = stoi(record[4]);
+    this->_protocol = (record[5].Equals("UDP") || record[5].Equals("TCP"));
+    this->_length = stoi(record[6]);
+    this->_data = record[7];
+    this->_arrivalTime = Time(record[8]);
 }
 
 void Packet::setArrivalTime(Time arrivalTime) { this->_arrivalTime = arrivalTime; } 

@@ -1,5 +1,9 @@
 #pragma once
 
+#include <string>
+
+using std::string;
+
 class Time{
     private: 
         int _year;
@@ -17,7 +21,8 @@ class Time{
     public:
         Time() = default;
         Time(int year, int month, int day, int hour, int minute, int second, int miliSec);
-        
+        Time(string time);
+
         //Set & Get
         void setYear(int year);
         int getYear();

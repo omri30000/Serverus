@@ -11,6 +11,11 @@ Time::Time(int year, int month, int day, int hour, int minute, int second, int m
     this->_miliSec = miliSec;
 }
 
+Time::Time(string time)
+{
+    //#todo
+}
+
 void Time::setYear(int year) { this->_year = year; } 
 int Time::getYear() { return this->_year; }
 void Time::setMonth(int month) { this->_month = month; } 
