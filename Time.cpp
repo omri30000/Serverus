@@ -35,8 +35,19 @@ Time::Time(string time)
     t = t.substr(t.find('.') + 1); // "987"
 
     this->_miliSec = stoi(t); // 987
+}
 
+string Time::toString()
+{
+    string s = std::to_string(this->_year) + "-" +
+                std::to_string(this->_month) + "-" +
+                std::to_string(this->_day) + " " +
+                std::to_string(this->_hour) + ":" +
+                std::to_string(this->_minute) + ":" +
+                std::to_string(this->_second) + "." +
+                std::to_string(this->_miliSec);
 
+    return s;
 }
 
 void Time::setYear(int year) { this->_year = year; } 

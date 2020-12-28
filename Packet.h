@@ -24,6 +24,8 @@ class Packet
             int destPort, int length, bool protocol, string data);
         Packet(vector<string> record);//row of data from csv file
         
+        string toString();
+
         //Set & Get
         void setArrivalTime(Time arrivalTime);
         Time getArrivalTime();

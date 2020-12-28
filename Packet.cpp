@@ -26,6 +26,16 @@ Packet::Packet(vector<string> record)
     this->_arrivalTime = Time(record[8]);
 }
 
+string Packet::toString()
+{
+    string s = this->_sourceIP + this->_destIP + std::to_string(this->_sourcePort) +
+        std::to_string(this->_destPort) + std::to_string(this->_protocol) + std::to_string(this->_length) +
+        this->_data + this->_arrivalTime.toString();
+
+    return s;
+}
+
+
 void Packet::setArrivalTime(Time arrivalTime) { this->_arrivalTime = arrivalTime; } 
 Time Packet::getArrivalTime() { return this->_arrivalTime; }
 void Packet::setSourceIP(string sourceIP) { this->_sourceIP = sourceIP; } 
