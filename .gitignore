@@ -4,3 +4,7 @@
 *.txt
 TestLog.py
 /__pycache__
+/obj
+/src
+Makefile
+*.d
