@@ -6,5 +6,5 @@ class PacketsReaderSQLITE : PacketsReader
 {
 public:
     PacketsReaderSQLITE(string filePath);
-    virtual Packet getNextPacket();
+    Packet getNextPacket();
 };

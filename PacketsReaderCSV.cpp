@@ -2,29 +2,29 @@
 
 PacketsReaderCSV::PacketsReaderCSV(string filePath):PacketsReader(filePath){
     //open the file
-    this.file.open(filePath.c_str(), ios::in);
+    this->file.open(filePath.c_str(), std::fstream::in);
 
 }
 
 PacketsReaderCSV::~PacketsReaderCSV()
 {
-    this.file.close();
+    this->file.close();
 }
 
 Packet PacketsReaderCSV::getNextPacket() {
     
     vector<string> row;
-    string record, temp;
+    string record, temp, word;
 
-    this.file >> temp;
+    this->file >> temp;
     
     record = "";
 
-    getline(this.file, record);
+    std::getline(this->file, record, '\n');
 
-    stringstream s(record);
+    std::stringstream stream(record);
 
-    while(getline(s, word, ', '))
+    while(std::getline(stream, word, ','))
     {
         row.push_back(word);
     }

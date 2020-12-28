@@ -1,18 +1,17 @@
 #pragma once
 
-
-#include "PacketsReader.h"
+#include "./PacketsReader.h"
 
 using std::vector;
 
 class PacketsReaderCSV : PacketsReader
 {
     protected:
-        fstream file;
+        std::fstream file;
 
     public:
         PacketsReaderCSV(string filePath);
         ~PacketsReaderCSV();
 
-        virtual Packet getNextPacket();
+        Packet getNextPacket();
 };

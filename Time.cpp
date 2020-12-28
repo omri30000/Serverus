@@ -14,7 +14,7 @@ Time::Time(int year, int month, int day, int hour, int minute, int second, int m
 Time::Time(string time)
 {
     //string argument example: "2020-12-28 13:49:10.987621"
-    string t = time.substr(0, time.length - 3) // "2020-12-28 13:49:10.987"
+    string t = time.substr(0, time.length() - 3); // "2020-12-28 13:49:10.987"
 
     this->_year = stoi(t.substr(0, t.find('-'))); // 2020
     t = t.substr(t.find('-')); // "12-28 13:49:10.987"

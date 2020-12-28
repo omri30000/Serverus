@@ -40,7 +40,5 @@ class Time{
         int getSecond();
         void setMiliSec(int miliSec);
         int getMiliSec();
-
-
 };
 

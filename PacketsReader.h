@@ -1,7 +1,10 @@
 #pragma once
 
 #include <string>
-#include "Packet.h"
+#include <iostream>
+#include <fstream>
+#include <sstream>
+#include "./Packet.h"
 
 using std::string;
 

@@ -20,7 +20,7 @@ Packet::Packet(vector<string> record)
     this->_destIP = record[2];
     this->_sourcePort = stoi(record[3]);
     this->_destPort = stoi(record[4]);
-    this->_protocol = (record[5].Equals("UDP") || record[5].Equals("TCP"));
+    this->_protocol = (record[5] == "UDP" || record[5] == "TCP");
     this->_length = stoi(record[6]);
     this->_data = record[7];
     this->_arrivalTime = Time(record[8]);

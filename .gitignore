@@ -8,3 +8,5 @@ TestLog.py
 /src
 Makefile
 *.d
+*.csv
+FeatureExtractor
