@@ -4,6 +4,7 @@
 #include <iostream>
 #include <fstream>
 #include <sstream>
+#include <exception>
 #include "./Packet.h"
 
 using std::string;

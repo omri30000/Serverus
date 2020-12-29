@@ -3,7 +3,6 @@
 PacketsReaderCSV::PacketsReaderCSV(string filePath):PacketsReader(filePath){
     //open the file
     this->file.open(filePath.c_str(), std::fstream::in);
-
 }
 
 PacketsReaderCSV::~PacketsReaderCSV()
@@ -18,7 +17,7 @@ Packet PacketsReaderCSV::getNextPacket() {
 
     if (this->_cursor == 0)
     {
-        this->file >> temp;  
+        this->file >> temp;
         this->_cursor++;
     }
 
@@ -30,9 +29,16 @@ Packet PacketsReaderCSV::getNextPacket() {
     //std::cout << record << std::endl;
     std::stringstream stream(record);
 
-    while(std::getline(stream, word, ','))
+    if (stream.str().find_first_of(',', 0) != std::string::npos)
     {
-        row.push_back(word);
+        while(std::getline(stream, word, ','))
+        {
+            row.push_back(word);
+        }
+    }
+    else
+    {
+        throw std::exception();
     }
 
     return Packet(row);
