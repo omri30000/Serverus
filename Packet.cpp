@@ -18,19 +18,29 @@ Packet::Packet(vector<string> record)
 {
     this->_sourceIP = record[1];
     this->_destIP = record[2];
-    this->_sourcePort = stoi(record[3]);
-    this->_destPort = stoi(record[4]);
+    this->_sourcePort = std::stoi(record[3]);
+    this->_destPort = std::stoi(record[4]);
     this->_protocol = (record[5] == "UDP" || record[5] == "TCP");
-    this->_length = stoi(record[6]);
+    this->_length = std::stoi(record[6]);
+    //std::cout << record[6] << std::endl;
     this->_data = record[7];
     this->_arrivalTime = Time(record[8]);
+
+    //std::cout << "packet created successfuly" << std::endl;
 }
 
 string Packet::toString()
 {
-    string s = this->_sourceIP + this->_destIP + std::to_string(this->_sourcePort) +
-        std::to_string(this->_destPort) + std::to_string(this->_protocol) + std::to_string(this->_length) +
-        this->_data + this->_arrivalTime.toString();
+    string s = "##PACKET##\n";
+     s += this->_sourceIP + "\n";
+     s += this->_destIP + "\n"; 
+     s += std::to_string(this->_sourcePort) + "\n";
+     s += std::to_string(this->_destPort) + "\n"; 
+     s += std::to_string(this->_protocol) + "\n";
+     s += std::to_string(this->_length) + "\n";
+     s += this->_data + "\n";
+     s += this->_arrivalTime.toString() + "\n";
+     s += "##########\n";
 
     return s;
 }

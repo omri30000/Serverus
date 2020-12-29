@@ -16,12 +16,18 @@ Packet PacketsReaderCSV::getNextPacket() {
     vector<string> row;
     string record, temp, word;
 
+    if (this->_cursor == 0)
+    {
+        this->file >> temp;  
+        this->_cursor++;
+    }
+
+    this->file >> record;
     this->file >> temp;
-    
-    record = "";
+    record += (" " + temp);
 
-    std::getline(this->file, record, '\n');
-
+    this->_cursor++;
+    //std::cout << record << std::endl;
     std::stringstream stream(record);
 
     while(std::getline(stream, word, ','))
