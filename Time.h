@@ -10,6 +10,7 @@ class Time{
         int _second;
         int _miliSec;
 
+        int daysSinceYearStart();
     /*
     The Time class's c'tor
     #TODO: check time format comes from the data base
