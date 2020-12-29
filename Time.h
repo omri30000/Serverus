@@ -23,6 +23,7 @@ private:
 public:
     Time() = default;
     Time(int year, int month, int day, int hour, int minute, int second, int miliSec);
+    Time::Time(string time);
 
     int operator-(const Time other)const;
 
