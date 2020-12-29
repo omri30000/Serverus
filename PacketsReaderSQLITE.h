@@ -10,6 +10,7 @@ class PacketsReaderSQLITE : PacketsReader
 {
     protected:
         sqlite3* dbFile;
+        int _cursor; // determine which line in the DB to start from
 
     public:
         PacketsReaderSQLITE(string filePath);
