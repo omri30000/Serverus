@@ -2,8 +2,11 @@
 
 #include "Time.h"
 #include <string>
+#include <vector>
+#include <iostream>
 
 using std::string;
+using std::vector;
 
 class Packet
 {
@@ -20,7 +23,11 @@ class Packet
     public:
         Packet(Time arrivalTime, string sourceIP, string destIP, int sourcePort, 
             int destPort, int length, bool protocol, string data);
+        Packet(vector<string> record);//row of data from csv file
+        Packet() = default; // remove this after bulding PacketsReaderSQLITE class
         
+        string toString();
+
         //Set & Get
         void setArrivalTime(Time arrivalTime);
         Time getArrivalTime();

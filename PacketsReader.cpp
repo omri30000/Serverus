@@ -1,15 +1,7 @@
 #include "PacketsReader.h"
 
-PacketsReader::PacketsReader()
+PacketsReader::PacketsReader(string filePath)
 {
+    this->_dbFilePath = filePath;
     this->_cursor = 0;
-}
-
-/*
-The function will provise the next packet
-
-*/
-Packet PacketsReader::getNextPacket()
-{
-    //#TODO
 }

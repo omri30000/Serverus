@@ -47,6 +47,45 @@ int Time::daysSinceYearStart()
 }
 
 
+Time::Time(string time)
+{
+    //string argument example: "2020-12-28 13:49:10.987621"
+    string t = time.substr(0, time.length() - 3); // "2020-12-28 13:49:10.987"
+
+    this->_year = std::stoi(t.substr(0, t.find('-'))); // 2020
+    t = t.substr(t.find('-') + 1); // "12-28 13:49:10.987"
+
+    this->_month = std::stoi(t.substr(0, t.find('-'))); // 12
+    t = t.substr(t.find('-') + 1); // "28 13:49:10.987"
+
+    this->_day = std::stoi(t.substr(0, t.find(' '))); // 28
+    t = t.substr(t.find(' ') + 1); // "13:49:10.987"
+
+    this->_hour = std::stoi(t.substr(0, t.find(':'))); // 13
+    t = t.substr(t.find(':') + 1); // "49:10.987"
+
+    this->_minute = std::stoi(t.substr(0, t.find(':'))); // 49
+    t = t.substr(t.find(':') + 1); // "10.987"
+
+    this->_second = std::stoi(t.substr(0, t.find('.'))); // 10
+    t = t.substr(t.find('.') + 1); // "987"
+
+    this->_miliSec = std::stoi(t); // 987
+}
+
+string Time::toString()
+{
+    string s = std::to_string(this->_year) + "-" +
+                std::to_string(this->_month) + "-" +
+                std::to_string(this->_day) + " " +
+                std::to_string(this->_hour) + ":" +
+                std::to_string(this->_minute) + ":" +
+                std::to_string(this->_second) + "." +
+                std::to_string(this->_miliSec);
+
+    return s;
+}
+
 void Time::setYear(int year) { this->_year = year; } 
 int Time::getYear() const { return this->_year; }
 void Time::setMonth(int month) { this->_month = month; } 

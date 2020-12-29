@@ -1,18 +1,25 @@
 #pragma once
 
 #include <string>
-#include "Packet.h"
+#include <iostream>
+#include <fstream>
+#include <sstream>
+#include <exception>
+#include "./Packet.h"
 
 using std::string;
 
 class PacketsReader
 {
-    private:
+    /*
+    This is an abstract PacketReader class
+    */
+    protected:
         int _cursor;
         string _dbFilePath;
 
     public:
-        PacketsReader();
-        Packet getNextPacket();
+        PacketsReader(string filePath);
+        virtual Packet getNextPacket() = 0;
 
 };
