@@ -18,21 +18,22 @@ class Time{
         Time() = default;
         Time(int year, int month, int day, int hour, int minute, int second, int miliSec);
         
+        int operator-(const Time other)const;
         //Set & Get
         void setYear(int year);
-        int getYear();
+        int getYear() const;
         void setMonth(int month);
-        int getMonth();
+        int getMonth() const;
         void setDay(int day);
-        int getDay();
+        int getDay() const;
         void setHour(int hour);
-        int getHour();
+        int getHour() const;
         void setMinute(int minute);
-        int getMinute();
+        int getMinute() const;
         void setSecond(int second);
-        int getSecond();
+        int getSecond() const;
         void setMiliSec(int miliSec);
-        int getMiliSec();
+        int getMiliSec() const;
 
 
 };
