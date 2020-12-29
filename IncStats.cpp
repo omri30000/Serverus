@@ -44,7 +44,37 @@ void IncStats::performDecay(Time timeStamp)
     this->_squaredSum *= decay;
 }
 
+/*
+This function returns all stats
+Input:None
+Output:Stream stats : vector<float>
+*/
+vector<float> IncStats::getStats() const
+{
+    return std::vector<float>{this->_weight, this->_mean, this->_standardDeviation};
+}
 
+//options to move to static function
+/*
+This function calculates Mean value
+Input:None
+Output:None / Mean value : float
+*/
+float IncStats::calcMean()
+{
+    this->_mean = this->_linearSum / this->_weight;
+    return this->_mean;
+}
+
+/*
+This function calculates Standard Deviation value
+Input:None
+Output:None / Standard Deviation value : float
+*/float IncStats::calcStandardDeviation()
+{
+    this->_standardDeviation = sqrt(abs(this->_squaredSum / this->_weight - pow(this->_linearSum / this->_weight, 2)));
+    return this->_standardDeviation;
+}
 
 
 
