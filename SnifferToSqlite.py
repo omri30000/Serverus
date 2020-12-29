@@ -39,13 +39,15 @@ class Sniffer:
             # Create packets table
             try:
                 self.db_cursor.execute('''CREATE TABLE packets
-                        (source_mac text, source_IP text, dest_IP text, source_port real, 
+                        (id INTEGER PRIMARY KEY AUTOINCREMENT, source_mac text, source_IP text, dest_IP text, source_port real, 
                         dest_port real, protocol text, length real, data text, arrival_time text)''')
 
             except Exception:
                 pass
 
             self.lock.release()
+
+            self.packet_index = 0
 
         else:
             raise Exception("can't create more than one sniffer!")

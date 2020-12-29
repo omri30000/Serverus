@@ -73,7 +73,8 @@ class Packet:
 	    :rtype: string
 	    """
 
-        statement = "INSERT INTO packets VALUES (\'" + self.source_mac + "\',\'" + self.source_IP + "\',\'" + self.dest_IP + \
+        statement = '''INSERT INTO packets (source_mac,source_IP,dest_IP,source_port,
+                        dest_port,protocol,length,data,arrival_time)''' + " VALUES (\'" + self.source_mac + "\',\'" + self.source_IP + "\',\'" + self.dest_IP + \
         "\'," + str(self.source_port) + "," + str(self.dest_port) + ",\'" + self.protocol + "\'," + str(self.length) + \
         ",\'" + self.data + "\',\'" + str(self.arrival_time) + "\')"
         
