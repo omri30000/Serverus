@@ -9,7 +9,7 @@
 class PacketsReaderSQLITE : PacketsReader
 {
     protected:
-        sqlite3* dbFile;
+        sqlite3* _dbFile;
         int _cursor; // determine which line in the DB to start from
 
     public:
