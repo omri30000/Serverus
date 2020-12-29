@@ -22,7 +22,6 @@ Packet::Packet(vector<string> record)
     this->_destPort = std::stoi(record[4]);
     this->_protocol = (record[5] == "UDP" || record[5] == "TCP");
     this->_length = std::stoi(record[6]);
-    //std::cout << record[6] << std::endl;
     this->_data = record[7];
     this->_arrivalTime = Time(record[8]);
 

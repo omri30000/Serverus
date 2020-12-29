@@ -9,7 +9,7 @@ int main(){
             std::cout << reader.getNextPacket().toString() << std::endl;
         }
     }
-    catch (std::exception e)
+    catch (std::exception& e)
     {
         std::cout << "finished reading packets" << std::endl;
     }
