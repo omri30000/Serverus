@@ -3,7 +3,7 @@
 PacketsReaderSQLITE::PacketsReaderSQLITE(string filePath):PacketsReader(filePath)
 {
     int status = 0; 
-    status = sqlite3_open(filePath.c_str(), &this->dbFile); 
+    status = sqlite3_open(filePath.c_str(), &this->_dbFile); 
   
     if (status) { 
         std::cerr << "Error open DB " << sqlite3_errmsg(DB) << std::endl; 
@@ -11,6 +11,8 @@ PacketsReaderSQLITE::PacketsReaderSQLITE(string filePath):PacketsReader(filePath
     } 
     else
         std::cout << "Opened Database Successfully!" << std::endl; 
+
+    this->_cursor = 1;
      
 }
 
