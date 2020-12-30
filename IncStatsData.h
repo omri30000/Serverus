@@ -20,7 +20,8 @@ protected:
 public:
     IncStatsData();
     void registerStream(string uniqueKey) throw();
-    void insertPacket(string key, float value, Time timestamp, int lambdaindex) throw();
+    void IncStatsData::insertPacket(string key, float value, Time timestamp) throw()
+    void insertPacket(string key, float value, Time timestamp, int lambdaIndex) throw();
     vector<float> getStats(string key) const throw();
     
 };
