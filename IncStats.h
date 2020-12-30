@@ -16,7 +16,7 @@ protected:
     float _squaredSum;
     Time _timeStamp;
     float _decayFactor;
-    float _variance;
+    float _mean;
     float _standardDeviation;
 
     void performDecay(Time timeStamp);
@@ -27,8 +27,9 @@ protected:
 
 public:
     IncStats(float decayFactor);
-    void insertElement(float element, Time timeStemp);
+    void insertElement(float element, Time timeStamp);
     vector<float> getStats() const;
+
 };
 
 
