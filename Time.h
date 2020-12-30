@@ -17,7 +17,7 @@ private:
 
     bool _isFirst;
 
-    int daysSinceYearStart();
+    int daysSinceYearStart() const;
     /*
     The Time class's c'tor
     #TODO: check time format comes from the data base
@@ -46,6 +46,6 @@ public:
     int getSecond() const;
     void setMiliSec(int miliSec);
     int getMiliSec() const;
-}
+};
 
 
