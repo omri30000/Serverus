@@ -38,8 +38,9 @@ void IncStatsData::registerStream(string uniqueKey) throw()
  */
 void IncStatsData::insertPacket(string key, float value, Time timestamp) throw()
 {
+
     if (!this->isStreamExists(key))
-        throw std::exception("Stream doesn't exist");
+        this->registerStream(key);
 
     for (int i = 0; i <this->_incStatsCollection[key].size() ; ++i)
     {

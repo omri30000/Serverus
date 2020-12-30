@@ -15,15 +15,17 @@ private:
     int _second;
     int _miliSec;
 
+    bool _isFirst;
+
     int daysSinceYearStart();
     /*
     The Time class's c'tor
     #TODO: check time format comes from the data base
     */
 public:
-    Time() = default;
+    Time();
     Time(int year, int month, int day, int hour, int minute, int second, int miliSec);
-    Time::Time(string time);
+    Time(string time);
 
     int operator-(const Time other)const;
 
