@@ -6,3 +6,4 @@ Makefile
 /obj
 /src
 *.o
+*.sqlite

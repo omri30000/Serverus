@@ -33,7 +33,7 @@ class Sniffer:
             
             self.lock.acquire()
             
-            self.db = sqlite3.connect('db_file.db')
+            self.db = sqlite3.connect('db_file.sqlite')
             self.db_cursor = self.db.cursor()
 
             # Create packets table
