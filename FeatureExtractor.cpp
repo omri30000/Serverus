@@ -13,6 +13,19 @@ FeatureExtractor::FeatureExtractor(vector<float> lambdas)
     this->_lambdas = lambdas;
 }
 
+vector<float> FeatureExtractor::extractNewFeaturesVector(Packet pack)
+{
+    //update
+    this->_channelSize.insertPacket("key",pack.getLength(),pack.getArrivalTime());
+    this->_channelJitter.insertPacket("key",0,pack.getArrivalTime());
+    this->_socketSize.insertPacket("key",pack.getLength(),pack.getArrivalTime());
+
+    vector<float> res;
+    this->_channelSize.getStats("key");
+
+
+}
+
 
 
 
