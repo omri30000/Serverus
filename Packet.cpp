@@ -14,22 +14,25 @@ Packet::Packet(Time arrivalTime, string sourceIP, string destIP, int sourcePort,
     this->_data = data;
 }
 
-Packet::Packet(vector<string> record)
+Packet::Packet(vector<string> record, int startIndex)
 {
-    this->_sourceIP = record[1];
-    this->_destIP = record[2];
-    this->_sourcePort = std::stoi(record[3]);
-    this->_destPort = std::stoi(record[4]);
-    this->_protocol = (record[5] == "UDP" || record[5] == "TCP");
-    this->_length = std::stoi(record[6]);
-    this->_data = record[7];
-    this->_arrivalTime = Time(record[8]);
+    if (record.size() == 0) throw std::exception();
 
-    //std::cout << "packet created successfuly" << std::endl;
+    this->_sourceIP = record[startIndex];
+    this->_destIP = record[startIndex + 1];
+    this->_sourcePort = std::stoi(record[startIndex + 2]);
+    this->_destPort = std::stoi(record[startIndex + 3]);
+    this->_protocol = (record[startIndex + 4] == "UDP" || record[startIndex + 4] == "TCP");
+    this->_length = std::stoi(record[startIndex + 5]);
+    this->_data = record[startIndex + 6];
+    this->_arrivalTime = Time(record[startIndex + 7]); 
+
+
 }
 
 string Packet::toString()
 {
+
     string s = "##PACKET##\n";
      s += this->_sourceIP + "\n";
      s += this->_destIP + "\n"; 

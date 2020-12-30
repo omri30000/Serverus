@@ -25,9 +25,9 @@ Packet PacketsReaderSQLITE::getNextPacket() {
     vector<string> record;
 
     executeCommand(sqlStatement.c_str(), callbackGetData, &record);
-
     this->_cursor++;
-    return Packet(record);
+    
+    return Packet(record, 2);
 }
 
 /*

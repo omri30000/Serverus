@@ -49,5 +49,5 @@ Packet PacketsReaderCSV::getNextPacket() {
         throw std::exception();
     }
 
-    return Packet(row);
+    return Packet(row, 1);
 }

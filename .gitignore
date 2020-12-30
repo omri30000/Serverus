@@ -11,3 +11,4 @@ Makefile
 *.csv
 FeatureExtractor
 *.db
+*.sqlite
