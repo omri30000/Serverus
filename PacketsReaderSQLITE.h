@@ -12,7 +12,7 @@ class PacketsReaderSQLITE : PacketsReader
 {
     protected:
         sqlite3* _dbFile;
-        int _cursor; // determine which line in the DB to start from
+        
         static int callbackGetData(void* data, int argc, char** argv, char** azColName);
         void executeCommand(const char* statement, int (*callback)(void*, int, char**, char**), void* arg);
     
