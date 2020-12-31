@@ -10,7 +10,6 @@ IncStats::IncStats(float decayFactor)
     this->_weight = 0;
     this->_linearSum = 0;
     this->_squaredSum = 0;
-    this->_timeStamp;
     this->_mean = 0;
     this->_standardDeviation = 0;
 }

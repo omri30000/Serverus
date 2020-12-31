@@ -2,6 +2,8 @@
 
 #include "IncStatsData.h"
 #include "Packet.h"
+#include "IncStatsDataChannel.h"
+#include "IncStatsDataSocket.h"
 
 
 #include <vector>
@@ -14,9 +16,9 @@ protected:
 
     vector<float> _lambdas;
     
-    IncStatsData _channelJitter;
-    IncStatsData _channelSize;
-    IncStatsData _socketSize;
+    IncStatsDataChannel _channelJitter;
+    IncStatsDataChannel _channelSize;
+    IncStatsDataSocket _socketSize;
 
 
 public:

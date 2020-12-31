@@ -15,12 +15,12 @@ IncStatsData::IncStatsData()
 void IncStatsData::registerStream(string uniqueKey) throw()
 {
 	//check if not exists
-	if(this->isStreamExists(uniqueKey)
-		throw std::exception("Stream already exists");
+	if(this->isStreamExists(uniqueKey))
+		throw std::runtime_error("Stream already exists");
 	
 
 	const float lambdas[] = { 0.01,0.1,1,3,5 };
-	std::vector<uniqueKey> vec;
+	std::vector<IncStats> vec;
 	for (size_t i = 0; i <5; i++)
 	{
 		vec.push_back(IncStats(lambdas[i]));
@@ -61,7 +61,7 @@ void IncStatsData::insertPacket(string key, float value, Time timestamp) throw()
 void IncStatsData::insertPacket(string key, float value, Time timestamp, int lambdaIndex) throw()
 {
 	if (!this->isStreamExists(key))
-        throw std::exception("Stream doesn't exist");
+        throw std::runtime_error("Stream doesn't exist");
 
 	this->_incStatsCollection[key][lambdaIndex].insertElement(value, timestamp);
 }
@@ -75,19 +75,19 @@ void IncStatsData::insertPacket(string key, float value, Time timestamp, int lam
 vector<float> IncStatsData::getStats(string key) const throw()
 {
 	if (!this->isStreamExists(key))
-        throw std::exception("Stream doesn't exist");
+        throw std::runtime_error("Stream doesn't exist");
 
 	vector<float> result;
-	for (size_t i = 0; i < this->_incStatsCollection[key].size ; i++)
+	for (size_t i = 0; i < this->_incStatsCollection.at(key).size() ; i++)
 	{
-		vector<float> val = this->_incStatsCollection[key][i].getStats();
+		vector<float> val = this->_incStatsCollection.at(key)[i].getStats();
 		for (float stat : val)
 		{
 			result.push_back(stat);
 		}
 
 	}
-	retuen result;
+	return result;
 }
 
 /*
@@ -101,7 +101,7 @@ bool IncStatsData::isStreamExists(string key) const
 	{
 		this->_incStatsCollection.at(key);
 	}
-	catch (Exception e)
+	catch (std::exception e)
 	{
 		return false;
 	}
