@@ -1,4 +1,4 @@
-#pragma once
+#pragma oncePacketsReaderSQLITE
 
 #include "sqlite3.h"
 #include "PacketsReader.h"

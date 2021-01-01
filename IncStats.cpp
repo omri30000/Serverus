@@ -81,6 +81,10 @@ Output:None / Standard Deviation value : float
     return this->_standardDeviation;
 }
 
+void IncStats::insertElement(Time timeStamp) {
+    insertElement(timeStamp - this->_timeStamp,timeStamp);
+}
+
 
 
 

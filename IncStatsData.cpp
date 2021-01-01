@@ -107,3 +107,15 @@ bool IncStatsData::isStreamExists(string key) const
 	}
 	return true;
 }
+
+
+void IncStatsData::insertPacket(string key, Time timestamp) throw()
+{
+    if (!this->isStreamExists(key))
+        throw std::runtime_error("Stream doesn't exist");
+
+    for (int i = 0; i <this->_incStatsCollection[key].size() ; ++i)
+    {
+        this->_incStatsCollection[key][i].insertElement(timestamp);
+    }
+}

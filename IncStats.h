@@ -27,6 +27,7 @@ protected:
 
 public:
     IncStats(float decayFactor);
+    void insertElement(Time timeStamp);
     void insertElement(float element, Time timeStamp);
     vector<float> getStats() const;
 
