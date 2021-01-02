@@ -29,20 +29,21 @@ void readPackets(string filePath)
 }
 
 
-int main() {
+int main()
+{
 
     std::cout << "Hello, World!" << std::endl;
-    PacketsReader * reader = new PacketsReaderSQLITE("path");
+    PacketsReaderSQLITE reader =  PacketsReaderSQLITE("../db_file.sqlite");
     FeatureExtractor extractor;
 
     while(true)
     {
-        Packet* p = nullptr;
         Packet pack;
         bool cond = false;
-        while(!cond) {
+        while(!cond)
+        {
             try {
-                pack = reader->getNextPacket();
+                pack = reader.getNextPacket();
                 cond = true;
             }
             catch (std::exception &e) {
@@ -51,10 +52,12 @@ int main() {
         }
 
         std::cout<<pack.toString();
-        vector<float> stats = extractor.extractNewFeaturesVector(pack);\
+        vector<float> stats = extractor.extractNewFeaturesVector(pack);
         for (float v : stats)
         {
             std::cout << v<<',';
+            //std::cout<<"Fuck my life";
+            //printf("%d",v);
         }
         std::cout<<std::endl;
     }

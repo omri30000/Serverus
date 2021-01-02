@@ -14,11 +14,16 @@ class PacketsReaderSQLITE : public PacketsReader
         sqlite3* _dbFile;
         
         static int callbackGetData(void* data, int argc, char** argv, char** azColName);
-        void executeCommand(const char* statement, int (*callback)(void*, int, char**, char**), void* arg);
+        static int callbackGetInt(void *data, int argc, char **argv, char **azColName);
+
+    void executeCommand(const char* statement, int (*callback)(void*, int, char**, char**), void* arg);
     
     public:
         PacketsReaderSQLITE(string filePath);
         ~PacketsReaderSQLITE();
            
         Packet getNextPacket();
+
+    int find_next_row();
+
 };
