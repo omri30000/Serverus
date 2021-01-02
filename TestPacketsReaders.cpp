@@ -1,9 +1,10 @@
-#include "./PacketsReaderCSV.h"
-#include "./PacketsReaderSQLITE.h"
+#include "PacketsReaderCSV.h"
+#include "PacketsReaderSQLITE.h"
 
-/*
+
 //csv reader checker
-int main(){
+/*
+int maindds(){
     PacketsReaderCSV reader("sniffs.csv");
 
     try{
@@ -19,7 +20,7 @@ int main(){
 
     return 0;
 }
-*/
+
 
 /*
 //sqlite reader checker

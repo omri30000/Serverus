@@ -4,7 +4,7 @@
 
 using std::vector;
 
-class PacketsReaderCSV : PacketsReader
+class PacketsReaderCSV : public PacketsReader
 {
     protected:
         std::fstream file;

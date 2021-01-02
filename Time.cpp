@@ -59,6 +59,7 @@ int Time::operator-(const Time other) const
     diff += (this->_hour - other._hour) * 1000 * 60 * 60;
     diff += (this->daysSinceYearStart() - other.daysSinceYearStart()) * 1000 * 60 * 60 * 24;
     diff += (this->_year - other._year) * 1000 * 60 * 60 * 24 * 365;
+    return diff;
 }
 /*
 This function returns the amount days since start of the year

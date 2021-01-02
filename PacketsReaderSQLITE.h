@@ -8,7 +8,7 @@
 //sudo apt-get install sqlite3
 //add this to makeFile flags:
 //-lsqlite3
-class PacketsReaderSQLITE : PacketsReader
+class PacketsReaderSQLITE : public PacketsReader
 {
     protected:
         sqlite3* _dbFile;
