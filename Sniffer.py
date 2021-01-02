@@ -1,24 +1,27 @@
-#!/usr/bin/env python3
-
-# This is the sniffer file, it will parse the data from the sniffs to a data for the model
-
-from scapy.all import *
-import socket
-import datetime
-import os
-#  from geoip import geolite2
-import time
+import SnifferToCsv
+import SnifferToSqlite
 
 def main():
-    sniff(prn=parse_packet)
+    """
+    """
+    try:
+        choice = int(input("choose 1 or 2 (CSV or Sqlite): "))
+    except Exception:
+        print("Invalid input, Csv was chosen by default")
+        choice = 1
+
+    if choice == 1:
+        mySniffer = SnifferToCsv.Sniffer()
+    elif choice == 2:
+        mySniffer = SnifferToSqlite.Sniffer()
+    else:
+        print("Invalid input, Csv was chosen by default")
+        mySniffer = SnifferToCsv.Sniffer()
+        
+    mySniffer.start_sniffing()
 
 
-def parse_packet(pkt):
-    # get the packet arrival time
-    time = datetime.datetime.now()
-    pkt.show()
 
 
-
-if __name__ == '__main__':
+if __name__ == "__main__":
     main()
