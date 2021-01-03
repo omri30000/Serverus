@@ -51,7 +51,7 @@ int main()
             }
         }
 
-        std::cout<<pack.toString();
+        std::cout << pack.toString();
         vector<float> stats = extractor.extractNewFeaturesVector(pack);
         for (float v : stats)
         {

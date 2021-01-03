@@ -44,16 +44,3 @@ vector<float> FeatureExtractor::extractNewFeaturesVector(Packet pack) {
     return res;
 
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
