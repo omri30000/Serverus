@@ -97,3 +97,8 @@ int PacketsReaderSQLITE::find_next_row() {
 
 }
 
+
+void PacketsReaderSQLITE::removeOutgoingPackets()
+{
+    
+}

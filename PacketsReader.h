@@ -5,6 +5,11 @@
 #include <fstream>
 #include <sstream>
 #include <exception>
+#include <cstdio>
+#include <memory>
+#include <stdexcept>
+#include <array>
+
 #include "./Packet.h"
 
 using std::string;
@@ -18,10 +23,13 @@ class PacketsReader
         int _cursor;
         string _dbFilePath;
 
-        virtual void deleteRecord(int id) = 0;
-        string getHostIp();
+        virtual void removeOutgoingPackets() = 0;
+        
+        string execTerminalCommand(const char* cmd);
+        string getHostMac();
     public:
         PacketsReader(string filePath);
         virtual Packet getNextPacket() = 0;
+        
 
 };

@@ -1,6 +1,7 @@
 #include <iostream>
 #include <string>
 #include "PacketsReaderSQLITE.h"
+#include "PacketsReaderCSV.h"
 #include "FeatureExtractor.h"
 
 void readPackets(string filePath);
@@ -33,20 +34,30 @@ int main()
 {
 
     std::cout << "Hello, World!" << std::endl;
-    PacketsReaderSQLITE reader =  PacketsReaderSQLITE("../db_file.sqlite");
+    //PacketsReaderSQLITE reader =  PacketsReaderSQLITE("../db_file.sqlite");
+    PacketsReaderCSV reader("sniffs.csv");
     FeatureExtractor extractor;
 
     while(true)
     {
         Packet pack;
         bool cond = false;
+        int countExceptions = 0;
         while(!cond)
         {
             try {
-                pack = reader.getNextPacket();
-                cond = true;
+                if (countExceptions < 5)
+                {
+                    pack = reader.getNextPacket();
+                    cond = true;
+                }
+                else{
+                    std::cout << "Finished reading Packets" << std::endl;
+                    return 0;
+                }
             }
             catch (std::exception &e) {
+                countExceptions++;
                 cond = false;
             }
         }
@@ -55,11 +66,11 @@ int main()
         vector<float> stats = extractor.extractNewFeaturesVector(pack);
         for (float v : stats)
         {
-            std::cout << v<<',';
+            std::cout << v << ',';
             //std::cout<<"Fuck my life";
             //printf("%d",v);
         }
-        std::cout<<std::endl;
+        std::cout << std::endl;
     }
 
     return 0;
