@@ -69,7 +69,6 @@ void PacketsReaderCSV::removeOutgoingPackets()
     string line, word, hostMac; 
     vector<string> row; 
     
-    int row_size = row.size(); 
     hostMac = this->getHostMac();
 
     // Check if this record exists 
@@ -84,6 +83,8 @@ void PacketsReaderCSV::removeOutgoingPackets()
         while (getline(s, word, ',')) { 
             row.push_back(word); 
         }
+
+        int row_size = row.size(); 
   
         // writing all records, 
         // except the record to be deleted, 
@@ -92,7 +93,7 @@ void PacketsReaderCSV::removeOutgoingPackets()
         if (row[0].find(hostMac) == string::npos) {
             if (!fin.eof()) { 
                 for (i = 0; i < row_size - 1; i++) { 
-                    fout << row[i] << ", "; 
+                    fout << row[i] << ","; 
                 } 
                 fout << row[row_size - 1] << "\n"; 
             } 
