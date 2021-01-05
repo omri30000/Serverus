@@ -2,6 +2,7 @@
 *.csv
 *.db
 /.vscode
+/.idea
 Makefile
 /obj
 /src
