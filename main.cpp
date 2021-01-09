@@ -29,13 +29,16 @@ void readPackets(string filePath)
      */
 }
 
-
+/*
+##NOTE##
++ make sure you use sudo when running the program. the DB requires wirting permissions!
+*/
 int main()
 {
 
     std::cout << "Hello, World!" << std::endl;
     //PacketsReaderSQLITE reader =  PacketsReaderSQLITE("../db_file.sqlite");
-    PacketsReaderCSV reader("sniffs.csv");
+    PacketsReaderSQLITE reader("db_file.sqlite");
     FeatureExtractor extractor;
 
     while(true)
@@ -67,8 +70,6 @@ int main()
         for (float v : stats)
         {
             std::cout << v << ',';
-            //std::cout<<"Fuck my life";
-            //printf("%d",v);
         }
         std::cout << std::endl;
     }

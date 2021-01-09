@@ -19,6 +19,7 @@ PacketsReaderSQLITE::PacketsReaderSQLITE(string filePath) :PacketsReader(filePat
 //destructor
 PacketsReaderSQLITE::~PacketsReaderSQLITE()
 {
+    this->removeOutgoingPackets();
     sqlite3_close(this->_dbFile);
 }
 
@@ -94,11 +95,16 @@ int PacketsReaderSQLITE::find_next_row() {
     executeCommand(sqlStatement.c_str(), callbackGetInt, &val);
 
    return  val != -1 ? val : this->_cursor+1;
-
 }
 
 
 void PacketsReaderSQLITE::removeOutgoingPackets()
 {
-    
+    string hostMac, sqlStatement;
+    int val = -1;
+
+    hostMac = this->getHostMac();
+    sqlStatement = "DELETE FROM packets WHERE source_mac = \'" + hostMac + "\'";
+
+    executeCommand(sqlStatement.c_str(), callbackGetInt, &val);
 }
