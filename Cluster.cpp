@@ -31,7 +31,29 @@ Cluster::Cluster(int id,vector<vector<float>>* distance)
 
     this->_distance = distance;
 }
-
+//Destructor - also free from memory
+Cluster::~Cluster()
+{
+    if(_right != nullptr)
+        delete _right;
+    if(_left != nullptr)
+        delete _left;
+}
+/*
+ This function calculates the distance between 2 clusters
+ Input:other : The second cluster : Cluster
+ Output: The distance : float
+ */
+float Cluster::calcDistance(Cluster other) const {
+    //distance between 2 clusters calculated with average
+    float sum = 0;
+    for (int i = 0; i < other.getSize(); ++i) {
+        for (int j = 0; j < other.getSize(); ++j) {
+            sum += (*(this->_distance))[i][j];
+        }
+    }
+    return sum / (float) (this->getSize() * other.getSize());
+}
 
 
 //getters
@@ -44,21 +66,17 @@ float Cluster::getHeight() const
 {
     return _height;
 }
-/*
- This function calculates the distance between 2 clusters
- Input:other : The second cluster : Cluster
- Output: The distance : float
- */
-float Cluster::calcDistance(Cluster other) const
-{
-    //distance between 2 clusters calculated with average
-    int sum =0;
-    for (int i = 0; i <other.getSize() ; ++i) {
-        for (int j = 0; j < other.getSize(); ++j) {
-            sum += this->_distance[i][j];
-        }
-    }
-    return sum /(float)(this->getSize()*other.getSize());
+
+vector<int> Cluster::getIds() const {
+    return this->_ids;
+}
+
+Cluster *Cluster::getLeft() const {
+    return _left;
+}
+
+Cluster *Cluster::getRight() const {
+    return _right;
 }
 
 
