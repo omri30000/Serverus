@@ -19,6 +19,7 @@ protected:
 
     int _m;
     int _learningLimit;
+    int _cursor;
 
     vector<vector<float>> _correlation;
     vector<vector<float>> calcInitialDistanceMatrix() const;
