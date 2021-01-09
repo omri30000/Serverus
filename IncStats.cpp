@@ -81,6 +81,26 @@ Output:None / Standard Deviation value : float
     return this->_standardDeviation;
 }
 
+/*
+The function will calc the magnitude between the current IncStats and the other (in param)
+input: other IncStats used for calculations
+output: the magnitude of those 2 Inc stats
+*/
+float IncStats::calcMagnitude(IncStats other)
+{
+    return sqrt(pow(this->calcMean(), 2) + pow(other.calcMean(), 2));
+}
+
+/*
+The function will calc the radius between the current IncStats and the other (in param)
+input: other IncStats used for calculations
+output: the radius of those 2 Inc stats
+*/
+float IncStats::calcRadius(IncStats other)
+{
+    return sqrt(pow(this->calcStandardDeviation(), 4) + pow(other.calcStandardDeviation(), 4))
+}
+
 void IncStats::insertElement(Time timeStamp) {
     insertElement(timeStamp - this->_timeStamp,timeStamp);
 }

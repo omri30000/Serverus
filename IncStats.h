@@ -21,9 +21,13 @@ protected:
 
     void performDecay(Time timeStamp);
 
-    //stats
+    //1D stats
     float calcMean();
     float calcStandardDeviation();
+
+    //2D stats
+    float calcMagnitude(IncStats other);
+    float calcRadius(IncStats other);
 
 public:
     IncStats(float decayFactor);
