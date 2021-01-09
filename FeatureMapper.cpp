@@ -3,6 +3,7 @@
 //
 
 #include "FeatureMapper.h"
+#include <math.h>
 
 //constructor
 FeatureMapper::FeatureMapper(int learningLimit, int m,int statsSize) {
@@ -17,7 +18,7 @@ FeatureMapper::FeatureMapper(int learningLimit, int m,int statsSize) {
 
     for (int i = 0; i < statsSize; ++i)
     {
-        this->_correlation[i] = vector<float>(statsSize,0);
+        this->_correlation.push_back(vector<float>(statsSize,0));
     }
 }
 
@@ -45,3 +46,46 @@ void FeatureMapper::update(vector<float> stats)
     }
 }
 
+/*
+    This function
+ */
+vector<vector<float>> FeatureMapper::calcDistanceMatrix() const {
+    vector<vector<float>> res;
+    for (int i = 0; i < this->_correlation.size(); ++i)
+    {
+        res.push_back(vector<float>(_correlation.size(),0));
+        for (int j = 0; j < _correlation.size(); ++j)
+        {
+            res[i][j] = 1 - _correlation[i][j]/(sqrt(_crs[i]) * sqrt(_crs[j]));
+        }
+    }
+    return res;
+}
+/*
+void func(void)
+{
+    vector<Element*> vec;
+
+    while(vec.size()!= 1) {
+        //build Distance
+
+        //find two minimum - merge
+    }
+    vector<Element*> cut;
+    //if not cut
+    cut_tree(vec[0],&cut,m);
+}
+
+void cut_tree(Cluster* cluster,vector<Element*> *vec,int m)
+{
+    if(cluster->getSize() <= m)
+        vec->push_back(cluster);
+    else
+    {
+        cut_tree(cluster.getLeft(),vec,m);
+        cut_tree(cluster.getRight(),vec,m);
+
+    }
+}
+
+*/

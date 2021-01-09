@@ -19,7 +19,7 @@ protected:
     int _learningLimit;
     int _m;
 
-    static vector<float> sumVectors(vector<float> first,vector<float> second);
+    vector<vector<float>> calcDistanceMatrix() const;
 public:
     FeatureMapper( int learningLimit  ,int m ,int statsSize);
     void update(vector<float> stats);
@@ -27,7 +27,6 @@ public:
     //getstate
 
 
-    //float calcDistanceMatrix();
 };
 
 
