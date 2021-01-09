@@ -24,7 +24,4 @@ public:
     void insertPacket(string key, float value, Time timestamp) throw();
     void insertPacket(string key, float value, Time timestamp, int lambdaIndex) throw();
     vector<float> getStats(string key) const throw();
-
-
-
 };

@@ -16,10 +16,10 @@ FeatureExtractor::FeatureExtractor(vector<float> lambdas)
 }
 
 /*
- This function extracts the vector stats for a specific packet
- Input: pack - the packet to add :Packet
- Output: The statistics vector :Vector<float>
- */
+This function extracts the vector stats for a specific packet
+Input: pack - the packet to add :Packet
+Output: The statistics vector :Vector<float>
+*/
 vector<float> FeatureExtractor::extractNewFeaturesVector(Packet pack) {
     //update
     string channelKey = this->_channelSize.getStreamKey(pack);
