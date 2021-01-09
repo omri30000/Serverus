@@ -85,7 +85,6 @@ vector<float> IncStatsData::getStats(string key) const throw()
 		{
 			result.push_back(stat);
 		}
-
 	}
 	return result;
 }

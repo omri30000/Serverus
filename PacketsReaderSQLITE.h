@@ -16,7 +16,8 @@ class PacketsReaderSQLITE : public PacketsReader
         static int callbackGetData(void* data, int argc, char** argv, char** azColName);
         static int callbackGetInt(void *data, int argc, char **argv, char **azColName);
 
-    void executeCommand(const char* statement, int (*callback)(void*, int, char**, char**), void* arg);
+        void executeCommand(const char* statement, int (*callback)(void*, int, char**, char**), void* arg);
+        void removeOutgoingPackets();
     
     public:
         PacketsReaderSQLITE(string filePath);
@@ -24,6 +25,6 @@ class PacketsReaderSQLITE : public PacketsReader
            
         Packet getNextPacket();
 
-    int find_next_row();
+        int find_next_row();
 
 };

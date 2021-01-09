@@ -9,6 +9,7 @@ PacketsReaderCSV::PacketsReaderCSV(string filePath):PacketsReader(filePath){
 PacketsReaderCSV::~PacketsReaderCSV()
 {
     this->file.close();
+    this->removeOutgoingPackets();
 }
 
 /*
@@ -50,4 +51,64 @@ Packet PacketsReaderCSV::getNextPacket() {
     }
 
     return Packet(row, 1);
+}
+
+void PacketsReaderCSV::removeOutgoingPackets()
+{
+    
+    // Open FIle pointers 
+    std::fstream fin, fout; 
+  
+    // Open the existing file 
+    fin.open(this->_dbFilePath, std::fstream::in); 
+  
+    // Create a new file to store the non-deleted data 
+    fout.open("temp.csv", std::fstream::out); 
+  
+    int i;
+    string line, word, hostMac; 
+    vector<string> row; 
+    
+    hostMac = this->getHostMac();
+
+    // Check if this record exists 
+    // If exists, leave it and 
+    // add all other data to the new file 
+    while (!fin.eof()) { 
+  
+        row.clear(); 
+        getline(fin, line); 
+        std::stringstream s(line); 
+  
+        while (getline(s, word, ',')) { 
+            row.push_back(word); 
+        }
+
+        int row_size = row.size(); 
+  
+        // writing all records, 
+        // except the record to be deleted, 
+        // into the new file 'reportcardnew.csv' 
+        // using fout pointer 
+        if (row[0].find(hostMac) == string::npos) {
+            if (!fin.eof()) { 
+                for (i = 0; i < row_size - 1; i++) { 
+                    fout << row[i] << ","; 
+                } 
+                fout << row[row_size - 1] << "\n"; 
+            } 
+        }
+        if (fin.eof()) 
+            break; 
+    }
+
+    // Close the pointers 
+    fin.close(); 
+    fout.close(); 
+  
+    // removing the existing file 
+    remove(this->_dbFilePath.c_str()); 
+  
+    // renaming the new file with the existing file name 
+    rename("temp.csv", this->_dbFilePath.c_str());
 }

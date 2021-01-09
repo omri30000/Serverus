@@ -9,6 +9,7 @@ class PacketsReaderCSV : public PacketsReader
     protected:
         std::fstream file;
 
+        void removeOutgoingPackets();
     public:
         PacketsReaderCSV(string filePath);
         ~PacketsReaderCSV();
