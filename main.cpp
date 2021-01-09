@@ -3,6 +3,7 @@
 #include "PacketsReaderSQLITE.h"
 #include "FeatureExtractor.h"
 
+/*
 void readPackets(string filePath);
 
 void readPackets(string filePath)
@@ -10,7 +11,7 @@ void readPackets(string filePath)
 
     PacketsReader* pPackets = nullptr;
     //if .sqlite
-    /*
+
 
     pPackets = new PacketsReaderSQLITE();
     try{
@@ -25,9 +26,9 @@ void readPackets(string filePath)
     }
 
     return 0;
-     */
-}
 
+}
+*/
 
 int main()
 {
@@ -56,8 +57,6 @@ int main()
         for (float v : stats)
         {
             std::cout << v<<',';
-            //std::cout<<"Fuck my life";
-            //printf("%d",v);
         }
         std::cout<<std::endl;
     }
