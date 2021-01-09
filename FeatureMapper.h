@@ -25,7 +25,7 @@ protected:
     vector<vector<float>> calcCurrentDistanceMatrix(vector<Cluster*> vec);
     pair<pair<int,int>,int> findMin(vector<vector<float>> vec);
 
-    void cutDendogram(Cluster* cluster,vector<Cluster*> *vec) const;
+    void cutDendrogram(Cluster* cluster,vector<Cluster*> *vec) const;
 
 
 public:

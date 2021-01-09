@@ -89,7 +89,7 @@ pair<vector<vector<int>>, int> FeatureMapper::cluster() {
     }
 
     vector<Cluster*> cut;
-    cutDendogram(vec[0],&cut);
+    cutDendrogram(vec[0],&cut);
     //
 
     vector<vector<int>> mapping;
@@ -100,20 +100,20 @@ pair<vector<vector<int>>, int> FeatureMapper::cluster() {
     return {mapping,vec.size()};
 }
 /*
- This function cuts a Dendogram to clusters which each cluster's size lower than m
+ This function cuts a Dendrogram to clusters which each cluster's size lower than m
  Input:
-        cluster - pointer to the head od Dendogram (biggest cluster) :Cluster*
+        cluster - pointer to the head od Dendrogram (biggest cluster) :Cluster*
         vec - pointer to vector where there all chosen clusters will be added : vector<Cluster*>
 Output:None
  */
-void FeatureMapper::cutDendogram(Cluster* cluster,vector<Cluster*> *vec) const
+void FeatureMapper::cutDendrogram(Cluster* cluster,vector<Cluster*> *vec) const
 {
     if(cluster->getSize() <= _m)
         vec->push_back(cluster);
     else
     {
-        cutDendogram(cluster->getLeft(),vec);
-        cutDendogram(cluster->getRight(),vec);
+        cutDendrogram(cluster->getLeft(),vec);
+        cutDendrogram(cluster->getRight(),vec);
     }
 }
 /*
