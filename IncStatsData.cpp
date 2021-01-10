@@ -23,11 +23,21 @@ void IncStatsData::registerStream(string uniqueKey) throw()
 	std::vector<IncStats> vec;
 	for (size_t i = 0; i <5; i++)
 	{
-		vec.push_back(IncStats(lambdas[i]));
+		vec.push_back(IncStats(uniqueKey, lambdas[i]));
 	}
 	this->_incStatsCollection.insert({ uniqueKey,vec });
-
 }
+
+/*
+
+*/
+void IncStatsData::registerRelatedStreams(string firstUniqueKey, string secondUniqueKey) throw()
+{
+	float lambda = 0; // FIX
+
+	firstIncStats = 
+}
+
 /*
  This function inserts a new packet to the stream in all lambdas
  Input: key - the stream key : std::string

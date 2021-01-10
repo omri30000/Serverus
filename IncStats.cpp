@@ -4,8 +4,9 @@
 
 
 //--------constructor----------
-IncStats::IncStats(float decayFactor)
+IncStats::IncStats(string id, float decayFactor)
 {
+    this-> _identifier = id;
     this->_decayFactor = decayFactor;
     this->_weight = 0;
     this->_linearSum = 0;
@@ -105,8 +106,18 @@ void IncStats::insertElement(Time timeStamp) {
     insertElement(timeStamp - this->_timeStamp,timeStamp);
 }
 
+/*
 
+*/
+string IncStats::getIdentifier() const
+{
+    return this->_identifier;
+}
 
+/*
 
-
-
+*/
+float IncStats::getDecayFactor() const
+{
+    return this->_decayFactor;
+}

@@ -4,9 +4,11 @@
 
 #include <vector>
 #include <pair>
+#include <string>
 
 using std::vector;
 using std::pair;
+using std::string;
 
 class RelativeIncStats
 {
@@ -14,11 +16,12 @@ protected:
     IncStats* _firstIncStats;
     IncStats* _secondIncStats;
 
+    float _firstCurrResidule;
+    float _secondCurrResidule;
+
     float _sumResiduleProducts; //sum of residule products (A-uA)(B-uB)
     float _currWeight;
-
-    
-    //void performDecay(Time timeStamp);
+    Time _currTimeStamp; //last time stamp of the sum of residule products
 
     //stats
     float calcCovariance();
@@ -26,7 +29,9 @@ protected:
 
 public:
     RelativeIncStats(IncStats* first, IncStats* second);
-
+    RelativeIncStats(IncStats* first, IncStats* second, Time initialTime);
+    void update(string iSID, float newValue, Time timeStamp);
+    void performDecay(Time timeStamp, int index);
 };
 
 

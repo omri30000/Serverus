@@ -10,7 +10,7 @@ using std::vector;
 class IncStats
 {
 protected:
-    int _instanceNumber;
+    string _identifier;
     float _weight;
     float _linearSum;
     float _squaredSum;
@@ -19,8 +19,16 @@ protected:
     float _mean;
     float _standardDeviation;
 
-    void performDecay(Time timeStamp);
+    
 
+public:
+    IncStats(string id, float decayFactor);
+    void insertElement(Time timeStamp);
+    void insertElement(float element, Time timeStamp);
+    vector<float> getStats() const;
+    
+    void performDecay(Time timeStamp);
+    
     //1D stats
     float calcMean();
     float calcStandardDeviation();
@@ -29,12 +37,9 @@ protected:
     float calcMagnitude(IncStats other);
     float calcRadius(IncStats other);
 
-public:
-    IncStats(float decayFactor);
-    void insertElement(Time timeStamp);
-    void insertElement(float element, Time timeStamp);
-    vector<float> getStats() const;
-
+    //getters&setters
+    string getIdentifier() const;
+    float getDecayFactor() const;
 };
 
 

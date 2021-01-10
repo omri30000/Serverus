@@ -26,9 +26,10 @@ public:
     Time();
     Time(int year, int month, int day, int hour, int minute, int second, int miliSec);
     Time(string time);
+    Time(const Time& other); // copy constructor
 
     int operator-(const Time other)const;
-
+    
     string toString();
 
     //Set & Get

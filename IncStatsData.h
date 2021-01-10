@@ -19,7 +19,10 @@ protected:
 
 public:
     IncStatsData();
+    
     void registerStream(string uniqueKey) throw();
+    void registerRelatedStreams(string firstUniqueKey, string secondUniqueKey) throw();
+
     void insertPacket(string key, Time timestamp) throw();
     void insertPacket(string key, float value, Time timestamp) throw();
     void insertPacket(string key, float value, Time timestamp, int lambdaIndex) throw();

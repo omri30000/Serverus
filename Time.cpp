@@ -1,7 +1,19 @@
 #include "Time.h"
+
 Time::Time()
 {
     this->_isFirst = true;
+}
+
+Time::Time(const Time& other)
+{
+    this->_year = other.getYear();
+    this->_month = other.getMonth();
+    this->_day = other.getDay();
+    this->_hour = other.getHour();
+    this->_minute = other.getMinute();
+    this->_second = other.getSecond();
+    this->_miliSec = other.getMiliSec();
 }
 
 Time::Time(int year, int month, int day, int hour, int minute, int second, int miliSec)
