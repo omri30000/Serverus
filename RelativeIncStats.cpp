@@ -1,5 +1,7 @@
 #include "RelativeIncStats.h"
 
+#include <math.h>
+
 RelativeIncStats::RelativeIncStats(IncStats* first, IncStats* second)
 {
     this->_firstIncStats = first;
@@ -35,7 +37,7 @@ void RelativeIncStats::update(string iSID, float newValue, Time timeStamp)
 
     if (iSID == this->_firstIncStats->getIdentifier())
     {
-        this->_secondIncStats.performDecay();
+        this->_secondIncStats->performDecay(timeStamp);
         this->performDecay(timeStamp, 1);
 
         this->_firstCurrResidule = (newValue - this->_firstIncStats->calcMean());
@@ -47,7 +49,7 @@ void RelativeIncStats::update(string iSID, float newValue, Time timeStamp)
     }
     else if (iSID == this->_secondIncStats->getIdentifier())
     {
-        this->_firstIncStats.performDecay();
+        this->_firstIncStats->performDecay(timeStamp);
         this->performDecay(timeStamp, 2);
 
         this->_secondCurrResidule = (newValue - this->_secondIncStats->calcMean());
@@ -79,13 +81,13 @@ void RelativeIncStats::performDecay(Time timeStamp, int index)
         switch (index)
         {
             case 1:
-                factor = pow(2, -1 *(this->_firstIncStats.getDecayFactor() * timeDifference));
+                factor = pow(2, -1 *(this->_firstIncStats->getDecayFactor() * timeDifference));
                 this->_sumResiduleProducts *= factor;
                 this->_currWeight *= factor;
                 this->_firstCurrResidule *= factor;
                 break;
             case 2:
-                factor = pow(2, -1 *(this->_secondIncStats.getDecayFactor() * timeDifference));
+                factor = pow(2, -1 *(this->_secondIncStats->getDecayFactor() * timeDifference));
                 this->_sumResiduleProducts *= factor;
                 this->_currWeight *= factor;
                 this->_secondCurrResidule *= factor;

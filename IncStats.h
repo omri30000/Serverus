@@ -19,7 +19,6 @@ protected:
     float _mean;
     float _standardDeviation;
 
-    
 
 public:
     IncStats(string id, float decayFactor);

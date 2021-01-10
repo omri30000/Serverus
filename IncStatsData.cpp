@@ -35,7 +35,7 @@ void IncStatsData::registerRelatedStreams(string firstUniqueKey, string secondUn
 {
 	float lambda = 0; // FIX
 
-	firstIncStats = 
+	//firstIncStats = 
 }
 
 /*

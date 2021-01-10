@@ -3,7 +3,6 @@
 #include "IncStats.h"
 
 #include <vector>
-#include <pair>
 #include <string>
 
 using std::vector;

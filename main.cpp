@@ -34,7 +34,7 @@ int main()
 {
 
     std::cout << "Hello, World!" << std::endl;
-    PacketsReaderSQLITE reader =  PacketsReaderSQLITE("../db_file.sqlite");
+    PacketsReaderSQLITE reader =  PacketsReaderSQLITE("db_file.sqlite");
     FeatureExtractor extractor;
 
     while(true)
@@ -56,7 +56,7 @@ int main()
         vector<float> stats = extractor.extractNewFeaturesVector(pack);
         for (float v : stats)
         {
-            std::cout << v<<',';
+            std::cout << v <<',';
         }
         std::cout<<std::endl;
     }

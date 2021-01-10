@@ -99,7 +99,7 @@ output: the radius of those 2 Inc stats
 */
 float IncStats::calcRadius(IncStats other)
 {
-    return sqrt(pow(this->calcStandardDeviation(), 4) + pow(other.calcStandardDeviation(), 4))
+    return sqrt(pow(this->calcStandardDeviation(), 4) + pow(other.calcStandardDeviation(), 4));
 }
 
 void IncStats::insertElement(Time timeStamp) {
