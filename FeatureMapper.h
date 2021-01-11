@@ -5,8 +5,9 @@
 #pragma  once
 
 #include <vector>
-#include <pair>
+#include <utility>
 #include "Cluster.h"
+
 using std::vector;
 using std::pair;
 
@@ -22,9 +23,12 @@ protected:
     int _cursor;
 
     vector<vector<float>> _correlation;
-    vector<vector<float>> calcInitialDistanceMatrix() const;
+    vector<vector<float>> _initialDistanceMatrix;
+
+    void calcInitialDistanceMatrix();
     vector<vector<float>> calcCurrentDistanceMatrix(vector<Cluster*> vec);
-    pair<pair<int,int>,int> findMin(vector<vector<float>> vec);
+
+    static pair<pair<int,int>,float> findMin(vector<vector<float>> vec);
 
     void cutDendrogram(Cluster* cluster,vector<Cluster*> *vec) const;
 
@@ -33,6 +37,7 @@ public:
     FeatureMapper(int learningLimit, int m,int statsSize);
     void update(vector<float> stats);
     pair<vector<vector<int>>, int> cluster();
+    bool getState() const;
 
 
 };

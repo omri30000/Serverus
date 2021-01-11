@@ -11,20 +11,18 @@ using std::vector;
 class Cluster {
 protected:
 
-    int _height;
+    float _height;
 
     vector<int> _ids; //for saving time only - can be ignored
 
     Cluster* _right;
     Cluster* _left;
 
-    vector<vector<float>>* _distance; // between all initial data points
-
 
 
 public:
-    Cluster(Cluster* left, Cluster * right, float height,vector<vector<float>>* distance); //for merging between 2 clusters
-    Cluster(int id,vector<vector<float>>* distance); // for initial data type
+    Cluster(Cluster* left, Cluster * right, float height); //for merging between 2 clusters
+    Cluster(int id); // for initial data type
 
     ~Cluster();
     int getSize() const;
@@ -32,7 +30,7 @@ public:
     Cluster * getLeft() const;
     Cluster * getRight() const;
     vector<int> getIds() const;
-    float calcDistance(Cluster other) const;
+    float calcDistance(const Cluster& other,const vector<vector<float>>& distanceMatrix) const;
 };
 
 

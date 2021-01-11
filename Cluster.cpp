@@ -3,9 +3,13 @@
 //
 
 #include "Cluster.h"
+#include <algorithm>
 
+
+using std::min;
+using std::max;
 //Constructors
-Cluster::Cluster(Cluster *left, Cluster *right, float height, vector<vector<float>> * distance)
+Cluster::Cluster(Cluster *left, Cluster *right, float height)
 {
     this->_height = height;
 
@@ -15,12 +19,11 @@ Cluster::Cluster(Cluster *left, Cluster *right, float height, vector<vector<floa
     this->_ids = left->_ids;
     this->_ids.insert(this->_ids.end(),right->_ids.begin(),right->_ids.end());
 
-    this->_distance = distance;
 
 
 }
 
-Cluster::Cluster(int id,vector<vector<float>>* distance)
+Cluster::Cluster(int id)
 {
     this->_ids.push_back(id);
 
@@ -28,8 +31,6 @@ Cluster::Cluster(int id,vector<vector<float>>* distance)
 
     this->_right = nullptr;
     this->_left = nullptr;
-
-    this->_distance = distance;
 }
 //Destructor - also free from memory
 Cluster::~Cluster()
@@ -44,12 +45,16 @@ Cluster::~Cluster()
  Input:other : The second cluster : Cluster
  Output: The distance : float
  */
-float Cluster::calcDistance(Cluster other) const {
+float Cluster::calcDistance(const Cluster& other,const vector<vector<float>>& distanceMatrix) const {
     //distance between 2 clusters calculated with average
     float sum = 0;
-    for (int i = 0; i < other.getSize(); ++i) {
+    for (int i = 0; i < this->getSize(); ++i) {
+        int this_id = this->_ids[i];
         for (int j = 0; j < other.getSize(); ++j) {
-            sum += (*(this->_distance))[i][j];
+            int other_id = other._ids[j];
+            //using min() and max() because distance matrix is a triangle
+            sum += distanceMatrix[std::min(this_id,other_id)][std::max(this_id,other_id)];
+
         }
     }
     return sum / (float) (this->getSize() * other.getSize());

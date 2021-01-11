@@ -3,15 +3,15 @@
 //
 
 #include "FeatureMapper.h"
-#include <math.h>
+#include <cmath>
 
 //constructor
 FeatureMapper::FeatureMapper(int learningLimit, int m,int statsSize) {
 
-    this->_learningLimit;
+    this->_cursor = 0;
+    this->_learningLimit = learningLimit;
     this->_m = m;
 
-    this->_cursor;
     this->_c = vector<float>(statsSize,0);
     this->_cr = vector<float>(statsSize,0);
     this->_crs = vector<float>(statsSize,0);
@@ -51,18 +51,38 @@ This function calculates the initial Distance matrix - between points and not cl
 Input: None
 Output: distance matrix : vector<vector<float>>
  */
-vector<vector<float>> FeatureMapper::calcInitialDistanceMatrix() const {
-    vector<vector<float>> res;
-    for (int i = 0; i < this->_correlation.size(); ++i)
+void FeatureMapper::calcInitialDistanceMatrix()  {
+
+    for (int i = 1; i < this->_correlation.size(); ++i)
     {
-        res.push_back(vector<float>(_correlation.size(),0));
-        for (int j = 0; j < _correlation.size(); ++j)
+        this->_initialDistanceMatrix.push_back(vector<float>(i,0));
+        for (int j = 0; j < i; ++j)
         {
-            res[i][j] = 1 - _correlation[i][j]/(sqrt(_crs[i]) * sqrt(_crs[j]));
+            _initialDistanceMatrix[i][j] = 1 - _correlation[i][j]/(sqrt(_crs[i]) * sqrt(_crs[j]));
         }
     }
+}
+
+/*
+  This function calculates and returns the current distance matrix
+  Input: vec : The current clusters : vector<Cluster*>
+  Output:The current distance matrix : vector<vector<float>>
+ */
+vector<vector<float>> FeatureMapper::calcCurrentDistanceMatrix(vector<Cluster*> vec)
+{
+    vector<vector<float>> res;
+    for (int i = 1; i < this->_correlation.size(); ++i)
+    {
+        res.push_back(vector<float>(i,0));
+        for (int j = 0; j < i; ++j)
+        {
+            res[i][j] = vec[i]->calcDistance(*vec[j],_initialDistanceMatrix);
+        }
+    }
+
     return res;
 }
+
 /*
  This function performs clustering on the data
  Input: None
@@ -71,19 +91,18 @@ vector<vector<float>> FeatureMapper::calcInitialDistanceMatrix() const {
 pair<vector<vector<int>>, int> FeatureMapper::cluster() {
 
     vector<Cluster*> vec;
-    vector<vector<float>> initDistance= this->calcInitialDistanceMatrix();
 
     for (int i = 0; i < _c.size(); ++i) {
-        vec.push_back(new Cluster(i,&initDistance));
+        vec.push_back(new Cluster(i));
     }
-
-    vector<vector<float>> currDistance = this->calcCurrentDistanceMatrix(vec);
+    calcInitialDistanceMatrix();
+    vector<vector<float>> currDistance = _initialDistanceMatrix;
     while(vec.size()!= 1)
     {
         currDistance = this->calcCurrentDistanceMatrix(vec);
         pair<pair<int,int>,int> indexes = FeatureMapper::findMin(currDistance);
 
-        vec[indexes.first.first] = new Cluster(vec[indexes.first.first],vec[indexes.first.second],indexes.second,&initDistance);
+        vec[indexes.first.first] = new Cluster(vec[indexes.first.first],vec[indexes.first.second],indexes.second);
         vec.erase(vec.begin() + indexes.first.second);
         //find two minimum - merge
     }
@@ -116,30 +135,15 @@ void FeatureMapper::cutDendrogram(Cluster* cluster,vector<Cluster*> *vec) const
         cutDendrogram(cluster->getRight(),vec);
     }
 }
-/*
-  This function calculates and returns the current distance metrix
-  Input: vec : The current clusters : vector<Cluster*>
-  Output:The current distance matrix : vector<vector<float>>
- */
-vector<vector<float>> FeatureMapper::calcCurrentDistanceMatrix(vector<Cluster*> vec)
-{
-    vector<vector<float>> res;
-    for (int i = 0; i < vec.size(); ++i) {
-        res.push_back(vector<float>());
-        for (int j = 0; j < i+1; ++j) {
-            res[i][j] = vec[i]->calcDistance(*vec[j]);
-        }
-    }
-    return res;
-}
+
 /*
  This function finds the 2 closest clusters indexes and their distance value
  Input: vec: The distance matrix
- Output: The indexes of the closest clusters, their distance : std::pair<std::pair<int,int>,int>
+ Output: The indexes of the closest clusters, their distance : std::pair<std::pair<int,int>,float>
  */
-pair<pair<int, int>, int> FeatureMapper::findMin(vector<vector<float>> vec) {
+pair<pair<int, int>, float> FeatureMapper::findMin(vector<vector<float>> vec) {
     pair<int,int> p = {-1,-1};
-    int min = -1;
+    float min = -1;
     for (int i = 0; i < vec.size(); ++i) {
         for (int j = 0; j < vec[i].size(); ++j) {
             if( min == -1 || vec[i][j] < min )
@@ -150,4 +154,12 @@ pair<pair<int, int>, int> FeatureMapper::findMin(vector<vector<float>> vec) {
         }
     }
     return {p,min};
+}
+/*
+    This function returns if the first part of the FeatureMapper Process has been finished
+    Input:None
+    Output:If the first part has been finished : bool
+ */
+bool FeatureMapper::getState() const{
+    return _cursor >=_learningLimit;
 }
