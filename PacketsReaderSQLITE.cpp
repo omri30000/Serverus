@@ -3,7 +3,7 @@
 PacketsReaderSQLITE::PacketsReaderSQLITE(string filePath) :PacketsReader(filePath)
 {
     int status = 0;
-    this->_cursor =0;
+    this->_cursor =2;
 
     status = sqlite3_open(filePath.c_str(), &this->_dbFile); 
   

@@ -30,18 +30,18 @@ FeatureMapper::FeatureMapper(int learningLimit, int m,int statsSize) {
 void FeatureMapper::update(vector<float> stats) 
 {
     this->_cursor++;
-    vector<float> _crTime(stats.size(),0);
+    vector<float> crTime(stats.size(),0);
     for (int i = 0; i < stats.size(); i++) {
 
         this->_c[i] += stats[i];
-        _crTime[i] = stats[i] - this->_c[i] / (float) _cursor;
-        this->_cr[i] += _crTime[i];
-        this->_crs[i] += _crTime[i] * _crTime[i]; //pow(val,2)
+        crTime[i] = stats[i] - this->_c[i] / (float) _cursor;
+        this->_cr[i] += crTime[i];
+        this->_crs[i] += crTime[i] * crTime[i]; //pow(val,2)
     }
     //updates Correlation matrix
     for (int i = 0; i < stats.size(); i++) {
         for (int j = 0; j <stats.size() ; j++) {
-            this->_correlation[i][j] += _crTime[i] * _crTime[j];
+            this->_correlation[i][j] += crTime[i] * crTime[j];
         }
     }
 }
@@ -51,16 +51,18 @@ This function calculates the initial Distance matrix - between points and not cl
 Input: None
 Output: distance matrix : vector<vector<float>>
  */
-void FeatureMapper::calcInitialDistanceMatrix()  {
+void FeatureMapper::calcInitialDistanceMatrix()
+{
 
-    for (int i = 1; i < this->_correlation.size(); ++i)
+    for (int i = 0; i < this->_correlation.size(); ++i)
     {
-        this->_initialDistanceMatrix.push_back(vector<float>(i,0));
-        for (int j = 0; j < i; ++j)
+        this->_initialDistanceMatrix.push_back(vector<float>(i+1,0));
+        for (int j = 0; j < i+1; ++j)
         {
-            _initialDistanceMatrix[i][j] = 1 - _correlation[i][j]/(sqrt(_crs[i]) * sqrt(_crs[j]));
+            _initialDistanceMatrix[i][j] = 1 - (_correlation[i][j]/(sqrt(_crs[i]) * sqrt(_crs[j])));
         }
     }
+    int a = 0;
 }
 
 /*
@@ -71,10 +73,10 @@ void FeatureMapper::calcInitialDistanceMatrix()  {
 vector<vector<float>> FeatureMapper::calcCurrentDistanceMatrix(vector<Cluster*> vec)
 {
     vector<vector<float>> res;
-    for (int i = 1; i < this->_correlation.size(); ++i)
+    for (int i = 0; i < vec.size(); ++i)
     {
-        res.push_back(vector<float>(i,0));
-        for (int j = 0; j < i; ++j)
+        res.push_back(vector<float>(i+1,0));
+        for (int j = 0; j < i+1; ++j)
         {
             res[i][j] = vec[i]->calcDistance(*vec[j],_initialDistanceMatrix);
         }
@@ -96,14 +98,15 @@ pair<vector<vector<int>>, int> FeatureMapper::cluster() {
         vec.push_back(new Cluster(i));
     }
     calcInitialDistanceMatrix();
-    vector<vector<float>> currDistance = _initialDistanceMatrix;
+    vector<vector<float>> currDistance;// = _initialDistanceMatrix;
     while(vec.size()!= 1)
     {
         currDistance = this->calcCurrentDistanceMatrix(vec);
         pair<pair<int,int>,int> indexes = FeatureMapper::findMin(currDistance);
-
-        vec[indexes.first.first] = new Cluster(vec[indexes.first.first],vec[indexes.first.second],indexes.second);
-        vec.erase(vec.begin() + indexes.first.second);
+        //if(indexes.second == -1)
+        //    continue;
+        vec[indexes.first.second] = new Cluster(vec[indexes.first.first],vec[indexes.first.second],indexes.second);
+        vec.erase(vec.begin() + indexes.first.first);
         //find two minimum - merge
     }
 
@@ -113,10 +116,10 @@ pair<vector<vector<int>>, int> FeatureMapper::cluster() {
 
     vector<vector<int>> mapping;
     for (int i = 0; i < cut.size(); ++i) {
-        mapping.push_back(cut[0]->getIds());
+        mapping.push_back(cut[i]->getIds());
     }
 
-    return {mapping,vec.size()};
+    return {mapping,mapping.size()};
 }
 /*
  This function cuts a Dendrogram to clusters which each cluster's size lower than m
@@ -145,14 +148,20 @@ pair<pair<int, int>, float> FeatureMapper::findMin(vector<vector<float>> vec) {
     pair<int,int> p = {-1,-1};
     float min = -1;
     for (int i = 0; i < vec.size(); ++i) {
-        for (int j = 0; j < vec[i].size(); ++j) {
-            if( min == -1 || vec[i][j] < min )
+        for (int j = 0; j < vec[i].size(); ++j)
+        {
+            if( i == j)
+                continue;
+            if(vec[i][j] > 0 && (min == -1  || vec[i][j] < min ))
             {
                 min = vec[i][j];
                 p ={i,j};
             }
         }
     }
+    if( p == std::pair<int,int>(-1,-1))
+        p = p;
+
     return {p,min};
 }
 /*

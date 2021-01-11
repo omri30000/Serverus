@@ -4,7 +4,8 @@
 
 #include "Cluster.h"
 #include <algorithm>
-
+#include <math.h>
+#include <iostream>
 
 using std::min;
 using std::max;
@@ -53,11 +54,14 @@ float Cluster::calcDistance(const Cluster& other,const vector<vector<float>>& di
         for (int j = 0; j < other.getSize(); ++j) {
             int other_id = other._ids[j];
             //using min() and max() because distance matrix is a triangle
-            sum += distanceMatrix[std::min(this_id,other_id)][std::max(this_id,other_id)];
+            sum += distanceMatrix[std::max(this_id,other_id)][std::min(this_id,other_id)];
 
         }
     }
-    return sum / (float) (this->getSize() * other.getSize());
+    float res = sum / (float) (this->getSize() * other.getSize());
+    if(std::isnan(res))
+        std::cout<<"fuck";
+    return res;
 }
 
 

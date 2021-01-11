@@ -1,7 +1,13 @@
 #include <iostream>
 #include <string>
+
+
 #include "PacketsReaderSQLITE.h"
 #include "FeatureExtractor.h"
+#include "FeatureMapper.h"
+#include "Parser.h"
+
+#include <cstdlib>
 
 /*
 void readPackets(string filePath);
@@ -32,10 +38,12 @@ void readPackets(string filePath)
 
 int main()
 {
-
+    srand (time(NULL));
     std::cout << "Hello, World!" << std::endl;
-    PacketsReaderSQLITE reader =  PacketsReaderSQLITE("db_file.sqlite");
+    PacketsReaderSQLITE reader =  PacketsReaderSQLITE("../db_file.sqlite");
     FeatureExtractor extractor;
+    FeatureMapper mapper(300,15,45);
+    //Parser* p
 
     while(true)
     {
@@ -54,11 +62,19 @@ int main()
 
         std::cout<<pack.toString();
         vector<float> stats = extractor.extractNewFeaturesVector(pack);
-        for (float v : stats)
+        std::cout<<stats.size();
+        for (int i = 0; i <stats.size() ; ++i)
         {
-            std::cout << v <<',';
+            //if(stats[i] == 0)
+            //    stats[i] = (float)( rand() % 1000)/1000;
+            std::cout << stats[i] <<',';
         }
+
         std::cout<<std::endl;
+        if(!mapper.getState())
+            mapper.update(stats);
+        else
+            std::cout<<mapper.cluster().second;
     }
 
     return 0;

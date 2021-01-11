@@ -61,7 +61,7 @@ Output: differece in millisecond : int
 */
 int Time::operator-(const Time other) const
 {
-    if(other._isFirst)
+    if(other._isFirst || this->_isFirst)
         return 0;
 
     int diff = 0;
