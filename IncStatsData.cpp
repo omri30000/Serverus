@@ -9,10 +9,10 @@ IncStatsData::IncStatsData()
 /*
  This function adds a new stream to the Category
  Input: uniqueKey -  The Stream Key : std::string
- Output: None
+ Output: pointer to the vector of inc stats (with different lambda in each index)
  Throw: std::exception
  */
-void IncStatsData::registerStream(string uniqueKey) throw()
+vector<IncStats>* IncStatsData::registerStream(string uniqueKey) throw()
 {
 	//check if not exists
 	if(this->isStreamExists(uniqueKey))
@@ -20,22 +20,55 @@ void IncStatsData::registerStream(string uniqueKey) throw()
 	
 
 	const float lambdas[] = { 0.01,0.1,1,3,5 };
-	std::vector<IncStats> vec;
-	for (size_t i = 0; i <5; i++)
+	std::vector<IncStats>* vec;
+
+	if (this->_incStatsCollection.find(uniqueKey) != this->_incStatsCollection.end())
 	{
-		vec.push_back(IncStats(uniqueKey, lambdas[i]));
+		vec = this->_incStatsCollection.at(uniqueKey);
 	}
-	this->_incStatsCollection.insert({ uniqueKey,vec });
+	else
+	{
+		for (size_t i = 0; i < 5; i++)
+		{
+			vec->push_back(IncStats(uniqueKey, lambdas[i]));
+		}
+		this->_incStatsCollection.insert({ uniqueKey,*vec });
+	}
+
+	return vec;
 }
 
 /*
 
 */
-void IncStatsData::registerRelatedStreams(string firstUniqueKey, string secondUniqueKey) throw()
+vector<RelativeIncStats>* IncStatsData::registerRelatedStreams(string firstUniqueKey, string secondUniqueKey) throw()
 {
-	float lambda = 0; // FIX
+	const float lambdas[] = { 0.01,0.1,1,3,5 };
+	vector<RelativeIncStats>* vec;
+	std::vector<IncStats>* pFirstGroup;
+	std::vector<IncStats>* pSecondGroup;
 
-	//firstIncStats = 
+	for (int i = 0 ; i < 5 ; i++)
+	{
+		(*pFirstGroup).push_back(this->registerStream(firstUniqueKey));
+		(*pSecondGroup).push_back(this->registerStream(secondUniqueKey));
+
+		RelativeIncStats r(&((*pFirstGroup)[i])), &((*pSecondGroup)[i]));
+
+		RelativeIncStats* pTemp = this->getExistLink(r);
+
+		if (pTemp == nullptr)
+		{
+			this->_relIncStatsCollection.push_back(r);
+			vec->push_back(r);
+		}
+		else
+		{
+			vec->push_back(*pTemp);
+		}	
+	}
+
+	return vec;
 }
 
 /*
@@ -116,6 +149,26 @@ bool IncStatsData::isStreamExists(string key) const
 	}
 	return true;
 }
+
+/*
+The function will check if an instance of RelativeIncStats that refers to 2 specific streams is already exist, and return it if exist
+input: instance of RelativeIncStats
+output: a pointer to the exist link or nullptr
+*/
+RelativeIncStats* IncStatsData::getExistLink(RelativeIncStats& link)
+{
+	for (int i = 0; i< this->_relIncStatsCollection.size(); i++)
+	{
+		if(link == this->_relIncStatsCollection[i])
+		{
+			return &(this->_relIncStatsCollection[i]);
+		}
+	}
+
+	return nullptr;
+}
+
+
 
 
 void IncStatsData::insertPacket(string key, Time timestamp) throw()
