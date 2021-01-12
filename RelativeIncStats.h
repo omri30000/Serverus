@@ -12,8 +12,8 @@ using std::string;
 class RelativeIncStats
 {
 protected:
-    IncStats* _firstIncStats;
-    IncStats* _secondIncStats;
+    vector<IncStats*> _firstIncStats;
+    vector<IncStats*> _secondIncStats;
 
     float _firstCurrResidule;
     float _secondCurrResidule;
@@ -31,6 +31,9 @@ public:
     RelativeIncStats(IncStats* first, IncStats* second, Time initialTime);
     void update(string iSID, float newValue, Time timeStamp);
     void performDecay(Time timeStamp, int index);
+    vector<float> getRelativeStats();
+
+    bool operator==(const RelativeIncStats& other) const;
 };
 
 

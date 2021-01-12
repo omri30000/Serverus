@@ -45,14 +45,11 @@ vector<RelativeIncStats>* IncStatsData::registerRelatedStreams(string firstUniqu
 {
 	const float lambdas[] = { 0.01,0.1,1,3,5 };
 	vector<RelativeIncStats>* vec;
-	std::vector<IncStats>* pFirstGroup;
-	std::vector<IncStats>* pSecondGroup;
+	std::vector<IncStats>* pFirstGroup = this->registerStream(firstUniqueKey);
+	std::vector<IncStats>* pSecondGroup = this->registerStream(secondUniqueKey);
 
 	for (int i = 0 ; i < 5 ; i++)
 	{
-		(*pFirstGroup).push_back(this->registerStream(firstUniqueKey));
-		(*pSecondGroup).push_back(this->registerStream(secondUniqueKey));
-
 		RelativeIncStats r(&((*pFirstGroup)[i])), &((*pSecondGroup)[i]));
 
 		RelativeIncStats* pTemp = this->getExistLink(r);
@@ -85,7 +82,7 @@ void IncStatsData::insertPacket(string key, float value, Time timestamp) throw()
     if (!this->isStreamExists(key))
         this->registerStream(key);
 
-    for (int i = 0; i <this->_incStatsCollection[key].size() ; ++i)
+    for (int i = 0; i <this->_incStatsCollection[key].size() ; ++i) // for each lambda
     {
         this->insertPacket(key,value,timestamp,i);
     }
@@ -110,12 +107,26 @@ void IncStatsData::insertPacket(string key, float value, Time timestamp, int lam
 }
 
 /*
+
+*/
+void IncStatsData::insertPacket(string key, Time timestamp) throw()
+{
+    if (!this->isStreamExists(key))
+        this->registerStream(key);
+
+    for (int i = 0; i <this->_incStatsCollection[key].size() ; ++i)
+    {
+        this->_incStatsCollection[key][i].insertElement(timestamp);
+    }
+}
+
+/*
  This function gets stats of a specific stream of all lambdas
  Input: key - The stream key : std::string
  Output: all stats of stream : vector<float>
  Throw: std::exception
  */
-vector<float> IncStatsData::getStats(string key) const throw()
+vector<float> IncStatsData::getStatsOneDimension(string key) const throw()
 {
 	if (!this->isStreamExists(key))
         throw std::runtime_error("Stream doesn't exist");
@@ -127,6 +138,37 @@ vector<float> IncStatsData::getStats(string key) const throw()
 		for (float stat : val)
 		{
 			result.push_back(stat);
+		}
+	}
+	return result;
+}
+
+/*
+ This function gets stats of two specific streams of all lambdas
+ Input: key - The stream key : std::string
+ Output: all stats of stream : vector<float>
+ Throw: std::exception
+*/
+vector<float> IncStatsData::getStatsTwoDimensions(string firstKey, string secondKey) const throw()
+{
+	RelativeIncStats r(firstKey, secondKey);
+	RelativeIncStats* pTemp = this->getExistLink(r);
+	
+	if (pTemp == nullptr)
+	{
+		throw std::exception("the required link is not exist");
+	}
+	
+	vector<float> result;
+	for (size_t i = 0; i < this->_relIncStatsCollection.size() ; i++)
+	{
+		if (*pTemp == this->_relIncStatsCollection[i])
+		{
+			vector<float> val = this->_relIncStatsCollection[i].getRelativeStats();
+			for (float stat : val)
+			{
+				result.push_back(stat);
+			}
 		}
 	}
 	return result;
@@ -166,18 +208,4 @@ RelativeIncStats* IncStatsData::getExistLink(RelativeIncStats& link)
 	}
 
 	return nullptr;
-}
-
-
-
-
-void IncStatsData::insertPacket(string key, Time timestamp) throw()
-{
-    if (!this->isStreamExists(key))
-        this->registerStream(key);
-
-    for (int i = 0; i <this->_incStatsCollection[key].size() ; ++i)
-    {
-        this->_incStatsCollection[key][i].insertElement(timestamp);
-    }
 }

@@ -18,9 +18,10 @@ class IncStatsData
 {
 protected:
     map<string,vector<IncStats>> _incStatsCollection;
-    vector<RelativeIncStats> _relIncStatsCollection; //Relative Inc Stats
+    map<string,vector<RelativeIncStats>> _relIncStatsCollection; //lambda based vector, key is in format: "key1+key2"
 
     bool isStreamExists(string key) const;
+    bool isRelStreamExists(string firstKey, string secondKey) const;
     RelativeIncStats* getExistLink(RelativeIncStats& link);
 
 public:
@@ -32,5 +33,7 @@ public:
     void insertPacket(string key, Time timestamp) throw();
     void insertPacket(string key, float value, Time timestamp) throw();
     void insertPacket(string key, float value, Time timestamp, int lambdaIndex) throw();
-    vector<float> getStats(string key) const throw();
+    vector<float> getStatsOneDimension(string key) const throw();
+    vector<float> getStatsTwoDimensions(string firstKey, string secondKey) const throw();
+    void updateStatsTwoDimensions(string firstKey, Time timestamp, float value) const throw();
 };

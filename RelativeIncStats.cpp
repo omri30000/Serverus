@@ -101,6 +101,23 @@ void RelativeIncStats::performDecay(Time timeStamp, int index)
 }
 
 /*
+The method will put the 2D statistics of the inc stats into a vector of statistics
+input: none
+output: vector of statistics
+*/
+vector<float> RelativeIncStats::getRelativeStats()
+{
+    vector<float> vec;
+
+    vec.push_back(this->calcCovariance());
+    vec.push_back(this->calcCorrelationCoefficiency());
+    vec.push_back(this->_firstIncStats->calcRadius(this->_secondIncStats));
+    vec.push_back(this->_firstIncStats->calcMagnitude(this->_secondIncStats));
+
+    return vec;
+}
+
+/*
 the function will calculate the covariance approximation of the 2 inc stats of the class
 input: none
 output: covariance approximation
@@ -120,4 +137,12 @@ float RelativeIncStats::calcCorrelationCoefficiency()
     float stdProduct = this->_firstIncStats->calcStandardDeviation() * this->_secondIncStats->calcStandardDeviation();
 
     return (stdProduct != 0) ? this->calcCovariance() / stdProduct : 0; 
+}
+
+/*
+
+*/
+bool RelativeIncStats::operator==(const RelativeIncStats& other) const
+{
+    return (*(this->_firstIncStats) == (*other._firstIncStats)) && (*(this->_secondIncStats) == *(other._secondIncStats));
 }

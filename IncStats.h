@@ -39,6 +39,9 @@ public:
     //getters&setters
     string getIdentifier() const;
     float getDecayFactor() const;
+
+
+    bool operator==(const IncStats& other) const;
 };
 
 

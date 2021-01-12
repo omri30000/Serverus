@@ -32,13 +32,14 @@ vector<float> FeatureExtractor::extractNewFeaturesVector(Packet pack) {
     vector<float> res;
     vector<float> tmp;
 
-    tmp = this->_channelSize.getStats(channelKey);
+    tmp = this->_channelSize.getStatsOneDimension(channelKey); // returns 15 featurs
     res.insert(res.begin(), tmp.begin(), tmp.end());
 
-    tmp = this->_channelJitter.getStats(channelKey);
+    //Jitter --> 1D only
+    tmp = this->_channelJitter.getStatsOneDimension(channelKey); // returns 15 featurs
     res.insert(res.begin(), tmp.begin(), tmp.end());
 
-    tmp = this->_socketSize.getStats(socketKey);
+    tmp = this->_socketSize.getStatsOneDimension(socketKey); // returns 15 featurs
     res.insert(res.begin(), tmp.begin(), tmp.end());
 
     return res;
