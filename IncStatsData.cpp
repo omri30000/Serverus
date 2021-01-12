@@ -83,10 +83,14 @@ vector<RelativeIncStats>* IncStatsData::registerRelatedStreams(string firstUniqu
  Output: None
  Throw: std::exception
  */
-void IncStatsData::insertPacket(string firstKey, float value, Time timestamp) throw()
+void IncStatsData::insertPacket(string firstKey, string secondKey, float value, Time timestamp) throw()
 {
-    if (!this->isStreamExists(firstKey))
-        this->registerStream(firstKey);
+    vector<RelativeIncStats>* vec = this->registerRelatedStreams(firstKey, secondKey);
+		
+	for (int i = 0 ; i < vec->size(); i++)
+	{
+		(*vec)[i].update(firstKey, value, timestamp);
+	}
 
     for (int i = 0; i <this->_incStatsCollection[firstKey].size() ; ++i) // for each lambda
     {
