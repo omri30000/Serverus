@@ -31,6 +31,8 @@ vector<float> FeatureExtractor::extractNewFeaturesVector(Packet pack) {
     this->_channelJitter.insertPacket(channelKey,  pack.getArrivalTime());
     this->_socketSize.insertPacket(socketKey, socketForeignKey, (float)pack.getLength(), pack.getArrivalTime());
 
+    std::cout << "Inserted successfuly" << std::endl;
+
     vector<float> res;
     vector<float> tmp;
 

@@ -21,23 +21,24 @@ vector<IncStats>* IncStatsData::registerStream(string uniqueKey) throw()
 	//create 5 new incStats for the new stream
 
 	const float lambdas[] = { 0.01,0.1,1,3,5 };
-	std::vector<IncStats>* vec;
+	std::vector<IncStats> vec;
 
 	//#TODO: check if this if statement is neccessary (might be not)
 	if (this->_incStatsCollection.find(uniqueKey) != this->_incStatsCollection.end())
 	{
-		vec = &this->_incStatsCollection.at(uniqueKey);
+		vec = this->_incStatsCollection.at(uniqueKey);
 	}
 	else
 	{
 		for (size_t i = 0; i < 5; i++)
-		{
-			vec->push_back(IncStats(uniqueKey, lambdas[i]));
+		{std::cout << "Inserted successfuly" << i << std::endl;
+			vec.push_back(IncStats(uniqueKey, lambdas[i]));
 		}
-		this->_incStatsCollection.insert({ uniqueKey,*vec });
+		
+		this->_incStatsCollection.insert({ uniqueKey,vec });
 	}
 
-	return vec;
+	return &vec;
 }
 
 /*
@@ -51,10 +52,10 @@ vector<RelativeIncStats>* IncStatsData::registerRelatedStreams(string firstUniqu
 {
 	const float lambdas[] = { 0.01,0.1,1,3,5 };
 	string uniqueKey = firstUniqueKey + '+' + secondUniqueKey;
-	vector<RelativeIncStats>* vec;
+	vector<RelativeIncStats> vec;
 	std::vector<IncStats>* pFirstGroup = this->registerStream(firstUniqueKey);
 	std::vector<IncStats>* pSecondGroup = this->registerStream(secondUniqueKey);
-
+	
 	if (this->isRelStreamExists(uniqueKey))
 	{
 		return &this->_relIncStatsCollection.at(uniqueKey);
@@ -67,12 +68,12 @@ vector<RelativeIncStats>* IncStatsData::registerRelatedStreams(string firstUniqu
 		IncStats* pFirst = &((*pFirstGroup)[i]);
 		IncStats* pSecond = &((*pSecondGroup)[i]);
 
-		vec->push_back(RelativeIncStats(pFirst, pSecond));
+		vec.push_back(RelativeIncStats(pFirst, pSecond));
 	}
 	
-	this->_relIncStatsCollection.insert({uniqueKey, *vec});
+	this->_relIncStatsCollection.insert({uniqueKey, vec});
 
-	return vec;
+	return &vec;
 }
 
 /*
@@ -86,7 +87,7 @@ vector<RelativeIncStats>* IncStatsData::registerRelatedStreams(string firstUniqu
 void IncStatsData::insertPacket(string firstKey, string secondKey, float value, Time timestamp) throw()
 {
     vector<RelativeIncStats>* vec = this->registerRelatedStreams(firstKey, secondKey);
-		
+	
 	for (int i = 0 ; i < vec->size(); i++)
 	{
 		(*vec)[i].update(firstKey, value, timestamp);
@@ -96,6 +97,8 @@ void IncStatsData::insertPacket(string firstKey, string secondKey, float value, 
     {
         this->insertPacket(firstKey,value,timestamp,i);
     }
+
+	
 }
 
 /*
