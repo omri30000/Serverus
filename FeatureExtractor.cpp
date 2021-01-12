@@ -24,6 +24,8 @@ vector<float> FeatureExtractor::extractNewFeaturesVector(Packet pack) {
     //update
     string channelKey = this->_channelSize.getStreamKey(pack);
     string socketKey = this->_socketSize.getStreamKey(pack);
+    string channelForeignKey = this->_channelSize.getForeignKey(pack);
+    string socketForeignKey = this->_socketSize.getForeignKey(pack);
 
     this->_channelSize.insertPacket(channelKey, pack.getLength(), pack.getArrivalTime());
     this->_channelJitter.insertPacket(channelKey,  pack.getArrivalTime());

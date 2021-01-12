@@ -21,7 +21,7 @@ protected:
     map<string,vector<RelativeIncStats>> _relIncStatsCollection; //lambda based vector, key is in format: "key1+key2"
 
     bool isStreamExists(string key) const;
-    bool isRelStreamExists(string firstKey, string secondKey) const;
+    bool isRelStreamExists(string key) const;
     RelativeIncStats* getExistLink(RelativeIncStats& link);
 
 public:

@@ -16,12 +16,14 @@ vector<IncStats>* IncStatsData::registerStream(string uniqueKey) throw()
 {
 	//check if not exists
 	if(this->isStreamExists(uniqueKey))
-		throw std::runtime_error("Stream already exists");
+		return this->_incStatsCollection.at(uniqueKey);
 	
+	//create 5 new incStats for the new stream
 
 	const float lambdas[] = { 0.01,0.1,1,3,5 };
 	std::vector<IncStats>* vec;
 
+	//#TODO: check if this if statement is neccessary (might be not)
 	if (this->_incStatsCollection.find(uniqueKey) != this->_incStatsCollection.end())
 	{
 		vec = this->_incStatsCollection.at(uniqueKey);
@@ -39,31 +41,36 @@ vector<IncStats>* IncStatsData::registerStream(string uniqueKey) throw()
 }
 
 /*
-
+This function adds a new relative Inc stats to the main vector
+Input: the keys of the two streams
+Output: pointer to the vector of relative inc stats (with different lambda in each index)
+Throw: std::exception
 */
+
 vector<RelativeIncStats>* IncStatsData::registerRelatedStreams(string firstUniqueKey, string secondUniqueKey) throw()
 {
 	const float lambdas[] = { 0.01,0.1,1,3,5 };
+	string uniqueKey = firstUniqueKey + '+' + secondUniqueKey;
 	vector<RelativeIncStats>* vec;
 	std::vector<IncStats>* pFirstGroup = this->registerStream(firstUniqueKey);
 	std::vector<IncStats>* pSecondGroup = this->registerStream(secondUniqueKey);
 
-	for (int i = 0 ; i < 5 ; i++)
+	if (this->isRelStreamExists(uniqueKey))
 	{
-		RelativeIncStats r(&((*pFirstGroup)[i])), &((*pSecondGroup)[i]));
-
-		RelativeIncStats* pTemp = this->getExistLink(r);
-
-		if (pTemp == nullptr)
-		{
-			this->_relIncStatsCollection.push_back(r);
-			vec->push_back(r);
-		}
-		else
-		{
-			vec->push_back(*pTemp);
-		}	
+		return this->_relIncStatsCollection.at(uniqueKey);
 	}
+
+	//create new relative incremental statistics
+
+	for (int i = 0 ; i < 5 ; i++) // for each lambda
+	{
+		IncStats* pFirst = &((*pFirstGroup)[i]);
+		IncStats* pSecond = &((*pSecondGroup)[i]);
+
+		vec->push_back(RelativeIncStats(pFirst, pSecond)));
+	}
+	
+	this->_relIncStatsCollection.insert({uniqueKey, *vec});
 
 	return vec;
 }
@@ -76,17 +83,15 @@ vector<RelativeIncStats>* IncStatsData::registerRelatedStreams(string firstUniqu
  Output: None
  Throw: std::exception
  */
-void IncStatsData::insertPacket(string key, float value, Time timestamp) throw()
+void IncStatsData::insertPacket(string firstKey, float value, Time timestamp) throw()
 {
+    if (!this->isStreamExists(firstKey))
+        this->registerStream(firstKey);
 
-    if (!this->isStreamExists(key))
-        this->registerStream(key);
-
-    for (int i = 0; i <this->_incStatsCollection[key].size() ; ++i) // for each lambda
+    for (int i = 0; i <this->_incStatsCollection[firstKey].size() ; ++i) // for each lambda
     {
-        this->insertPacket(key,value,timestamp,i);
+        this->insertPacket(firstKey,value,timestamp,i);
     }
-
 }
 
 /*
@@ -151,26 +156,22 @@ vector<float> IncStatsData::getStatsOneDimension(string key) const throw()
 */
 vector<float> IncStatsData::getStatsTwoDimensions(string firstKey, string secondKey) const throw()
 {
-	RelativeIncStats r(firstKey, secondKey);
-	RelativeIncStats* pTemp = this->getExistLink(r);
-	
-	if (pTemp == nullptr)
+	string uniqueKey = firstKey + '+' + secondKey;
+	if (!this->isRelStreamExists(uniqueKey))
 	{
-		throw std::exception("the required link is not exist");
+		throw std::exception("the required link doesn't exist");
 	}
 	
 	vector<float> result;
-	for (size_t i = 0; i < this->_relIncStatsCollection.size() ; i++)
+	for (size_t i = 0; i < this->_relIncStatsCollection.at(key).size() ; i++)
 	{
-		if (*pTemp == this->_relIncStatsCollection[i])
+		vector<float> val = this->_relIncStatsCollection.at(key)[i].getRelativeStats();
+		for (float stat : val)
 		{
-			vector<float> val = this->_relIncStatsCollection[i].getRelativeStats();
-			for (float stat : val)
-			{
-				result.push_back(stat);
-			}
+			result.push_back(stat);
 		}
 	}
+
 	return result;
 }
 
@@ -184,6 +185,19 @@ bool IncStatsData::isStreamExists(string key) const
 	try
 	{
 		this->_incStatsCollection.at(key);
+	}
+	catch (std::exception e)
+	{
+		return false;
+	}
+	return true;
+}
+
+bool IncStatsData::isRelStreamExists(string key) const
+{
+	try
+	{
+		this->_relIncStatsCollection.at(key);
 	}
 	catch (std::exception e)
 	{
