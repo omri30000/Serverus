@@ -12,8 +12,8 @@ using std::string;
 class RelativeIncStats
 {
 protected:
-    vector<IncStats*> _firstIncStats;
-    vector<IncStats*> _secondIncStats;
+    IncStats* _firstIncStats;
+    IncStats* _secondIncStats;
 
     float _firstCurrResidule;
     float _secondCurrResidule;
@@ -23,17 +23,17 @@ protected:
     Time _currTimeStamp; //last time stamp of the sum of residule products
 
     //stats
-    float calcCovariance();
-    float calcCorrelationCoefficiency();
+    float calcCovariance() const;
+    float calcCorrelationCoefficiency() const;
 
 public:
     RelativeIncStats(IncStats* first, IncStats* second);
     RelativeIncStats(IncStats* first, IncStats* second, Time initialTime);
     void update(string iSID, float newValue, Time timeStamp);
     void performDecay(Time timeStamp, int index);
-    vector<float> getRelativeStats();
+    vector<float> getRelativeStats() const;
 
-    bool operator==(const RelativeIncStats& other) const;
+    //bool operator==(const RelativeIncStats& other) const;
 };
 
 

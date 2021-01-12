@@ -105,14 +105,14 @@ The method will put the 2D statistics of the inc stats into a vector of statisti
 input: none
 output: vector of statistics
 */
-vector<float> RelativeIncStats::getRelativeStats()
+vector<float> RelativeIncStats::getRelativeStats() const
 {
     vector<float> vec;
 
     vec.push_back(this->calcCovariance());
     vec.push_back(this->calcCorrelationCoefficiency());
-    vec.push_back(this->_firstIncStats->calcRadius(this->_secondIncStats));
-    vec.push_back(this->_firstIncStats->calcMagnitude(this->_secondIncStats));
+    vec.push_back(this->_firstIncStats->calcRadius(*this->_secondIncStats));
+    vec.push_back(this->_firstIncStats->calcMagnitude(*this->_secondIncStats));
 
     return vec;
 }
@@ -122,7 +122,7 @@ the function will calculate the covariance approximation of the 2 inc stats of t
 input: none
 output: covariance approximation
 */
-float RelativeIncStats::calcCovariance()
+float RelativeIncStats::calcCovariance() const
 {
     return this->_sumResiduleProducts / this->_currWeight;
 }
@@ -132,7 +132,7 @@ the function will calculate the correlation coefficiency of 2 inc stats
 input: none
 output: correlation coefficiency of 2 inc stats 
 */
-float RelativeIncStats::calcCorrelationCoefficiency()
+float RelativeIncStats::calcCorrelationCoefficiency() const
 {
     float stdProduct = this->_firstIncStats->calcStandardDeviation() * this->_secondIncStats->calcStandardDeviation();
 
@@ -141,8 +141,8 @@ float RelativeIncStats::calcCorrelationCoefficiency()
 
 /*
 
-*/
+*//*
 bool RelativeIncStats::operator==(const RelativeIncStats& other) const
 {
     return (*(this->_firstIncStats) == (*other._firstIncStats)) && (*(this->_secondIncStats) == *(other._secondIncStats));
-}
+}*/

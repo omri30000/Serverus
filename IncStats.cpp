@@ -76,7 +76,8 @@ float IncStats::calcMean()
 This function calculates Standard Deviation value
 Input:None
 Output:None / Standard Deviation value : float
-*/float IncStats::calcStandardDeviation()
+*/
+float IncStats::calcStandardDeviation()
 {
     this->_standardDeviation = sqrt(abs(this->_squaredSum / this->_weight - pow(this->_linearSum / this->_weight, 2)));
     return this->_standardDeviation;

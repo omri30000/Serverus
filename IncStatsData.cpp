@@ -16,7 +16,7 @@ vector<IncStats>* IncStatsData::registerStream(string uniqueKey) throw()
 {
 	//check if not exists
 	if(this->isStreamExists(uniqueKey))
-		return this->_incStatsCollection.at(uniqueKey);
+		return &this->_incStatsCollection.at(uniqueKey);
 	
 	//create 5 new incStats for the new stream
 
@@ -26,7 +26,7 @@ vector<IncStats>* IncStatsData::registerStream(string uniqueKey) throw()
 	//#TODO: check if this if statement is neccessary (might be not)
 	if (this->_incStatsCollection.find(uniqueKey) != this->_incStatsCollection.end())
 	{
-		vec = this->_incStatsCollection.at(uniqueKey);
+		vec = &this->_incStatsCollection.at(uniqueKey);
 	}
 	else
 	{
@@ -57,7 +57,7 @@ vector<RelativeIncStats>* IncStatsData::registerRelatedStreams(string firstUniqu
 
 	if (this->isRelStreamExists(uniqueKey))
 	{
-		return this->_relIncStatsCollection.at(uniqueKey);
+		return &this->_relIncStatsCollection.at(uniqueKey);
 	}
 
 	//create new relative incremental statistics
@@ -67,7 +67,7 @@ vector<RelativeIncStats>* IncStatsData::registerRelatedStreams(string firstUniqu
 		IncStats* pFirst = &((*pFirstGroup)[i]);
 		IncStats* pSecond = &((*pSecondGroup)[i]);
 
-		vec->push_back(RelativeIncStats(pFirst, pSecond)));
+		vec->push_back(RelativeIncStats(pFirst, pSecond));
 	}
 	
 	this->_relIncStatsCollection.insert({uniqueKey, *vec});
@@ -163,13 +163,13 @@ vector<float> IncStatsData::getStatsTwoDimensions(string firstKey, string second
 	string uniqueKey = firstKey + '+' + secondKey;
 	if (!this->isRelStreamExists(uniqueKey))
 	{
-		throw std::exception("the required link doesn't exist");
+		throw std::runtime_error("the required link doesn't exist");
 	}
 	
 	vector<float> result;
-	for (size_t i = 0; i < this->_relIncStatsCollection.at(key).size() ; i++)
+	for (size_t i = 0; i < this->_relIncStatsCollection.at(uniqueKey).size() ; i++)
 	{
-		vector<float> val = this->_relIncStatsCollection.at(key)[i].getRelativeStats();
+		vector<float> val = this->_relIncStatsCollection.at(uniqueKey)[i].getRelativeStats();
 		for (float stat : val)
 		{
 			result.push_back(stat);
@@ -208,22 +208,4 @@ bool IncStatsData::isRelStreamExists(string key) const
 		return false;
 	}
 	return true;
-}
-
-/*
-The function will check if an instance of RelativeIncStats that refers to 2 specific streams is already exist, and return it if exist
-input: instance of RelativeIncStats
-output: a pointer to the exist link or nullptr
-*/
-RelativeIncStats* IncStatsData::getExistLink(RelativeIncStats& link)
-{
-	for (int i = 0; i< this->_relIncStatsCollection.size(); i++)
-	{
-		if(link == this->_relIncStatsCollection[i])
-		{
-			return &(this->_relIncStatsCollection[i]);
-		}
-	}
-
-	return nullptr;
 }

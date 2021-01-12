@@ -22,7 +22,6 @@ protected:
 
     bool isStreamExists(string key) const;
     bool isRelStreamExists(string key) const;
-    RelativeIncStats* getExistLink(RelativeIncStats& link);
 
 public:
     IncStatsData();
@@ -31,7 +30,7 @@ public:
     vector<RelativeIncStats>* registerRelatedStreams(string firstUniqueKey, string secondUniqueKey) throw();
 
     void insertPacket(string key, Time timestamp) throw();
-    void insertPacket(string key, float value, Time timestamp) throw();
+    void insertPacket(string firstKey, string secondKey, float value, Time timestamp) throw();
     void insertPacket(string key, float value, Time timestamp, int lambdaIndex) throw();
     vector<float> getStatsOneDimension(string key) const throw();
     vector<float> getStatsTwoDimensions(string firstKey, string secondKey) const throw();
