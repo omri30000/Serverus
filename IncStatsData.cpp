@@ -8,6 +8,7 @@ IncStatsData::IncStatsData()
 
 IncStatsData::~IncStatsData()
 {
+	std::cout << "dtor";
 	for (map<string,vector<IncStats*>>::iterator it = this->_incStatsCollection.begin(); it != this->_incStatsCollection.end(); it++)
 	{
 		for (int i = 0; i < 5; i++)
@@ -31,7 +32,7 @@ IncStatsData::~IncStatsData()
  Output: pointer to the vector of inc stats (with different lambda in each index)
  Throw: std::exception
  */
-vector<IncStats> IncStatsData::registerStream(string uniqueKey) throw()
+vector<IncStats*> IncStatsData::registerStream(string uniqueKey) throw()
 {
 	//check if not exists
 	if(this->isStreamExists(uniqueKey))
@@ -40,7 +41,7 @@ vector<IncStats> IncStatsData::registerStream(string uniqueKey) throw()
 	//create 5 new incStats for the new stream
 
 	const float lambdas[] = { 0.01,0.1,1,3,5 };
-	std::vector<IncStats> vec;
+	std::vector<IncStats*> vec;
 
 	//#TODO: check if this if statement is neccessary (might be not)
 	if (this->_incStatsCollection.find(uniqueKey) != this->_incStatsCollection.end())
@@ -50,8 +51,8 @@ vector<IncStats> IncStatsData::registerStream(string uniqueKey) throw()
 	else
 	{
 		for (size_t i = 0; i < 5; i++)
-		{std::cout << "Inserted successfuly" << i << std::endl;
-			vec.push_back(IncStats(uniqueKey, lambdas[i]));
+		{
+			vec.push_back(new IncStats(uniqueKey, lambdas[i]));
 		}
 		
 		this->_incStatsCollection.insert({ uniqueKey,vec });
@@ -67,13 +68,13 @@ Output: pointer to the vector of relative inc stats (with different lambda in ea
 Throw: std::exception
 */
 
-vector<RelativeIncStats> IncStatsData::registerRelatedStreams(string firstUniqueKey, string secondUniqueKey) throw()
+vector<RelativeIncStats*> IncStatsData::registerRelatedStreams(string firstUniqueKey, string secondUniqueKey) throw()
 {
 	const float lambdas[] = { 0.01,0.1,1,3,5 };
 	string uniqueKey = firstUniqueKey + '+' + secondUniqueKey;
-	vector<RelativeIncStats> vec;
-	std::vector<IncStats> pFirstGroup = this->registerStream(firstUniqueKey);
-	std::vector<IncStats> pSecondGroup = this->registerStream(secondUniqueKey);
+	vector<RelativeIncStats*> vec;
+	std::vector<IncStats*> firstGroup = this->registerStream(firstUniqueKey);
+	std::vector<IncStats*> secondGroup = this->registerStream(secondUniqueKey);
 	
 	if (this->isRelStreamExists(uniqueKey))
 	{
@@ -84,11 +85,7 @@ vector<RelativeIncStats> IncStatsData::registerRelatedStreams(string firstUnique
 
 	for (int i = 0 ; i < 5 ; i++) // for each lambda
 	{
-		
-		IncStats pFirst = pFirstGroup[i];
-		IncStats pSecond = pSecondGroup[i];
-		
-		vec.push_back(RelativeIncStats(&pFirst, &pSecond));
+		vec.push_back(new RelativeIncStats(firstGroup[i], secondGroup[i]));
 	}
 	
 	this->_relIncStatsCollection.insert({uniqueKey, vec});
@@ -106,12 +103,11 @@ vector<RelativeIncStats> IncStatsData::registerRelatedStreams(string firstUnique
  */
 void IncStatsData::insertPacket(string firstKey, string secondKey, float value, Time timestamp) throw()
 {
-    vector<RelativeIncStats> vec = this->registerRelatedStreams(firstKey, secondKey);
+    vector<RelativeIncStats*> vec = this->registerRelatedStreams(firstKey, secondKey);
 	
 	for (int i = 0 ; i < vec.size(); i++)
 	{
-		std::cout << "aaa" << std::endl;
-		vec[i].update(firstKey, value, timestamp);
+		vec[i]->update(firstKey, value, timestamp);
 	}
 
     for (int i = 0; i <this->_incStatsCollection[firstKey].size() ; ++i) // for each lambda
@@ -134,7 +130,7 @@ void IncStatsData::insertPacket(string key, float value, Time timestamp, int lam
 	if (!this->isStreamExists(key))
         throw std::runtime_error("Stream doesn't exist");
 
-	this->_incStatsCollection[key][lambdaIndex].insertElement(value, timestamp);
+	this->_incStatsCollection[key][lambdaIndex]->insertElement(value, timestamp);
 }
 
 /*
@@ -145,9 +141,9 @@ void IncStatsData::insertPacket(string key, Time timestamp) throw()
     if (!this->isStreamExists(key))
         this->registerStream(key);
 
-    for (int i = 0; i <this->_incStatsCollection[key].size() ; ++i)
+    for (int i = 0; i < this->_incStatsCollection[key].size() ; ++i)
     {
-        this->_incStatsCollection[key][i].insertElement(timestamp);
+        this->_incStatsCollection[key][i]->insertElement(timestamp);
     }
 }
 
@@ -165,7 +161,7 @@ vector<float> IncStatsData::getStatsOneDimension(string key) const throw()
 	vector<float> result;
 	for (size_t i = 0; i < this->_incStatsCollection.at(key).size() ; i++)
 	{
-		vector<float> val = this->_incStatsCollection.at(key)[i].getStats();
+		vector<float> val = this->_incStatsCollection.at(key)[i]->getStats();
 		for (float stat : val)
 		{
 			result.push_back(stat);
@@ -191,7 +187,7 @@ vector<float> IncStatsData::getStatsTwoDimensions(string firstKey, string second
 	vector<float> result;
 	for (size_t i = 0; i < this->_relIncStatsCollection.at(uniqueKey).size() ; i++)
 	{
-		vector<float> val = this->_relIncStatsCollection.at(uniqueKey)[i].getRelativeStats();
+		vector<float> val = this->_relIncStatsCollection.at(uniqueKey)[i]->getRelativeStats();
 		for (float stat : val)
 		{
 			result.push_back(stat);

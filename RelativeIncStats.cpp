@@ -34,7 +34,7 @@ output: none
 void RelativeIncStats::update(string iSID, float newValue, Time timeStamp)
 {
     float newResidule = 0, temp = 0;
-    std::cout << iSID << std::endl;
+    
     if (iSID == this->_firstIncStats->getIdentifier())
     {
         this->_secondIncStats->performDecay(timeStamp);

@@ -30,8 +30,10 @@ Packet PacketsReaderSQLITE::getNextPacket() {
 
     executeCommand(sqlStatement.c_str(), callbackGetData, &record);
 
-    if(record.size() ==0)
+    if(record.size() == 0)
+    {
         throw std::exception();
+    }
 
     this->_cursor = this->find_next_row();
 
@@ -94,7 +96,7 @@ int PacketsReaderSQLITE::find_next_row() {
 
     executeCommand(sqlStatement.c_str(), callbackGetInt, &val);
 
-   return  val != -1 ? val : this->_cursor+1;
+    return  val != -1 ? val : this->_cursor+1;
 }
 
 

@@ -32,33 +32,36 @@ void readPackets(string filePath)
 
 int main()
 {
-
     std::cout << "Hello, World!" << std::endl;
     PacketsReaderSQLITE reader =  PacketsReaderSQLITE("db_file.sqlite");
     FeatureExtractor extractor;
+    
+    bool cond = true;
+    Packet pack;
+        
+    try {
+        pack = reader.getNextPacket();
+    }
+    catch (std::exception &e) {
+        cond = false;
+    }
 
-    while(true)
+    while(cond)
     {
-        Packet pack;
-        bool cond = false;
-        while(!cond)
-        {
-            try {
-                pack = reader.getNextPacket();
-                cond = true;
-            }
-            catch (std::exception &e) {
-                cond = false;
-            }
-        }
-
-        std::cout<<pack.toString();
+        std::cout << pack.toString();
         vector<float> stats = extractor.extractNewFeaturesVector(pack);
         for (float v : stats)
         {
-            std::cout << v <<',';
+            std::cout << v << ',';
         }
         std::cout<<std::endl;
+        
+        try {
+            pack = reader.getNextPacket();
+        }
+        catch (std::exception &e) {
+            cond = false;
+        }
     }
 
     return 0;
