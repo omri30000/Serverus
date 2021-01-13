@@ -8,7 +8,7 @@ IncStatsData::IncStatsData()
 
 IncStatsData::~IncStatsData()
 {
-	std::cout << "dtor";
+	//std::cout << "INCS dtor" << std::endl;
 	for (map<string,vector<IncStats*>>::iterator it = this->_incStatsCollection.begin(); it != this->_incStatsCollection.end(); it++)
 	{
 		for (int i = 0; i < 5; i++)
@@ -24,6 +24,8 @@ IncStatsData::~IncStatsData()
 			delete it->second[i];
 		}
 	}
+
+	//std::cout << "finsh INCS dtor" << std::endl;
 }
 
 /*

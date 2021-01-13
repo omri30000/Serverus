@@ -16,11 +16,14 @@ PacketsReaderSQLITE::PacketsReaderSQLITE(string filePath) :PacketsReader(filePat
 
     this->_cursor = this->find_next_row();
 }
+
 //destructor
 PacketsReaderSQLITE::~PacketsReaderSQLITE()
 {
+    //std::cout << "PRSQLITE DETOR" << std::endl;
     this->removeOutgoingPackets();
     sqlite3_close(this->_dbFile);
+    //std::cout << "finsh PRSQLITE DETOR" << std::endl;
 }
 
 
@@ -55,7 +58,7 @@ int PacketsReaderSQLITE::callbackGetData(void* data, int argc, char** argv, char
 }
 
 /*
-The function will return ont int value,
+The function will return single int value,
 input: the char** base arr, number of fields, strings with the data, strings with fields names
 */
 int PacketsReaderSQLITE::callbackGetInt(void* data, int argc, char** argv, char** azColName)
@@ -81,6 +84,7 @@ void PacketsReaderSQLITE::executeCommand(const char* statement, int (*callback)(
 
 	if (res != SQLITE_OK)
 	{
+        std::cout << "err " << res << std::endl;
 		throw std::exception();
 	}
 }
@@ -102,11 +106,13 @@ int PacketsReaderSQLITE::find_next_row() {
 
 void PacketsReaderSQLITE::removeOutgoingPackets()
 {
+    
     string hostMac, sqlStatement;
     int val = -1;
-
+    
     hostMac = this->getHostMac();
+    
     sqlStatement = "DELETE FROM packets WHERE source_mac = \'" + hostMac + "\'";
-
+    
     executeCommand(sqlStatement.c_str(), callbackGetInt, &val);
 }
