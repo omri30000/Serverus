@@ -17,17 +17,17 @@ using std::pair;
 class IncStatsData
 {
 protected:
-    map<string,vector<IncStats>> _incStatsCollection;
-    map<string,vector<RelativeIncStats>> _relIncStatsCollection; //lambda based vector, key is in format: "key1+key2"
+    map<string,vector<IncStats*>> _incStatsCollection;
+    map<string,vector<RelativeIncStats*>> _relIncStatsCollection; //lambda based vector, key is in format: "key1+key2"
 
     bool isStreamExists(string key) const;
     bool isRelStreamExists(string key) const;
 
 public:
     IncStatsData();
-    
-    vector<IncStats>* registerStream(string uniqueKey) throw();
-    vector<RelativeIncStats>* registerRelatedStreams(string firstUniqueKey, string secondUniqueKey) throw();
+    ~IncStatsData();
+    vector<IncStats> registerStream(string uniqueKey) throw();
+    vector<RelativeIncStats> registerRelatedStreams(string firstUniqueKey, string secondUniqueKey) throw();
 
     void insertPacket(string key, Time timestamp) throw();
     void insertPacket(string firstKey, string secondKey, float value, Time timestamp) throw();

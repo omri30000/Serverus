@@ -34,7 +34,7 @@ output: none
 void RelativeIncStats::update(string iSID, float newValue, Time timeStamp)
 {
     float newResidule = 0, temp = 0;
-
+    std::cout << iSID << std::endl;
     if (iSID == this->_firstIncStats->getIdentifier())
     {
         this->_secondIncStats->performDecay(timeStamp);
@@ -68,7 +68,7 @@ void RelativeIncStats::update(string iSID, float newValue, Time timeStamp)
 This function processes the decay function
 Input: 
         * timeStamp : The time of the instance : Time
-        * index : determine which incStats shold be changed (1/2) : int
+        * index : determine which incStats shold be used (1/2) : int
 Output:None
 */
 void RelativeIncStats::performDecay(Time timeStamp, int index)

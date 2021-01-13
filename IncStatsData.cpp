@@ -6,17 +6,36 @@ IncStatsData::IncStatsData()
 
 }
 
+IncStatsData::~IncStatsData()
+{
+	for (map<string,vector<IncStats*>>::iterator it = this->_incStatsCollection.begin(); it != this->_incStatsCollection.end(); it++)
+	{
+		for (int i = 0; i < 5; i++)
+		{
+			delete it->second[i];
+		}
+	}
+
+	for (map<string,vector<RelativeIncStats*>>::iterator it = this->_relIncStatsCollection.begin(); it != this->_relIncStatsCollection.end(); it++)
+	{
+		for (int i = 0; i < 5; i++)
+		{
+			delete it->second[i];
+		}
+	}
+}
+
 /*
  This function adds a new stream to the Category
  Input: uniqueKey -  The Stream Key : std::string
  Output: pointer to the vector of inc stats (with different lambda in each index)
  Throw: std::exception
  */
-vector<IncStats>* IncStatsData::registerStream(string uniqueKey) throw()
+vector<IncStats> IncStatsData::registerStream(string uniqueKey) throw()
 {
 	//check if not exists
 	if(this->isStreamExists(uniqueKey))
-		return &this->_incStatsCollection.at(uniqueKey);
+		return this->_incStatsCollection.at(uniqueKey);
 	
 	//create 5 new incStats for the new stream
 
@@ -38,7 +57,7 @@ vector<IncStats>* IncStatsData::registerStream(string uniqueKey) throw()
 		this->_incStatsCollection.insert({ uniqueKey,vec });
 	}
 
-	return &vec;
+	return vec;
 }
 
 /*
@@ -48,32 +67,33 @@ Output: pointer to the vector of relative inc stats (with different lambda in ea
 Throw: std::exception
 */
 
-vector<RelativeIncStats>* IncStatsData::registerRelatedStreams(string firstUniqueKey, string secondUniqueKey) throw()
+vector<RelativeIncStats> IncStatsData::registerRelatedStreams(string firstUniqueKey, string secondUniqueKey) throw()
 {
 	const float lambdas[] = { 0.01,0.1,1,3,5 };
 	string uniqueKey = firstUniqueKey + '+' + secondUniqueKey;
 	vector<RelativeIncStats> vec;
-	std::vector<IncStats>* pFirstGroup = this->registerStream(firstUniqueKey);
-	std::vector<IncStats>* pSecondGroup = this->registerStream(secondUniqueKey);
+	std::vector<IncStats> pFirstGroup = this->registerStream(firstUniqueKey);
+	std::vector<IncStats> pSecondGroup = this->registerStream(secondUniqueKey);
 	
 	if (this->isRelStreamExists(uniqueKey))
 	{
-		return &this->_relIncStatsCollection.at(uniqueKey);
+		return this->_relIncStatsCollection.at(uniqueKey);
 	}
 
 	//create new relative incremental statistics
 
 	for (int i = 0 ; i < 5 ; i++) // for each lambda
 	{
-		IncStats* pFirst = &((*pFirstGroup)[i]);
-		IncStats* pSecond = &((*pSecondGroup)[i]);
-
-		vec.push_back(RelativeIncStats(pFirst, pSecond));
+		
+		IncStats pFirst = pFirstGroup[i];
+		IncStats pSecond = pSecondGroup[i];
+		
+		vec.push_back(RelativeIncStats(&pFirst, &pSecond));
 	}
 	
 	this->_relIncStatsCollection.insert({uniqueKey, vec});
 
-	return &vec;
+	return vec;
 }
 
 /*
@@ -86,19 +106,18 @@ vector<RelativeIncStats>* IncStatsData::registerRelatedStreams(string firstUniqu
  */
 void IncStatsData::insertPacket(string firstKey, string secondKey, float value, Time timestamp) throw()
 {
-    vector<RelativeIncStats>* vec = this->registerRelatedStreams(firstKey, secondKey);
+    vector<RelativeIncStats> vec = this->registerRelatedStreams(firstKey, secondKey);
 	
-	for (int i = 0 ; i < vec->size(); i++)
+	for (int i = 0 ; i < vec.size(); i++)
 	{
-		(*vec)[i].update(firstKey, value, timestamp);
+		std::cout << "aaa" << std::endl;
+		vec[i].update(firstKey, value, timestamp);
 	}
 
     for (int i = 0; i <this->_incStatsCollection[firstKey].size() ; ++i) // for each lambda
     {
         this->insertPacket(firstKey,value,timestamp,i);
     }
-
-	
 }
 
 /*
