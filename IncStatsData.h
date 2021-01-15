@@ -22,6 +22,7 @@ protected:
 
     bool isStreamExists(string key) const;
     bool isRelStreamExists(string key) const;
+    void cleanInactiveStats(float limit);
 
 public:
     IncStatsData();

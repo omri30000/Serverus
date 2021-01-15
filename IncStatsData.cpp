@@ -229,3 +229,19 @@ bool IncStatsData::isRelStreamExists(string key) const
 	}
 	return true;
 }
+
+/*
+The function will remove the streams with a weight lower than the limit from their containers.
+This is a thread that will do his job once per X time
+input: the limit, each stream with a weight lower than the limit will be removed
+output: none
+*/
+void cleanInactiveStats(float limit)
+{
+	/*
+	map<string,vector<IncStats*>> _incStatsCollection;
+    map<string,vector<RelativeIncStats*>> _relIncStatsCollection;
+	*/
+
+	
+}
