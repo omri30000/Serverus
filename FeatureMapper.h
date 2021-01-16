@@ -26,7 +26,7 @@ protected:
     vector<vector<float>> _initialDistanceMatrix;
 
     void calcInitialDistanceMatrix();
-    vector<vector<float>> calcCurrentDistanceMatrix(vector<Cluster*> vec);
+    void calcCurrentDistanceMatrix(vector<Cluster*> vec,vector<vector<float>>& distanceMatrix,pair<int,int> changedIndexes);
 
     static pair<pair<int,int>,float> findMin(vector<vector<float>> vec);
 
@@ -36,7 +36,7 @@ protected:
 public:
     FeatureMapper(int learningLimit, int m,int statsSize);
     void update(vector<float> stats);
-    pair<vector<vector<int>>, int> cluster();
+    vector<vector<int>> cluster();
     bool getState() const;
 
 

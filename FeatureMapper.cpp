@@ -4,6 +4,7 @@
 
 #include "FeatureMapper.h"
 #include <cmath>
+#include <iostream>
 
 //constructor
 FeatureMapper::FeatureMapper(int learningLimit, int m,int statsSize) {
@@ -70,19 +71,28 @@ void FeatureMapper::calcInitialDistanceMatrix()
   Input: vec : The current clusters : vector<Cluster*>
   Output:The current distance matrix : vector<vector<float>>
  */
-vector<vector<float>> FeatureMapper::calcCurrentDistanceMatrix(vector<Cluster*> vec)
+void FeatureMapper::calcCurrentDistanceMatrix(vector<Cluster *> vec, vector<vector<float>> &distanceMatrix, pair<int, int> changedIndexes)
 {
     vector<vector<float>> res;
-    for (int i = 0; i < vec.size(); ++i)
+    int second = changedIndexes.second;
+    //change second
+    for (int j = 0; j < second+1; ++j)
     {
-        res.push_back(vector<float>(i+1,0));
-        for (int j = 0; j < i+1; ++j)
+        distanceMatrix[second][j] = vec[second]->calcDistance(*vec[j],_initialDistanceMatrix);
+    }
+    //change all clusters after second
+    for(int i =second+1;i<distanceMatrix.size()-1;i++)
+    {
+
+        distanceMatrix[i][second] = vec[i]->calcDistance(*vec[second],_initialDistanceMatrix);
+        if(i >= changedIndexes.first)
         {
-            res[i][j] = vec[i]->calcDistance(*vec[j],_initialDistanceMatrix);
+            distanceMatrix[i] = distanceMatrix[i+1];
+            distanceMatrix[i].erase(distanceMatrix[i].begin() + changedIndexes.first);
         }
     }
 
-    return res;
+    distanceMatrix.pop_back();
 }
 
 /*
@@ -90,7 +100,7 @@ vector<vector<float>> FeatureMapper::calcCurrentDistanceMatrix(vector<Cluster*> 
  Input: None
  Output: The mapping of the data, k - number of AE/clusters : pair<vector<vector<int>>, int>
  */
-pair<vector<vector<int>>, int> FeatureMapper::cluster() {
+<vector<vector<int>> FeatureMapper::cluster() {
 
     vector<Cluster*> vec;
 
@@ -98,16 +108,16 @@ pair<vector<vector<int>>, int> FeatureMapper::cluster() {
         vec.push_back(new Cluster(i));
     }
     calcInitialDistanceMatrix();
-    vector<vector<float>> currDistance;// = _initialDistanceMatrix;
-    while(vec.size()!= 1)
+    vector<vector<float>> currDistance = _initialDistanceMatrix;
+    while(vec.size() != 1)
     {
-        currDistance = this->calcCurrentDistanceMatrix(vec);
         pair<pair<int,int>,int> indexes = FeatureMapper::findMin(currDistance);
-        //if(indexes.second == -1)
-        //    continue;
+
         vec[indexes.first.second] = new Cluster(vec[indexes.first.first],vec[indexes.first.second],indexes.second);
         vec.erase(vec.begin() + indexes.first.first);
         //find two minimum - merge
+        this->calcCurrentDistanceMatrix(vec,currDistance,indexes.first);
+
     }
 
     vector<Cluster*> cut;
@@ -172,3 +182,7 @@ pair<pair<int, int>, float> FeatureMapper::findMin(vector<vector<float>> vec) {
 bool FeatureMapper::getState() const{
     return _cursor >=_learningLimit;
 }
+
+
+
+
