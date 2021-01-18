@@ -73,6 +73,24 @@ int Time::operator-(const Time other) const
     diff += (this->_year - other._year) * 1000 * 60 * 60 * 24 * 365;
     return diff;
 }
+
+/*
+
+*/
+Time& Time::operator= (const Time& other)
+{
+    this->_year = other._year;
+    this->_month = other._month;
+    this->_day = other._day;
+    this->_hour = other._hour;
+    this->_minute = other._minute;
+    this->_second = other._second;
+    this->_miliSec = other._miliSec;
+    this->_isFirst = other._isFirst;
+
+    return *this;
+}
+
 /*
 This function returns the amount days since start of the year
 Input:None
@@ -88,8 +106,6 @@ int Time::daysSinceYearStart() const {
     }
 
     return sum + this->_day;
-
-
 }
 
 string Time::toString()

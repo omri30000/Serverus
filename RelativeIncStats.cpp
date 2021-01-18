@@ -34,7 +34,7 @@ output: none
 void RelativeIncStats::update(string iSID, float newValue, Time timeStamp)
 {
     float newResidule = 0, temp = 0;
-    
+
     if (iSID == this->_firstIncStats->getIdentifier())
     {
         this->_secondIncStats->performDecay(timeStamp);
@@ -43,9 +43,9 @@ void RelativeIncStats::update(string iSID, float newValue, Time timeStamp)
         this->_firstCurrResidule = (newValue - this->_firstIncStats->calcMean());
 
         newResidule = (this->_firstCurrResidule * this->_secondCurrResidule);
-        
+
         this->_sumResiduleProducts += newResidule;
-        this->_currWeight++;
+        this->_currWeight += 1;
     }
     else if (iSID == this->_secondIncStats->getIdentifier())
     {
@@ -57,7 +57,7 @@ void RelativeIncStats::update(string iSID, float newValue, Time timeStamp)
         newResidule = (this->_secondCurrResidule * this->_firstCurrResidule);
         
         this->_sumResiduleProducts += newResidule;
-        this->_currWeight++;
+        this->_currWeight += 1;
     }
     else{
         throw std::exception();
@@ -75,13 +75,16 @@ void RelativeIncStats::performDecay(Time timeStamp, int index)
 {
     float timeDifference = timeStamp - this->_currTimeStamp;
     float factor = 0;
-
+    
     if (timeDifference > 0)
     {
         switch (index)
         {
             case 1:
                 factor = pow(2, -1 *(this->_firstIncStats->getDecayFactor() * timeDifference));
+                std::cout << "****" << std::endl;
+                std::cout << factor << std::endl;
+                std::cout << "****" << std::endl;
                 this->_sumResiduleProducts *= factor;
                 this->_currWeight *= factor;
                 this->_firstCurrResidule *= factor;
@@ -111,6 +114,10 @@ vector<float> RelativeIncStats::getRelativeStats() const
 
     vec.push_back(this->calcCovariance());
     vec.push_back(this->calcCorrelationCoefficiency());
+    std::cout << "====" << std::endl;
+    std::cout << this->calcCovariance() << std::endl;
+    std::cout << this->calcCorrelationCoefficiency() << std::endl;
+    std::cout << "====" << std::endl;
     vec.push_back(this->_firstIncStats->calcRadius(*this->_secondIncStats));
     vec.push_back(this->_firstIncStats->calcMagnitude(*this->_secondIncStats));
 
@@ -124,6 +131,11 @@ output: covariance approximation
 */
 float RelativeIncStats::calcCovariance() const
 {
+
+    /*std::cout << "????" << std::endl;
+    std::cout << this->_sumResiduleProducts << std::endl;
+    std::cout << this->_currWeight << std::endl;
+    std::cout << "????" << std::endl;*/
     return this->_sumResiduleProducts / this->_currWeight;
 }
 
