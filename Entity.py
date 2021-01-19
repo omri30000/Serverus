@@ -9,13 +9,13 @@ class Entity():
             ip ({str}): The entity's ip address
             mac ({str}): The entity's MAC address
         """        
-        self._ip_add = ip
-        self._mac_add = mac
+        self.ip_add = ip
+        self.mac_add = mac
 
 
     """getters functions"""
     def get_ip_add(self):
-        return self._ip_add
+        return self.ip_add
     
     def get_mac_add(self):
-        return self._mac_add
+        return self.mac_add
