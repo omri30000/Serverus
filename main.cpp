@@ -34,7 +34,7 @@ int main()
 {
 
     std::cout << "Hello, World!" << std::endl;
-    PacketsReaderSQLITE reader =  PacketsReaderSQLITE("db_file.sqlite");
+    PacketsReaderSQLITE reader =  PacketsReaderSQLITE("../db_file.sqlite");
     FeatureExtractor extractor;
 
     while(true)
