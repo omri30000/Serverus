@@ -10,5 +10,6 @@ Makefile
 *.d
 *.csv
 FeatureExtractor
+CMakeLists.txt
 *.db
 *.sqlite
