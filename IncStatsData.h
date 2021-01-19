@@ -28,7 +28,7 @@ public:
     IncStatsData();
     ~IncStatsData();
     vector<IncStats*> registerStream(string uniqueKey) throw();
-    vector<RelativeIncStats*> registerRelatedStreams(string firstUniqueKey, string secondUniqueKey) throw();
+    vector<RelativeIncStats*> registerRelatedStreams(string firstUniqueKey, string secondUniqueKey, Time timestamp) throw();
 
     void insertPacket(string key, Time timestamp) throw();
     void insertPacket(string firstKey, string secondKey, float value, Time timestamp) throw();

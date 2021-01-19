@@ -28,7 +28,7 @@ public:
     Time(string time);
     Time(const Time& other); // copy constructor
 
-    int operator-(const Time other)const;
+    long operator-(const Time other)const;
     Time& operator= (const Time& other);
 
     string toString();

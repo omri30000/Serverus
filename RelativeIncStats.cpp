@@ -73,24 +73,33 @@ Output:None
 */
 void RelativeIncStats::performDecay(Time timeStamp, int index)
 {
-    float timeDifference = timeStamp - this->_currTimeStamp;
+    long timeDifference = timeStamp - this->_currTimeStamp;
     float factor = 0;
     
+    std::cout << "****" << std::endl;
+    std::cout << timeStamp.toString() << std::endl;
+    std::cout << this->_currTimeStamp.toString() << std::endl;
+    std::cout << timeDifference << std::endl;
+    std::cout << "****" << std::endl;
+
     if (timeDifference > 0)
     {
         switch (index)
         {
             case 1:
                 factor = pow(2, -1 *(this->_firstIncStats->getDecayFactor() * timeDifference));
-                std::cout << "****" << std::endl;
+                std::cout << "--1--" << std::endl;
                 std::cout << factor << std::endl;
-                std::cout << "****" << std::endl;
+                std::cout << "--1--" << std::endl;
                 this->_sumResiduleProducts *= factor;
                 this->_currWeight *= factor;
                 this->_firstCurrResidule *= factor;
                 break;
             case 2:
                 factor = pow(2, -1 *(this->_secondIncStats->getDecayFactor() * timeDifference));
+                std::cout << "--2--" << std::endl;
+                std::cout << factor << std::endl;
+                std::cout << "--2--" << std::endl;
                 this->_sumResiduleProducts *= factor;
                 this->_currWeight *= factor;
                 this->_secondCurrResidule *= factor;
@@ -114,10 +123,10 @@ vector<float> RelativeIncStats::getRelativeStats() const
 
     vec.push_back(this->calcCovariance());
     vec.push_back(this->calcCorrelationCoefficiency());
-    std::cout << "====" << std::endl;
+    /*std::cout << "====" << std::endl;
     std::cout << this->calcCovariance() << std::endl;
     std::cout << this->calcCorrelationCoefficiency() << std::endl;
-    std::cout << "====" << std::endl;
+    std::cout << "====" << std::endl;*/
     vec.push_back(this->_firstIncStats->calcRadius(*this->_secondIncStats));
     vec.push_back(this->_firstIncStats->calcMagnitude(*this->_secondIncStats));
 

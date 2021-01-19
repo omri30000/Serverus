@@ -70,7 +70,7 @@ Output: pointer to the vector of relative inc stats (with different lambda in ea
 Throw: std::exception
 */
 
-vector<RelativeIncStats*> IncStatsData::registerRelatedStreams(string firstUniqueKey, string secondUniqueKey) throw()
+vector<RelativeIncStats*> IncStatsData::registerRelatedStreams(string firstUniqueKey, string secondUniqueKey, Time timestamp) throw()
 {
 	const float lambdas[] = { 0.01,0.1,1,3,5 };
 	string uniqueKey = firstUniqueKey + '+' + secondUniqueKey;
@@ -87,7 +87,7 @@ vector<RelativeIncStats*> IncStatsData::registerRelatedStreams(string firstUniqu
 
 	for (int i = 0 ; i < 5 ; i++) // for each lambda
 	{
-		vec.push_back(new RelativeIncStats(firstGroup[i], secondGroup[i]));
+		vec.push_back(new RelativeIncStats(firstGroup[i], secondGroup[i], timestamp));
 	}
 	
 	this->_relIncStatsCollection.insert({uniqueKey, vec});
@@ -105,7 +105,7 @@ vector<RelativeIncStats*> IncStatsData::registerRelatedStreams(string firstUniqu
  */
 void IncStatsData::insertPacket(string firstKey, string secondKey, float value, Time timestamp) throw()
 {
-    vector<RelativeIncStats*> vec = this->registerRelatedStreams(firstKey, secondKey);
+    vector<RelativeIncStats*> vec = this->registerRelatedStreams(firstKey, secondKey, timestamp);
 	
 	for (int i = 0 ; i < vec.size(); i++)
 	{

@@ -7,6 +7,7 @@ Time::Time()
 
 Time::Time(const Time& other)
 {
+    this->_isFirst = false;
     this->_year = other.getYear();
     this->_month = other.getMonth();
     this->_day = other.getDay();
@@ -59,12 +60,12 @@ This function returns the difference between 2 time stamps in milliseconds()
 Input: other - the other timeStamp : Time
 Output: differece in millisecond : int
 */
-int Time::operator-(const Time other) const
+long Time::operator-(const Time other) const
 {
     if(other._isFirst)
         return 0;
 
-    int diff = 0;
+    long diff = 0;
     diff += this->_miliSec - other._miliSec;
     diff += (this->_second - other._second)*1000;
     diff += (this->_minute - other._minute) * 1000 * 60;
@@ -86,7 +87,7 @@ Time& Time::operator= (const Time& other)
     this->_minute = other._minute;
     this->_second = other._second;
     this->_miliSec = other._miliSec;
-    this->_isFirst = other._isFirst;
+    this->_isFirst = false;
 
     return *this;
 }
@@ -118,6 +119,16 @@ string Time::toString()
                 std::to_string(this->_second) + "." +
                 std::to_string(this->_miliSec);
 
+    if (this->_isFirst)
+    {
+        std::cout<< "/-True-/";
+    }
+        
+    else
+    {
+        std::cout<< "/-False-/";
+    }
+    
     return s;
 }
 
