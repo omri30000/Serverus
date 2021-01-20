@@ -12,6 +12,8 @@ import Rule
 import Event
 import Log
 
+
+COMPUTER_ID = 1
 # This is the Defender class, which will execute the defensive actions against hostile entities.
 
 class Defender():
@@ -41,12 +43,16 @@ class Defender():
         thread.start()
 
 
-    def defend(self,event):
+    def defend(self,event,local =False):
         """
         Primary function, provides the defence from hostile event, according to the anomaly level.
         Args:
             event ({event}): The hostile event the defend from
         """
+
+        if not local:
+            self.events += [event]
+
         self.__close_socket(self, event)
 
         if event.get_level() == 1:
@@ -60,6 +66,7 @@ class Defender():
 
         if event.get_level() == 4:
             self.emerge = True
+
 
     def cancel_action(self, event):
         """This function cancel fire-wall blocking
@@ -150,22 +157,34 @@ class Defender():
             start = datetime.now().time()
             while not found and  (datetime.now().time() - start).minutes <= 10:
                 time.sleep(10) #sleep 10 seconds
+            found = False
 
-            
+            message = bytearray(COMPUTER_ID)
+            for i in self.events:
+                message += i.to_packet()
+            #requires lock
+            events = []
             #get all events to send
+            data = bytearray()
             with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
                 s.connect((HOST, PORT))
                 s.sendall(message)
                 data = s.recv(1024)
-            #parseData
-            for i in rules:
-                self.defend(,rule) #at level3
+            
+            #block events from global server
+            for i in range(len(data)::6):
+                self.defend(data[i:i+6],local=True) #at level3
 
         
 
 def main():    
-    defend = Defender()
-
+    defender= Defender()
+    sock = socket.socket(socket.AF_INET,socket.SOCK_STREAM)
+    server_address = ("127.0.0.1", SERVER_PORT)
+    sock.connect(server_address)
+    while True:
+        msg_answer = sock.recv(1024)
+        defender.defend(Event.Event(msg_answer))
 
 if __name__ == '__main__':
     main()
