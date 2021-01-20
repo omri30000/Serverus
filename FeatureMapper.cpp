@@ -58,10 +58,11 @@ void FeatureMapper::calcInitialDistanceMatrix()
     for (int i = 0; i < this->_correlation.size(); ++i)
     {
         this->_initialDistanceMatrix.push_back(vector<float>(i+1,0));
-        for (int j = 0; j < i+1; ++j)
+        for (int j = 0; j < i; ++j)
         {
             _initialDistanceMatrix[i][j] = 1 - (_correlation[i][j]/(sqrt(_crs[i]) * sqrt(_crs[j])));
         }
+        _initialDistanceMatrix[i][i] = 0;
     }
 }
 
@@ -107,6 +108,7 @@ vector<vector<int>> FeatureMapper::cluster() {
     for (int i = 0; i < _c.size(); ++i) {
         vec.push_back(new Cluster(i));
     }
+
     calcInitialDistanceMatrix();
     vector<vector<float>> currDistance = _initialDistanceMatrix;
     while(vec.size() != 1)
@@ -119,7 +121,7 @@ vector<vector<int>> FeatureMapper::cluster() {
             vec.erase(vec.begin() + indexes.first.first);
             //find two minimum - merge
             this->calcCurrentDistanceMatrix(vec, currDistance, indexes.first);
-            if(vec.size() <= 25)
+            if(vec.size() <= 10)
             {
                 int a = 0;
             }

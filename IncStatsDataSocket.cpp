@@ -10,7 +10,7 @@ input: a packet
 output: a key that represents the stream
 */
 string IncStatsDataSocket::getStreamKey(Packet pack) {
-    return pack.getSourceIP() + std::to_string(pack.getSourcePort());
+    return pack.getSourceIP() + ":"+std::to_string(pack.getSourcePort());
 }
 
 /*
@@ -20,5 +20,5 @@ output: a key that represents the stream
 */
 string IncStatsDataSocket::getForeignKey(Packet pack)
 {
-    return pack.getDestIP() + std::to_string(pack.getDestPort());
+    return pack.getDestIP() +":"+ std::to_string(pack.getDestPort());
 }

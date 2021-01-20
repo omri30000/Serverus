@@ -59,7 +59,8 @@ void RelativeIncStats::update(string iSID, float newValue, Time timeStamp)
         this->_sumResiduleProducts += newResidule;
         this->_currWeight += 1;
     }
-    else{
+    else
+    {
         throw std::exception();
     }
 }

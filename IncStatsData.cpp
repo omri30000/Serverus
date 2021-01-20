@@ -42,20 +42,13 @@ vector<IncStats*> IncStatsData::registerStream(string uniqueKey) throw()
 	const float lambdas[] = { 0.01,0.1,1,3,5 };
 	std::vector<IncStats*> vec;
 
-	//#TODO: check if this if statement is neccessary (might be not)
-	if (this->_incStatsCollection.find(uniqueKey) != this->_incStatsCollection.end())
-	{
-		vec = this->_incStatsCollection.at(uniqueKey);
-	}
-	else
-	{
-		for (size_t i = 0; i < 5; i++)
-		{
-			vec.push_back(new IncStats(uniqueKey, lambdas[i]));
-		}
-		
-		this->_incStatsCollection.insert({ uniqueKey,vec });
-	}
+    for (size_t i = 0; i < 5; i++)
+    {
+        vec.push_back(new IncStats(uniqueKey, lambdas[i]));
+    }
+
+    this->_incStatsCollection.insert({ uniqueKey,vec });
+
 
 	return vec;
 }
@@ -69,18 +62,18 @@ Throw: std::exception
 
 vector<RelativeIncStats*> IncStatsData::registerRelatedStreams(string firstUniqueKey, string secondUniqueKey, Time timestamp) throw()
 {
-	string uniqueKey = firstUniqueKey + '+' + secondUniqueKey;
+	string uniqueKey = this->getCombinedKey(firstUniqueKey,secondUniqueKey);;
+
+    if (this->isRelStreamExists(uniqueKey))
+    {
+        return this->_relIncStatsCollection.at(uniqueKey);
+    }
+
 	vector<RelativeIncStats*> vec;
 	std::vector<IncStats*> firstGroup = this->registerStream(firstUniqueKey);
 	std::vector<IncStats*> secondGroup = this->registerStream(secondUniqueKey);
-	
-	if (this->isRelStreamExists(uniqueKey))
-	{
-		return this->_relIncStatsCollection.at(uniqueKey);
-	}
 
 	//create new relative incremental statistics
-
 	for (int i = 0 ; i < 5 ; i++) // for each lambda
 	{
 		vec.push_back(new RelativeIncStats(firstGroup[i], secondGroup[i], timestamp));
@@ -103,7 +96,7 @@ void IncStatsData::insertPacket(string firstKey, string secondKey, float value, 
 {
     vector<RelativeIncStats*> vec = this->registerRelatedStreams(firstKey, secondKey, timestamp);
 
-    for (int i = 0; i <this->_incStatsCollection[firstKey].size() ; ++i) // for each lambda
+    for (int i = 0; i < this->_incStatsCollection[firstKey].size() ; ++i) // for each lambda
     {
         this->insertPacket(firstKey,value,timestamp,i);
     }
@@ -177,7 +170,7 @@ vector<float> IncStatsData::getStatsOneDimension(string key) const throw()
 */
 vector<float> IncStatsData::getStatsTwoDimensions(string firstKey, string secondKey) const throw()
 {
-	string uniqueKey = firstKey + '+' + secondKey;
+	string uniqueKey = this->getCombinedKey(firstKey,secondKey);
 	if (!this->isRelStreamExists(uniqueKey))
 	{
 		throw std::runtime_error("the required link doesn't exist");
@@ -226,6 +219,13 @@ bool IncStatsData::isRelStreamExists(string key) const
 	}
 	return true;
 }
+
+string IncStatsData::getCombinedKey(string first, string second) const {
+    if(first.compare(second) <0)
+        return first +"+" + second;
+    return second +"+" + first;
+}
+
 
 /*
 The function will remove the streams with a weight lower than the limit from their containers.

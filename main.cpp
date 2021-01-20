@@ -15,13 +15,14 @@ int main()
     std::cout << "Hello, World!" << std::endl;
     PacketsReaderSQLITE reader = PacketsReaderSQLITE("../db_file.sqlite");
     FeatureExtractor extractor;
-    FeatureMapper mapper(100,1,85);
+    FeatureMapper mapper(100,5,85);
     Parser* p = nullptr;
+
 
 
     bool cond = true;
     Packet pack;
-
+    int a = 0;
     try
     {
         pack = reader.getNextPacket();
@@ -30,15 +31,17 @@ int main()
         cond = false;
     }
     while (cond) {
+        a++;
+        if(a > 250)
+            a++;
         //std::cout<<pack.toString();
         vector<float> stats = extractor.extractNewFeaturesVector(pack);
         //std::cout<<stats.size();
         std::cout << "#########\n";
         for (int i = 0; i < stats.size(); ++i) {
-            if (!(stats[i]  >0))
-                stats[i] = (float) (rand() % 1000) / 1000;
             std::cout << stats[i] << ',';
         }
+        std::cout << "\n-----------\n";
 
         std::cout << std::endl;
         if (p == nullptr) {
@@ -46,9 +49,8 @@ int main()
                 mapper.update(stats);
             else
                 {
-
                 vector<vector<int>> a = mapper.cluster();
-                std::cout<<a.size();
+                std::cout<<"Clusters amount: " <<a.size()<<std::endl;
                 p = new Parser(a);
                 //exit(1);
             }

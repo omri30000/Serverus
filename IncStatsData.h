@@ -23,7 +23,7 @@ protected:
     bool isStreamExists(string key) const;
     bool isRelStreamExists(string key) const;
     void cleanInactiveStats(float limit);
-
+    string getCombinedKey(string first, string second) const;
 public:
     IncStatsData();
     ~IncStatsData();
@@ -33,6 +33,7 @@ public:
     void insertPacket(string key, Time timestamp) throw();
     void insertPacket(string firstKey, string secondKey, float value, Time timestamp) throw();
     void insertPacket(string key, float value, Time timestamp, int lambdaIndex) throw();
+
     vector<float> getStatsOneDimension(string key) const throw();
     vector<float> getStatsTwoDimensions(string firstKey, string secondKey) const throw();
     void updateStatsTwoDimensions(string firstKey, Time timestamp, float value) const throw();
