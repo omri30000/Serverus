@@ -87,7 +87,7 @@ void RelativeIncStats::performDecay(Time timeStamp, int index)
         switch (index)
         {
             case 1:
-                factor = pow(2, -1 *(this->_firstIncStats->getDecayFactor() * timeDifference));
+                factor = pow(2, -1 *(this->_firstIncStats->getDecayFactor() * (float)timeDifference));
                 /*std::cout << "--1--" << std::endl;
                 std::cout << factor << std::endl;
                 std::cout << "--1--" << std::endl;*/
@@ -96,7 +96,7 @@ void RelativeIncStats::performDecay(Time timeStamp, int index)
                 this->_firstCurrResidule *= factor;
                 break;
             case 2:
-                factor = pow(2, -1 *(this->_secondIncStats->getDecayFactor() * timeDifference));
+                factor = pow(2, -1 *(this->_secondIncStats->getDecayFactor() * (float)timeDifference));
                 /*std::cout << "--2--" << std::endl;
                 std::cout << factor << std::endl;
                 std::cout << "--2--" << std::endl;*/
@@ -140,7 +140,6 @@ output: covariance approximation
 */
 float RelativeIncStats::calcCovariance() const
 {
-
     /*std::cout << "????" << std::endl;
     std::cout << this->_sumResiduleProducts << std::endl;
     std::cout << this->_currWeight << std::endl;
