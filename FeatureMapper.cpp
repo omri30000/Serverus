@@ -63,7 +63,6 @@ void FeatureMapper::calcInitialDistanceMatrix()
             _initialDistanceMatrix[i][j] = 1 - (_correlation[i][j]/(sqrt(_crs[i]) * sqrt(_crs[j])));
         }
     }
-    int a = 0;
 }
 
 /*
@@ -100,7 +99,8 @@ void FeatureMapper::calcCurrentDistanceMatrix(vector<Cluster *> vec, vector<vect
  Input: None
  Output: The mapping of the data, k - number of AE/clusters : pair<vector<vector<int>>, int>
  */
-<vector<vector<int>> FeatureMapper::cluster() {
+
+vector<vector<int>> FeatureMapper::cluster() {
 
     vector<Cluster*> vec;
 
@@ -111,13 +111,24 @@ void FeatureMapper::calcCurrentDistanceMatrix(vector<Cluster *> vec, vector<vect
     vector<vector<float>> currDistance = _initialDistanceMatrix;
     while(vec.size() != 1)
     {
-        pair<pair<int,int>,int> indexes = FeatureMapper::findMin(currDistance);
+        try {
+            pair<pair<int, int>, int> indexes = FeatureMapper::findMin(currDistance);
 
-        vec[indexes.first.second] = new Cluster(vec[indexes.first.first],vec[indexes.first.second],indexes.second);
-        vec.erase(vec.begin() + indexes.first.first);
-        //find two minimum - merge
-        this->calcCurrentDistanceMatrix(vec,currDistance,indexes.first);
+            vec[indexes.first.second] = new Cluster(vec[indexes.first.first], vec[indexes.first.second],
+                                                    indexes.second);
+            vec.erase(vec.begin() + indexes.first.first);
+            //find two minimum - merge
+            this->calcCurrentDistanceMatrix(vec, currDistance, indexes.first);
+            if(vec.size() <= 25)
+            {
+                int a = 0;
+            }
+        }
+        catch(std::exception e)
+        {
+            std::cout <<e.what();
 
+        }
     }
 
     vector<Cluster*> cut;
@@ -129,7 +140,7 @@ void FeatureMapper::calcCurrentDistanceMatrix(vector<Cluster *> vec, vector<vect
         mapping.push_back(cut[i]->getIds());
     }
 
-    return {mapping,mapping.size()};
+    return mapping;
 }
 /*
  This function cuts a Dendrogram to clusters which each cluster's size lower than m
