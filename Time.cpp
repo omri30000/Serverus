@@ -73,7 +73,7 @@ Output: difference in millisecond : long
 */
 long Time::operator-(const Time other) const
 {
-    if(other._isFirst)
+    if(other._isFirst || this->_isFirst)
         return 0;
 
     long diff = 0;
