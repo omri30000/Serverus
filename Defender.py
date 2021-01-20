@@ -9,7 +9,7 @@ import threading
 from datetime import datetime
 
 import Rule
-import Entity
+import Event
 import Log
 
 # This is the Defender class, which will execute the defensive actions against hostile entities.
@@ -28,66 +28,69 @@ class Defender():
         if Defender.count > 0:
             raise Exception("Cant create more than one Defender (Singletone Class)")
 
-        self.thread = threading.Thread(target=inform,args=(self))
+        self.events = []
+        self.thread = threading.Thread(target=inform, args=(self))
         self.cron = CronTab(user="root")
         self.emerge = False #level 4 has been found
+        
         try:
             self.log = Log.Log(input("Enter log file name: "))
         except Exception as e:
             raise e
+
         thread.start()
 
 
-    def defend(self,entity,level):
+    def defend(self,event):
         """
-        Primary function, provides the defence from hostile entity, according to the anomaly level.
+        Primary function, provides the defence from hostile event, according to the anomaly level.
         Args:
-            entity ({Entity}): The hostile entity to block
-            level ({int}): The Blocking level {1...4}
+            event ({event}): The hostile event the defend from
         """
-        self.__close_socket(self, entity)
+        self.__close_socket(self, event)
 
-        if level == 1:
+        if event.get_level() == 1:
             return
 
-        rule = Rule.Rule(entity,level == 2)
+        rule = Rule.Rule(event)
 
         #for upgrading
 
-        self.__block(entity, rule)
+        self.__block(event, rule)
 
-        if level == 4:
-            self.emerge = 
-    def cancel_action(self, entity):
+        if event.get_level() == 4:
+            self.emerge = True
+
+    def cancel_action(self, event):
         """This function cancel fire-wall blocking
 
         Args:
-            entity ({Entity}): which Entity to cancel the block for
+            event ({Event}): which event to cancel the block for
         """
         ERROR_CODE = "256"
         msg = ""
         while str(msg).find(ERROR_CODE) < 0:
-            msg = os.system("iptables -D INPUT %s -j DROP"%(Rule.Rule(entity,3).write_rule()))
-        self.log.add_unblock_record(entity)
+            msg = os.system("iptables -D INPUT %s -j DROP"%(Rule.Rule(event,3).write_rule()))
+        self.log.add_unblock_record(event)
 
 
 
-    def __close_socket(self, entity):
+    def __close_socket(self, event):
         """The function closes a specific socket
 
         Args:
-            entity ({Entity}): Entity to block
+            event ({Event}): Hostile event
         """
-        #terminates all sockets with entity
-        os.system("ss --kill -nt dst %s "%(entity.get_ip_add()))
-        self.log.add_block_record(entity,1)
+        #terminates all sockets with event
+        os.system("ss --kill -nt dst %s "%(event.get_ip_add()))
+        self.log.add_block_record(event,1)
 
-    def
+    
 
 
-    def __block(self, entity, rule):
+    def __block(self, rule):
 
-        """This function blocks an entity at the firewall
+        """This function blocks an event at the firewall
 
         Args:
             rule ({Rule}): The rule to write in the firewall
@@ -114,9 +117,10 @@ class Defender():
             job = self.cron.new(command = rule_to_write +"; crontab -l | grep \"" +rule_to_write + "\" | crontab -r")
             job.setall("%d %d * * *"%(time_to_delete.minute,time_to_delete.hour))
             self.cron.write()
-            self.log.add_block_record(entity, 2)
-        else:
-            self.log.add_block_record(entity, 3)
+
+            #self.log.add_block_record(event, 2)
+        #else:
+        #self.log.add_block_record(event, 3)
 
 
         os.system("/sbin/iptables -A INPUT %s -j DROP"%(rule.write_rule()))
@@ -155,11 +159,11 @@ class Defender():
                 data = s.recv(1024)
             #parseData
             for i in rules:
-                self.defend(entity,rule) #at level3
+                self.defend(,rule) #at level3
 
-        pass
+        
 
-def main():
+def main():    
     defend = Defender()
 
 
