@@ -6,7 +6,7 @@ import socket
 import time
 import threading
 
-from datetime import datetime
+from datetime import datetime, timedelta
 
 import Rule
 import Event
@@ -14,7 +14,9 @@ import Log
 
 
 COMPUTER_ID = 1
-# This is the Defender class, which will execute the defensive actions against hostile entities.
+LISTEN_PORT = 5556
+
+#This is the Defender class, which will execute the defensive actions against hostile entities.
 
 class Defender():
 
@@ -31,8 +33,8 @@ class Defender():
             raise Exception("Cant create more than one Defender (Singletone Class)")
 
         self.events = []
-        self.thread = threading.Thread(target=inform, args=(self))
-        self.cron = CronTab(user="root")
+        self.thread = threading.Thread(target=self.__inform)
+        self.cron = CronTab(user='root')
         self.emerge = False #level 4 has been found
         
         try:
@@ -40,7 +42,7 @@ class Defender():
         except Exception as e:
             raise e
 
-        thread.start()
+        self.thread.start()
 
 
     def defend(self,event,local =False):
@@ -53,7 +55,7 @@ class Defender():
         if not local:
             self.events += [event]
 
-        self.__close_socket(self, event)
+        self.__close_socket(event)
 
         if event.get_level() == 1:
             return
@@ -62,9 +64,9 @@ class Defender():
 
         #for upgrading
 
-        self.__block(event, rule)
+        self.__block(rule)
 
-        if event.get_level() == 4:
+        if event.get_level() == 4 and not local:
             self.emerge = True
 
 
@@ -90,6 +92,7 @@ class Defender():
         """
         #terminates all sockets with event
         os.system("ss --kill -nt dst %s "%(event.get_ip_add()))
+        #os.system("tcpkill ip host %s"%(event.get_ip_add()))
         self.log.add_block_record(event,1)
 
     
@@ -118,13 +121,13 @@ class Defender():
 
 
         if rule.is_temp():
-            time_to_delete = rule.get_date() + datetime.timedelta(minutes=2) #time to disable blocking
+            time_to_delete = rule.get_date() + timedelta(minutes=2) #time to disable blocking
+            print("hello")
             rule_to_write = "/sbin/iptables -D INPUT %s -j DROP"%(rule.write_rule())
 
-            job = self.cron.new(command = rule_to_write +"; crontab -l | grep \"" +rule_to_write + "\" | crontab -r")
+            job = self.cron.new(command = rule_to_write +"; sudo crontab -l | grep \"" +rule_to_write + "\" | crontab -r")
             job.setall("%d %d * * *"%(time_to_delete.minute,time_to_delete.hour))
-            self.cron.write()
-
+            self.cron.write(user ='root')  
             #self.log.add_block_record(event, 2)
         #else:
         #self.log.add_block_record(event, 3)
@@ -154,16 +157,16 @@ class Defender():
         """
 
         while True:
-            start = datetime.now().time()
-            while not found and  (datetime.now().time() - start).minutes <= 10:
+            start = datetime.now()
+            while not self.emerge and (datetime.now() - start).seconds <= 10*60:
                 time.sleep(10) #sleep 10 seconds
-            found = False
+            self.emerge= False
 
             message = bytearray(COMPUTER_ID)
             for i in self.events:
                 message += i.to_packet()
             #requires lock
-            events = []
+            self.events = []
             #get all events to send
             data = bytearray()
             with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
@@ -172,19 +175,24 @@ class Defender():
                 data = s.recv(1024)
             
             #block events from global server
-            for i in range(len(data)::6):
-                self.defend(data[i:i+6],local=True) #at level3
+            for i in range(0,len(data),5):
+                self.defend(data[i:i+5],local=True) #at level 3
 
         
 
 def main():    
     defender= Defender()
-    sock = socket.socket(socket.AF_INET,socket.SOCK_STREAM)
-    server_address = ("127.0.0.1", SERVER_PORT)
-    sock.connect(server_address)
+    listening_sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+    server_address = ('', LISTEN_PORT)
+    listening_sock.bind(server_address)
+    listening_sock.listen(1)#wait for connect with client
+    # Create a new conversation socket
+    client_soc, client_address = listening_sock.accept()
     while True:
-        msg_answer = sock.recv(1024)
+        msg_answer = client_soc.recv(1024)
+        print("ok")
         defender.defend(Event.Event(msg_answer))
-
+        
+    listeing_sock.close()
 if __name__ == '__main__':
     main()

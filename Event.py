@@ -1,22 +1,24 @@
 # This is the Event class
-
+from datetime import datetime 
 class Event():
 
-    def __init(self,msg):
+    def __init__(self,msg):
+        print(msg)
         self.level = msg[0]
-        self.ip =".".join([str(i) for i in msg_answer[1:5]])
-        self.date = msg_answer[6]
-
+        self.ip_add =".".join([str(i) for i in msg[1:5]])
+        self.date = datetime.now()
+        print(self.level,self.ip_add)
+    """
     def __init__(self,ip,level,date):
-        """Constructor
+        Constructor
 
         Args:
             ip ({str}): The entity's ip address
-        """        
+             
         self.ip_add = ip
         self.level = level
         self.date = date
-
+    """
 
     """getters functions"""
     def get_ip_add(self):
@@ -36,7 +38,7 @@ class Event():
         Returns:
             int: hour in milliseconds
         """
-        return self.date.hour * 60*60 *1000 + self.date.minute* 60 *1000 + self.date.second * 1000 + self.date.microseconds /1000;
+        return self.date.hour * 60*60 *1000 + self.date.minute* 60 *1000 + self.date.second * 1000 +int(self.date.microsecond /1000);
     
 
     def to_packet(self):
@@ -47,9 +49,9 @@ class Event():
         """
         mes = bytearray()
         mes.append(self.level)
-        for i in ip.split('.'):
+        for i in self.ip_add.split('.'):
             mes.append(int(i))
-        #mes.append(self.calc_date())
-        mes.append(self.date)
+        mes.append(self.calc_date())
+        #mes.append(self.date)
         return mes
 

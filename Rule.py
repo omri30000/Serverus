@@ -1,9 +1,9 @@
 import datetime
-import event
+import Event
 # This is the Rule class, which handles firewall rules
 
 class Rule:
-    def __init__(self,event,temp):
+    def __init__(self,event):
         """Constructor
 
         Args:
