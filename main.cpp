@@ -8,6 +8,7 @@
 #include "Parser.h"
 #include <cstdlib>
 
+// NOTE: Make sure to run program with sudo in order to be able to delete data from db
 int main()
 {
     srand (time(NULL));
@@ -18,20 +19,15 @@ int main()
     Parser* p = nullptr;
 
 
-    while(true)
-    {
-        Packet pack;
-        bool cond = false;
-        while(!cond)
-        {
-            try {
-                pack = reader.getNextPacket();
-                cond = true;
-            }
-            catch (std::exception &e) {
-                cond = false;
-            }
-        }
+    bool cond = true;
+    Packet pack;
+
+    try {
+        pack = reader.getNextPacket();
+    }
+    catch (std::exception &e) {
+        cond = false;
+    }
 
         //std::cout<<pack.toString();
         vector<float> stats = extractor.extractNewFeaturesVector(pack);
@@ -71,5 +67,13 @@ int main()
 
     }
 
+        try {
+            pack = reader.getNextPacket();
+        }
+        catch (std::exception &e) {
+            cond = false;
+        }
+    }
+    
     return 0;
 }

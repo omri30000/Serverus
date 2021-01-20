@@ -3,10 +3,20 @@
 Time::Time()
 {
     this->_isFirst = true;
+
+    //initialize these attributes for good looking while debugging
+    this->_year = 0;
+    this->_month = 0;
+    this->_day = 0;
+    this->_hour = 0;
+    this->_minute = 0;
+    this->_second = 0;
+    this->_miliSec = 0;
 }
 
 Time::Time(const Time& other)
 {
+    this->_isFirst = other._isFirst;
     this->_year = other.getYear();
     this->_month = other.getMonth();
     this->_day = other.getDay();
@@ -53,18 +63,20 @@ Time::Time(string time)
     t = t.substr(t.find('.') + 1); // "987"
 
     this->_miliSec = std::stoi(t); // 987
+
+    this->_isFirst = false;
 }
 /*
 This function returns the difference between 2 time stamps in milliseconds()
 Input: other - the other timeStamp : Time
-Output: differece in millisecond : int
+Output: difference in millisecond : long
 */
-int Time::operator-(const Time other) const
+long Time::operator-(const Time other) const
 {
     if(other._isFirst || this->_isFirst)
         return 0;
 
-    int diff = 0;
+    long diff = 0;
     diff += this->_miliSec - other._miliSec;
     diff += (this->_second - other._second)*1000;
     diff += (this->_minute - other._minute) * 1000 * 60;
@@ -73,6 +85,24 @@ int Time::operator-(const Time other) const
     diff += (this->_year - other._year) * 1000 * 60 * 60 * 24 * 365;
     return diff;
 }
+
+/*
+
+*/
+Time& Time::operator= (const Time& other)
+{
+    this->_year = other._year;
+    this->_month = other._month;
+    this->_day = other._day;
+    this->_hour = other._hour;
+    this->_minute = other._minute;
+    this->_second = other._second;
+    this->_miliSec = other._miliSec;
+    this->_isFirst = other._isFirst;
+
+    return *this;
+}
+
 /*
 This function returns the amount days since start of the year
 Input:None
@@ -88,8 +118,6 @@ int Time::daysSinceYearStart() const {
     }
 
     return sum + this->_day;
-
-
 }
 
 string Time::toString()
@@ -101,7 +129,7 @@ string Time::toString()
                 std::to_string(this->_minute) + ":" +
                 std::to_string(this->_second) + "." +
                 std::to_string(this->_miliSec);
-
+    
     return s;
 }
 

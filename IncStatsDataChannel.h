@@ -10,6 +10,7 @@ class IncStatsDataChannel : public IncStatsData
 {
 public:
     string getStreamKey(Packet pack);
+    string getForeignKey(Packet pack);
 };
 
 

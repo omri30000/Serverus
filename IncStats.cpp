@@ -8,7 +8,7 @@ IncStats::IncStats(string id, float decayFactor)
 {
     this-> _identifier = id;
     this->_decayFactor = decayFactor;
-    this->_weight = 0;
+    this->_weight = 0.00000000000000000001;  // very small number but not zero
     this->_linearSum = 0;
     this->_squaredSum = 0;
     this->_mean = 0;
@@ -43,7 +43,8 @@ Output:None
 
 void IncStats::performDecay(Time timeStamp)
 {
-    int diff = timeStamp - this->_timeStamp;
+    long diff = timeStamp - this->_timeStamp;
+    //std::cout << "dif --> " << diff << std::endl;
     float decay = pow(2,-1*this->_decayFactor *  diff );
     this->_weight *= decay;
     this->_linearSum *= decay;
@@ -76,7 +77,8 @@ float IncStats::calcMean()
 This function calculates Standard Deviation value
 Input:None
 Output:None / Standard Deviation value : float
-*/float IncStats::calcStandardDeviation()
+*/
+float IncStats::calcStandardDeviation()
 {
     this->_standardDeviation = sqrt(abs(this->_squaredSum / this->_weight - pow(this->_linearSum / this->_weight, 2)));
     return this->_standardDeviation;

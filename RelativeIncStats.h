@@ -23,14 +23,17 @@ protected:
     Time _currTimeStamp; //last time stamp of the sum of residule products
 
     //stats
-    float calcCovariance();
-    float calcCorrelationCoefficiency();
+    float calcCovariance() const;
+    float calcCorrelationCoefficiency() const;
 
 public:
     RelativeIncStats(IncStats* first, IncStats* second);
     RelativeIncStats(IncStats* first, IncStats* second, Time initialTime);
     void update(string iSID, float newValue, Time timeStamp);
     void performDecay(Time timeStamp, int index);
+    vector<float> getRelativeStats() const;
+
+    //bool operator==(const RelativeIncStats& other) const;
 };
 
 
