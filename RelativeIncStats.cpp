@@ -76,11 +76,11 @@ void RelativeIncStats::performDecay(Time timeStamp, int index)
     long timeDifference = timeStamp - this->_currTimeStamp;
     float factor = 0;
     
-    std::cout << "****" << std::endl;
+    /*std::cout << "****" << std::endl;
     std::cout << timeStamp.toString() << std::endl;
     std::cout << this->_currTimeStamp.toString() << std::endl;
     std::cout << timeDifference << std::endl;
-    std::cout << "****" << std::endl;
+    std::cout << "****" << std::endl;*/
 
     if (timeDifference > 0)
     {

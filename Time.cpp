@@ -54,6 +54,8 @@ Time::Time(string time)
     t = t.substr(t.find('.') + 1); // "987"
 
     this->_miliSec = std::stoi(t); // 987
+
+    this->_isFirst = false;
 }
 /*
 This function returns the difference between 2 time stamps in milliseconds()
@@ -87,7 +89,7 @@ Time& Time::operator= (const Time& other)
     this->_minute = other._minute;
     this->_second = other._second;
     this->_miliSec = other._miliSec;
-    this->_isFirst = false;
+    this->_isFirst = other._isFirst;
 
     return *this;
 }

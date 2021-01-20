@@ -8,7 +8,6 @@ IncStatsData::IncStatsData()
 
 IncStatsData::~IncStatsData()
 {
-	//std::cout << "INCS dtor" << std::endl;
 	for (map<string,vector<IncStats*>>::iterator it = this->_incStatsCollection.begin(); it != this->_incStatsCollection.end(); it++)
 	{
 		for (int i = 0; i < 5; i++)
@@ -24,8 +23,6 @@ IncStatsData::~IncStatsData()
 			delete it->second[i];
 		}
 	}
-
-	//std::cout << "finsh INCS dtor" << std::endl;
 }
 
 /*
@@ -72,7 +69,6 @@ Throw: std::exception
 
 vector<RelativeIncStats*> IncStatsData::registerRelatedStreams(string firstUniqueKey, string secondUniqueKey, Time timestamp) throw()
 {
-	const float lambdas[] = { 0.01,0.1,1,3,5 };
 	string uniqueKey = firstUniqueKey + '+' + secondUniqueKey;
 	vector<RelativeIncStats*> vec;
 	std::vector<IncStats*> firstGroup = this->registerStream(firstUniqueKey);
@@ -106,16 +102,17 @@ vector<RelativeIncStats*> IncStatsData::registerRelatedStreams(string firstUniqu
 void IncStatsData::insertPacket(string firstKey, string secondKey, float value, Time timestamp) throw()
 {
     vector<RelativeIncStats*> vec = this->registerRelatedStreams(firstKey, secondKey, timestamp);
-	
-	for (int i = 0 ; i < vec.size(); i++)
-	{
-		vec[i]->update(firstKey, value, timestamp);
-	}
 
     for (int i = 0; i <this->_incStatsCollection[firstKey].size() ; ++i) // for each lambda
     {
         this->insertPacket(firstKey,value,timestamp,i);
     }
+
+    for (int i = 0 ; i < vec.size(); i++)
+    {
+        vec[i]->update(firstKey, value, timestamp);
+    }
+
 }
 
 /*
@@ -161,7 +158,7 @@ vector<float> IncStatsData::getStatsOneDimension(string key) const throw()
         throw std::runtime_error("Stream doesn't exist");
 
 	vector<float> result;
-	for (size_t i = 0; i < this->_incStatsCollection.at(key).size() ; i++)
+	for (size_t i = 0; i < this->_incStatsCollection.at(key).size() ; i++) // An iteration for each lambda index
 	{
 		vector<float> val = this->_incStatsCollection.at(key)[i]->getStats();
 		for (float stat : val)
