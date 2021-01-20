@@ -69,7 +69,9 @@ Output:None / Mean value : float
 */
 float IncStats::calcMean()
 {
-    this->_mean = this->_linearSum / this->_weight;
+    float tmp = this->_linearSum / this->_weight;
+    if (!isnan(tmp))
+        this->_mean = tmp;
     return this->_mean;
 }
 
@@ -80,7 +82,9 @@ Output:None / Standard Deviation value : float
 */
 float IncStats::calcStandardDeviation()
 {
-    this->_standardDeviation = sqrt(abs(this->_squaredSum / this->_weight - pow(this->_linearSum / this->_weight, 2)));
+    float tmp = sqrt(abs(this->_squaredSum / this->_weight - pow(this->_linearSum / this->_weight, 2)));
+    if (!isnan(tmp))
+        this->_standardDeviation = tmp;
     return this->_standardDeviation;
 }
 

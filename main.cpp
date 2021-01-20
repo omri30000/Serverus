@@ -13,7 +13,7 @@ int main()
 {
     srand (time(NULL));
     std::cout << "Hello, World!" << std::endl;
-    PacketsReaderSQLITE reader =  PacketsReaderSQLITE("../db_file.sqlite");
+    PacketsReaderSQLITE reader = PacketsReaderSQLITE("../db_file.sqlite");
     FeatureExtractor extractor;
     FeatureMapper mapper(100,1,85);
     Parser* p = nullptr;
@@ -69,7 +69,6 @@ int main()
         catch (std::exception &e) {
             cond = false;
         }
-
     }
     return 0;
 }
