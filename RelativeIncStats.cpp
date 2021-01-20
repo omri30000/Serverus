@@ -23,7 +23,7 @@ RelativeIncStats::RelativeIncStats(IncStats* first, IncStats* second, Time initi
     this->_secondCurrResidule = 0;
 
     this->_sumResiduleProducts = 0;
-    this->_currWeight = 0.000000001; // very small number but not zero
+    this->_currWeight = 0.00000000000000000001; // very small number but not zero
 }
 
 /*

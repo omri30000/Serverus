@@ -30,7 +30,7 @@ void readPackets(string filePath)
 }
 */
 
-// NOTE: Make sure to run program with sudo in order to be able to delete data form db
+// NOTE: Make sure to run program with sudo in order to be able to delete data from db
 int main()
 {
     std::cout << "Hello, World!" << std::endl;

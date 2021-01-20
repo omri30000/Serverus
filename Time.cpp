@@ -7,7 +7,7 @@ Time::Time()
 
 Time::Time(const Time& other)
 {
-    this->_isFirst = false;
+    this->_isFirst = other._isFirst;
     this->_year = other.getYear();
     this->_month = other.getMonth();
     this->_day = other.getDay();
@@ -118,16 +118,6 @@ string Time::toString()
                 std::to_string(this->_minute) + ":" +
                 std::to_string(this->_second) + "." +
                 std::to_string(this->_miliSec);
-
-    if (this->_isFirst)
-    {
-        std::cout<< "/-True-/";
-    }
-        
-    else
-    {
-        std::cout<< "/-False-/";
-    }
     
     return s;
 }

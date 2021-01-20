@@ -8,7 +8,7 @@ IncStats::IncStats(string id, float decayFactor)
 {
     this-> _identifier = id;
     this->_decayFactor = decayFactor;
-    this->_weight = 0;
+    this->_weight = 0.00000000000000000001;  // very small number but not zero
     this->_linearSum = 0;
     this->_squaredSum = 0;
     this->_mean = 0;
