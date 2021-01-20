@@ -3,6 +3,15 @@
 Time::Time()
 {
     this->_isFirst = true;
+
+    //initialize these attributes for good looking while debugging
+    this->_year = 0;
+    this->_month = 0;
+    this->_day = 0;
+    this->_hour = 0;
+    this->_minute = 0;
+    this->_second = 0;
+    this->_miliSec = 0;
 }
 
 Time::Time(const Time& other)
@@ -60,7 +69,7 @@ Time::Time(string time)
 /*
 This function returns the difference between 2 time stamps in milliseconds()
 Input: other - the other timeStamp : Time
-Output: differece in millisecond : int
+Output: difference in millisecond : long
 */
 long Time::operator-(const Time other) const
 {

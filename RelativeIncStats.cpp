@@ -11,7 +11,7 @@ RelativeIncStats::RelativeIncStats(IncStats* first, IncStats* second)
     this->_secondCurrResidule = 0;
 
     this->_sumResiduleProducts = 0;
-    this->_currWeight = 0.000000001; // very small number but not zero
+    this->_currWeight = 0.00000000000000000001;  // very small number but not zero
 }
 
 RelativeIncStats::RelativeIncStats(IncStats* first, IncStats* second, Time initialTime) : _currTimeStamp(initialTime)
@@ -88,18 +88,18 @@ void RelativeIncStats::performDecay(Time timeStamp, int index)
         {
             case 1:
                 factor = pow(2, -1 *(this->_firstIncStats->getDecayFactor() * timeDifference));
-                std::cout << "--1--" << std::endl;
+                /*std::cout << "--1--" << std::endl;
                 std::cout << factor << std::endl;
-                std::cout << "--1--" << std::endl;
+                std::cout << "--1--" << std::endl;*/
                 this->_sumResiduleProducts *= factor;
                 this->_currWeight *= factor;
                 this->_firstCurrResidule *= factor;
                 break;
             case 2:
                 factor = pow(2, -1 *(this->_secondIncStats->getDecayFactor() * timeDifference));
-                std::cout << "--2--" << std::endl;
+                /*std::cout << "--2--" << std::endl;
                 std::cout << factor << std::endl;
-                std::cout << "--2--" << std::endl;
+                std::cout << "--2--" << std::endl;*/
                 this->_sumResiduleProducts *= factor;
                 this->_currWeight *= factor;
                 this->_secondCurrResidule *= factor;

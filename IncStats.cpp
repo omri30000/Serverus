@@ -44,7 +44,7 @@ Output:None
 void IncStats::performDecay(Time timeStamp)
 {
     long diff = timeStamp - this->_timeStamp;
-    std::cout << "dif --> " << diff << std::endl;
+    //std::cout << "dif --> " << diff << std::endl;
     float decay = pow(2,-1*this->_decayFactor *  diff );
     this->_weight *= decay;
     this->_linearSum *= decay;
