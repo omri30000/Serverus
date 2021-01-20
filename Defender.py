@@ -160,13 +160,15 @@ class Defender():
             start = datetime.now()
             while not self.emerge and (datetime.now() - start).seconds <= 10*60:
                 time.sleep(10) #sleep 10 seconds
-            self.emerge= False
+            
+            self.emerge = False
 
             message = bytearray(COMPUTER_ID)
             for i in self.events:
                 message += i.to_packet()
             #requires lock
             self.events = []
+            
             #get all events to send
             data = bytearray()
             with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
@@ -177,8 +179,6 @@ class Defender():
             #block events from global server
             for i in range(0,len(data),5):
                 self.defend(data[i:i+5],local=True) #at level 3
-
-        
 
 def main():    
     defender= Defender()

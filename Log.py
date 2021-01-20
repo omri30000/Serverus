@@ -3,7 +3,7 @@ import Entity
 class Log():
     
     
-    def __init__(self, log_path, overwrite = True):
+    def __init__(self, log_path, overwrite = False):
         self.file_path = log_path
 
         try:
