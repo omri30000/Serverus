@@ -51,6 +51,7 @@ class Server:
         computer_id = int(product_message[0])
         for i in range(1,len(product_message),9):
             event = Event.Event(product_message[i:i+9])
+            self.db.add_event(event,computer_id)
         print(events)
 
         #save to sql - events
