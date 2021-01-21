@@ -38,20 +38,27 @@ class Event():
         Returns:
             int: hour in milliseconds
         """
-        return self.date.hour * 60*60 *1000 + self.date.minute* 60 *1000 + self.date.second * 1000 +int(self.date.microsecond /1000);
+        return self.date.hour * 60*60 *1000 + self.date.minute* 60 *1000 + self.date.second * 1000 +int(self.date.microsecond /1000)
     
 
     def to_packet(self):
-        """This function builds the binary message of this event for the packet to the global server
-
+        """
+        This function builds the binary message of this event for the packet to the global server
         Returns:
             byteAarray: the binary message
         """
-        mes = bytearray()
-        mes.append(self.level)
-        for i in self.ip_add.split('.'):
+        mes = bytearray()  # create empty bytearray
+        
+        mes.append(self.level)  # add the level of blocking
+        
+        for i in self.ip_add.split('.'): # add IP address
             mes.append(int(i))
-        mes.append(self.calc_date())
-        #mes.append(self.date)
+
+        date = str(self.calc_date())  # add date (number by number)
+        for digit in date:
+            mes.append(int(digit))
+
+        # example of a message (level-4/IP-127.0.0.1/time-3600000):
+        # bytearray(b'\x04\x7f\x00\x00\x01\x03\x06\x00\x00\x00\x00\x00')
         return mes
 

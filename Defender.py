@@ -185,14 +185,14 @@ def main():
     listening_sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     server_address = ('', LISTEN_PORT)
     listening_sock.bind(server_address)
-    listening_sock.listen(1)#wait for connect with client
+    listening_sock.listen(1)  # wait for connection with the model
     # Create a new conversation socket
-    client_soc, client_address = listening_sock.accept()
+    model_soc, model_address = listening_sock.accept()
     while True:
-        msg_answer = client_soc.recv(1024)
+        msg_answer = model_soc.recv(1024)
         print("ok")
         defender.defend(Event.Event(msg_answer))
         
-    listeing_sock.close()
+    listening_sock.close()
 if __name__ == '__main__':
     main()
