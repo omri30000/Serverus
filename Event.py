@@ -5,8 +5,14 @@ class Event:
         print(msg)
         self.level = msg[0]
         self.ip_add =".".join([str(i) for i in msg[1:5]])
-        self.date = datetime.now()
+        date = sum([pow(256,i)  * int(msg[5+i]) for i in range(4)])
+        today = datetime.date.today()
+        if calc_date_param(datetime.now() > date):
+            today -= timedelta(days=1)
+        self.date = today. + timedelta(milliseconds = date)    
+        print(self.date.days,self.date.hour,self.date.minute,self.date.second)
         print(self.level,self.ip_add)
+    
     """
     def __init__(self,ip,level,date):
         Constructor
@@ -30,6 +36,9 @@ class Event:
         return self.date
     
     
+    def calc_date_param(time):
+        return time.hour * 60*60 *1000 + time.minute* 60 *1000 + time.second * 1000 +int(time.microsecond /1000)
+
     def calc_date(self):
         """
         This function returns the amount of milliseconds that passed since the start of day until the event's date
@@ -37,7 +46,7 @@ class Event:
         Returns:
             int: hour in milliseconds
         """
-        return self.date.hour * 60*60 *1000 + self.date.minute* 60 *1000 + self.date.second * 1000 +int(self.date.microsecond /1000)
+        return calc_date_param(self.date)
     
 
     def to_packet(self):
