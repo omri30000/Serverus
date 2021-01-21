@@ -1,4 +1,5 @@
 import socket
+import threading
 import time
 
 
@@ -12,20 +13,35 @@ class Server:
         # Connecting to remote computer
         server_address = ('', self.LISTEN_PORT)
         self.listening_sock.bind(server_address)
+
+        self.threads = []
         
         
     def serve(self):
-        self.listening_sock.listen(1)  # wait for connection with client
+        self.listening_sock.listen(1)  # wait for connection with product
         
-        # Create a new conversation socket
-        client_soc, client_address = self.listening_sock.accept()
-
         while True:
-            client_message = client_soc.recv(1024)
+            # Create a new conversation socket
+            product_soc, product_address = self.listening_sock.accept()
 
-        
+            try:
+                t = threading.Thread(target = self.__manage_conversation, args = product_soc)
+                t.start()
+                self.threads.append(t)
+
+            except ConnectionResetError as e:
+                print(e)
+                print("An existing connection was forcibly closed by the remote host")
+            
+        for thread in self.threads:
+            thread.join()
+
         self.listening_sock.close()
 
+
+    def __manage_conversation(self, sock):
+        while True:
+            client_message = sock.recv(1024)
 
 
 def main():
