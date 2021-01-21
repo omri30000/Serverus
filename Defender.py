@@ -163,7 +163,7 @@ class Defender():
             
             self.emerge = False
 
-            message = bytearray(COMPUTER_ID)
+            message = bytearray([COMPUTER_ID])
             for i in self.events:
                 message += i.to_packet()
             #requires lock

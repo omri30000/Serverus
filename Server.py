@@ -40,8 +40,10 @@ class Server:
 
 
     def __manage_conversation(self, sock):
-        client_message = sock.recv(1024)
-        
+        product_message = bytearray(sock.recv(1024))
+
+        #todo: add parsing to the message
+
 
 
 def main():
