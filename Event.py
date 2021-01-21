@@ -9,7 +9,7 @@ class Event:
         today = datetime.date.today()
         if calc_date_param(datetime.now() > date):
             today -= timedelta(days=1)
-        self.date = today. + timedelta(milliseconds = date)    
+        self.date = today + timedelta(milliseconds = date)    
         print(self.date.days,self.date.hour,self.date.minute,self.date.second)
         print(self.level,self.ip_add)
     
@@ -46,6 +46,7 @@ class Event:
         Returns:
             int: hour in milliseconds
         """
+
         return calc_date_param(self.date)
     
 

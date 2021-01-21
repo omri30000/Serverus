@@ -176,8 +176,9 @@ class Defender():
                 s.sendall(message)
                 data = s.recv(1024)
             
+            msg_code = int(data[0])
             #block events from global server
-            for i in range(0,len(data),5):
+            for i in range(1,len(data),5):
                 self.defend(data[i:i+5],local=True) #at level 3
 
 def main():    
