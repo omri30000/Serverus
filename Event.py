@@ -51,7 +51,16 @@ class Event():
         mes.append(self.level)
         for i in self.ip_add.split('.'):
             mes.append(int(i))
-        mes.append(self.calc_date())
-        #mes.append(self.date)
+        BASE = 256
+        date = self.calc_date()
+        vals =[]
+        while date >0:
+            vals += [date%BASE]
+            date //= BASE
+        
+        if len(vals) < 4:
+            vals += [0]*(4-len(vals))
+
+        mes.append(vals[::-1])
         return mes
 
