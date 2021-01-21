@@ -4,12 +4,6 @@ import time
 
 class Server:
     def __init__(self, listening_port):
-        """Constructor
-
-        Args:
-            entity ({Event}): The Hostile event
-            temp ({bool}): Is the rule temporally
-        """
         self.LISTEN_PORT = listening_port
 
         # Create a TCP/IP socket

@@ -1,7 +1,6 @@
 # This is the Event class
 from datetime import datetime 
-class Event():
-
+class Event:
     def __init__(self,msg):
         print(msg)
         self.level = msg[0]

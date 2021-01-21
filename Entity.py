@@ -1,7 +1,6 @@
 # This is the Event class
 
-class Event():
-
+class Entity:
     def __init__(self,ip,mac):
         """Constructor
 
@@ -10,7 +9,7 @@ class Event():
             mac ({str}): The entity's MAC address
         """        
         self.ip_add = ip
-        self
+        self.mac_add = mac
 
     """getters functions"""
     def get_ip_add(self):
