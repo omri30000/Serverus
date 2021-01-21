@@ -1,6 +1,7 @@
 import socket
 import threading
 import time
+import DatabaseManager
 
 
 class Server:
@@ -15,6 +16,8 @@ class Server:
         self.listening_sock.bind(server_address)
 
         self.threads = []
+
+        self.db_manager = DatabaseManager.DatabaseManager("general_db.sqlite")
         
         
     def serve(self):
