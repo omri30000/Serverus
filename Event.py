@@ -52,12 +52,17 @@ class Event:
         
         for i in self.ip_add.split('.'): # add IP address
             mes.append(int(i))
+        
+        BASE = 256
+        date = self.calc_date()
+        vals =[]
+        while date >0:
+            vals += [date%BASE]
+            date //= BASE
+        
+        if len(vals) < 4:
+            vals += [0]*(4-len(vals))
 
-        date = str(self.calc_date())  # add date (number by number)
-        for digit in date:
-            mes.append(int(digit))
-
-        # example of a message (level-4/IP-127.0.0.1/time-3600000):
-        # bytearray(b'\x04\x7f\x00\x00\x01\x03\x06\x00\x00\x00\x00\x00')
+        mes.append(vals[::-1])
         return mes
 

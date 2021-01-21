@@ -40,14 +40,12 @@ class Server:
 
 
     def __manage_conversation(self, sock):
-        while True:
-            client_message = sock.recv(1024)
+        client_message = sock.recv(1024)
+        
 
 
 def main():
     pass
-
-
 
 
 if __name__ == '__main__':

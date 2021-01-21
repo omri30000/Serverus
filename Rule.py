@@ -1,6 +1,6 @@
 import datetime
 import Event
-# This is the Rule class, which handles firewall rules
+# This is the Rule class, which handles iptables rules
 
 class Rule:
     def __init__(self,event):
