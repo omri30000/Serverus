@@ -8,7 +8,7 @@ class DatabaseManager:
         self.db_cursor = self.db.cursor()
 
 
-    def insert_product(self)
+    def insert_product(self):
         sql_statement = '''INSERT INTO Products (joinDate)
         VALUES (''' + str(datetime.datetime.now()) + ")"
         self.db_cursor.execute(sql_statement)
@@ -17,9 +17,8 @@ class DatabaseManager:
         self.db_cursor.execute(sql_statement)
 
 
-
     def insert_event(self, event, product_id):
         sql_statement = '''INSERT INTO Events (productId, attackerIp, blockLevel)
-        VALUES (1,"5.5.5.5", 3)'''
+        VALUES (''' + str(product_id) + ", \'" + event.get_ip_add() + "\', " + event.get_level() + ")"
         self.db_cursor.execute(sql_statement)
 
