@@ -4,8 +4,6 @@ import time
 import DatabaseManager
 import Event
 
-import 
-
 class Server:
     def __init__(self, listening_port):
         self.products = {}
