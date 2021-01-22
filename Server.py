@@ -3,6 +3,7 @@ import threading
 import time
 import DatabaseManager
 import Event
+import datetime
 
 class Server:
     def __init__(self, listening_port):
@@ -46,28 +47,30 @@ class Server:
         pass
 
     def __manage_conversation(self, sock):
+        EVENT_SIZE_BYTES = 9
+
         product_message = bytearray(sock.recv(1024))
         events = []
         computer_id = int(product_message[0])
-        for i in range(1,len(product_message),9):
-            event = Event.Event(product_message[i:i+9])
-            self.db.add_event(event,computer_id)
+        for i in range(1,len(product_message), EVENT_SIZE_BYTES):
+            event = Event.Event(product_message[i : i + EVENT_SIZE_BYTES])
+            self.db_manager.insert_event(event,computer_id)
         print(events)
 
         #save to sql - events
         last_date = self.products[computer_id]
-       #read from sql
+        #read from sql
+        
         outter_events = []
         msg = bytearray([0])
         for eve in outter_events:
             msg += eve.to_packet()
         
         sock.sendall(msg)
-        self.products[computer_id] = datetime.now() 
+        self.products[computer_id] = datetime.datetime.now() 
         
-        time.sleep(seconds=2)
+        time.sleep(seconds = 2)
         sock.close()
-        #todo: add parsing to the message
 
 
 
