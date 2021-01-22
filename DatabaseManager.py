@@ -19,13 +19,20 @@ class DatabaseManager:
         self.db.commit()
         self.db.close()
 
-    def insert_product(self):
-        sql_statement = "INSERT INTO Products (joinDate) VALUES (\'" + str(datetime.datetime.now()) + "\')"
-        print(sql_statement)
+    def insert_user(self, username, password, product_id):
+        sql_statement = "INSERT INTO Users (username, password, computerId) VALUES (\'" + username + "\', \'" + password + "\', " + str(product_id) + ")"
         self.db_cursor.execute(sql_statement)
 
-        # sql_statement = "SELECT * FROM Products WHERE joinDate=" + str(datetime.datetime.now()) 
-        # self.db_cursor.execute(sql_statement)
+    def insert_product(self):
+        sql_statement = "INSERT INTO Products (joinDate) VALUES (\'" + str(datetime.datetime.now()) + "\')"
+        self.db_cursor.execute(sql_statement)
+
+        sql_statement = "SELECT * FROM Products" # WHERE joinDate=\'" + str(datetime.datetime.now()) + "\'"
+        self.db_cursor.execute(sql_statement)
+        rows = self.db_cursor.fetchall()
+
+        for row in rows:
+            print(row)
 
 
     def insert_event(self, event, product_id):
@@ -37,8 +44,6 @@ class DatabaseManager:
 
 def main():
     a = DatabaseManager("general_db.sqlite")
-    a.insert_product()
-    a.insert_product()
     a.insert_product()
 
 if __name__ == '__main__':
