@@ -20,7 +20,6 @@ class DatabaseManager:
         self.db.close()
 
 
-
     # -----------to be moved to the http server---------------------
     def insert_user(self, username, password, product_id):
         sql_statement = "INSERT INTO Users (username, password, computerId) VALUES (\'" + username + "\', \'" + password + "\', " + str(product_id) + ")"
@@ -39,6 +38,17 @@ class DatabaseManager:
     # --------------------------------------------------------------
 
     def insert_event(self, event, product_id):
+        """
+        The method will insert a new event to the database
+        :param self: the instance of manager
+        :type self: DatabaseManager
+        :param event: the event to be inserted
+        :type event: Event
+        :param product_id: the id of the product that inserts the event
+        :type product_id: int
+	    :return: nothing
+	    :rtype: None
+	    """
         sql_statement = "INSERT INTO Events (productId, attackerIp, blockLevel, date) VALUES (" + str(product_id) + ", \'" + event.get_ip_add() + "\', " + str(event.get_level()) + ", \'" + str(event.get_date()) + "\')"
         self.db_cursor.execute(sql_statement)
 
@@ -53,7 +63,7 @@ class DatabaseManager:
         :param product_id: the id of the product that needs the data
         :type product_id: int
 	    :return: list of the relevant events
-	    :rtype: list[event]
+	    :rtype: list[Event]
 	    """
         sql_statement = "SELECT * FROM Events WHERE productId != " + str(product_id) + " AND blockLevel = 4"
         self.db_cursor.execute(sql_statement)
@@ -73,6 +83,7 @@ class DatabaseManager:
 
 def main():
     a = DatabaseManager("general_db.sqlite")
+    
     """
     a.insert_event(Event.Event("5.5.5.5", 4, datetime.datetime.now()), 3)
     a.insert_event(Event.Event("5.5.5.5", 4, datetime.datetime.now()), 3)
@@ -81,6 +92,7 @@ def main():
     """
 
     print(a.get_dangerous_events(5, 1))
+
 
 if __name__ == '__main__':
     main()

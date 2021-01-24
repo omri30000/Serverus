@@ -18,6 +18,15 @@ class Event:
 
     @classmethod
     def create_from_msg(cls, msg):
+        """
+        The method will create an Event object out of a given binary object.
+        :param cls: the Event class pointer
+        :type cls: Event class
+        :param msg: the binary message to be parsed
+        :type msg: bytearray
+	    :return: an Event object made by the binary message
+	    :rtype: Event
+        """
         print(msg)
         
         level = msg[0]
@@ -37,7 +46,15 @@ class Event:
     
     @classmethod
     def create_from_list(cls, event_params):
-        
+        """
+        The method will create an Event object out of a given list of parameters
+        :param cls: the Event class pointer
+        :type cls: Event class
+        :param event_params: list of attributes to be parsed (Example: ['5.5.5.5', 4, '2021-01-24 16:07:45.029904'])
+        :type event_params: list
+	    :return: an Event object made by the given list
+	    :rtype: Event
+        """
         ip_add = event_params[0]
         level = event_params[1]
         date = datetime.strptime(event_params[2], '%Y-%m-%d %H:%M:%S.%f')
