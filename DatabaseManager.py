@@ -52,6 +52,57 @@ class DatabaseManager:
         sql_statement = "INSERT INTO Events (productId, attackerIp, blockLevel, date) VALUES (" + str(product_id) + ", \'" + event.get_ip_add() + "\', " + str(event.get_level()) + ", \'" + str(event.get_date()) + "\')"
         self.db_cursor.execute(sql_statement)
 
+        if event.get_level() > 1:
+            self.__insert_rule(self.db_cursor.lastrowid, event.get_ip_add())
+
+            if event.get_level() < 4:  # 2 or 3
+                rule_id = self.db_cursor.lastrowid
+                self.__insert_block(product_id, rule_id)
+
+            elif event.get_level() == 4:
+                rule_id = self.db_cursor.lastrowid
+
+                sql_statement = "SELECT id FROM Products" 
+                self.db_cursor.execute(sql_statement)
+
+                temp = self.db_cursor.fetchall()
+                all_products_ids = [temp[i][0] for i in range(0,len(temp))]
+                
+                for single_id in all_products_ids:
+                    self.__insert_block(single_id, rule_id)
+
+
+    def __insert_rule(self, event_id, data):
+        """
+        The method will insert a new rule to the database
+        :param self: the instance of manager
+        :type self: DatabaseManager
+        :param event_id: the identifier of the event that caused the rule to be inserted
+        :type event_id: int
+        :param data: the ip that is blocked by the specific rule
+        :type data: str
+	    :return: nothing
+	    :rtype: None
+	    """
+        sql_statement = "INSERT INTO Rules (data, eventId) VALUES (\'" + data + "\', " + str(event_id) + ")"
+        self.db_cursor.execute(sql_statement)
+
+
+    def __insert_block(self, product_id, rule_id):
+        """
+        The method will insert a new block to the database
+        :param self: the instance of manager
+        :type self: DatabaseManager
+        :param product_id: the identifier of the product that the block should relate to
+        :type product_id: int
+        :param rule_id: the identifier of the rule that the block should relate to
+        :type rule_id: int
+	    :return: nothing
+	    :rtype: None
+	    """
+        sql_statement = "INSERT INTO Blocks (productId, ruleId) VALUES (" + str(product_id) + ", " + str(rule_id) + ")" 
+        self.db_cursor.execute(sql_statement)
+
 
     def get_dangerous_events(self, time, product_id):
         """
@@ -86,12 +137,12 @@ def main():
     
     """
     a.insert_event(Event.Event("5.5.5.5", 4, datetime.datetime.now()), 3)
-    a.insert_event(Event.Event("5.5.5.5", 4, datetime.datetime.now()), 3)
-    a.insert_event(Event.Event("5.5.5.5", 4, datetime.datetime.now()), 3)
-    a.insert_event(Event.Event("5.5.5.5", 4, datetime.datetime.now()), 3)
-    """
+    a.insert_event(Event.Event("5.5.5.5", 4, datetime.datetime.now()), 3)"""
+    a.insert_event(Event.Event("100.100.100.100", 3, datetime.datetime.now()), 11)
+    a.insert_event(Event.Event("101.101.101.101", 4, datetime.datetime.now()), 11)
+    
 
-    print(a.get_dangerous_events(5, 1))
+    #  print(a.get_dangerous_events(5, 1))
 
 
 if __name__ == '__main__':

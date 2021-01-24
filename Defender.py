@@ -192,8 +192,10 @@ def main():
     while True:
         msg_answer = model_soc.recv(1024)
         print("ok")
-        defender.defend(Event.Event(msg_answer))
+        defender.defend(Event.Event.create_from_msg(msg_answer))
         
     listening_sock.close()
+
+    
 if __name__ == '__main__':
     main()
