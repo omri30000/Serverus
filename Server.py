@@ -53,7 +53,7 @@ class Server:
         events = []
         computer_id = int(product_message[0])
         for i in range(1,len(product_message), EVENT_SIZE_BYTES):
-            event = Event.Event(product_message[i : i + EVENT_SIZE_BYTES])
+            event = Event.Event.create_from_msg(product_message[i : i + EVENT_SIZE_BYTES])
             self.db_manager.insert_event(event,computer_id)
         print(events)
 
@@ -61,7 +61,7 @@ class Server:
         last_date = self.products[computer_id]
         #read from sql
         
-        outter_events = []
+        outter_events = self.db_manager.get_dangerous_events(last_date, computer_id)
         msg = bytearray([0])
         for eve in outter_events:
             msg += eve.to_packet()

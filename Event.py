@@ -1,29 +1,50 @@
 # This is the Event class
-from datetime import datetime 
+from datetime import datetime
+from datetime import timedelta
+ 
 class Event:
-    def __init__(self,msg):
-        print(msg)
-        self.level = msg[0]
-        self.ip_add =".".join([str(i) for i in msg[1:5]])
-        date = sum([pow(256,i)  * int(msg[5+i]) for i in range(4)])
-        today = datetime.date.today()
-        if calc_date_param(datetime.now() > date):
-            today -= timedelta(days=1)
-        self.date = today + timedelta(milliseconds = date)    
-        print(self.date.days,self.date.hour,self.date.minute,self.date.second)
-        print(self.level,self.ip_add)
     
-    """
-    def __init__(self,ip,level,date):
+    def __init__(self, _ip, _level, _date):
+        """
         Constructor
 
         Args:
             ip ({str}): The entity's ip address
-             
-        self.ip_add = ip
-        self.level = level
-        self.date = date
-    """
+        """     
+        self.ip_add = _ip
+        self.level = _level
+        self.date = _date
+
+
+    @classmethod
+    def create_from_msg(cls, msg):
+        print(msg)
+        
+        level = msg[0]
+        ip_add =".".join([str(i) for i in msg[1:5]])
+        
+        temp = sum([pow(256,i)  * int(msg[5+i]) for i in range(4)])
+        today = datetime.date.today()
+        if Event.calc_date_param(datetime.now() > temp):
+            today -= timedelta(days=1)
+        date = today + timedelta(milliseconds = temp)    
+        
+        print(date.days, date.hour, date.minute, date.second)
+        print(level, ip_add)
+        
+        return cls(ip_add, level, date)
+
+    
+    @classmethod
+    def create_from_list(cls, event_params):
+        
+        ip_add = event_params[0]
+        level = event_params[1]
+        date = datetime.strptime(event_params[2], '%Y-%m-%d %H:%M:%S.%f')
+        
+        return cls(ip_add, level, date)
+    
+
 
     """getters functions"""
     def get_ip_add(self):
@@ -35,7 +56,7 @@ class Event:
     def get_date(self):
         return self.date
     
-    
+    @staticmethod
     def calc_date_param(time):
         return time.hour * 60*60 *1000 + time.minute* 60 *1000 + time.second * 1000 +int(time.microsecond /1000)
 
@@ -47,7 +68,7 @@ class Event:
             int: hour in milliseconds
         """
 
-        return calc_date_param(self.date)
+        return Event.calc_date_param(self.date)
     
 
     def to_packet(self):
@@ -75,4 +96,3 @@ class Event:
 
         mes.append(vals[::-1])
         return mes
-

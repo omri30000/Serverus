@@ -39,8 +39,7 @@ class DatabaseManager:
     # --------------------------------------------------------------
 
     def insert_event(self, event, product_id):
-        sql_statement = '''INSERT INTO Events (productId, attackerIp, blockLevel)
-        VALUES (''' + str(product_id) + ", \'" + event.get_ip_add() + "\', " + event.get_level() + ")"
+        sql_statement = "INSERT INTO Events (productId, attackerIp, blockLevel, date) VALUES (" + str(product_id) + ", \'" + event.get_ip_add() + "\', " + str(event.get_level()) + ", \'" + str(event.get_date()) + "\')"
         self.db_cursor.execute(sql_statement)
 
 
@@ -53,18 +52,35 @@ class DatabaseManager:
         :type time: Datetime
         :param product_id: the id of the product that needs the data
         :type product_id: int
-	    :return: no return value
-	    :rtype: None
+	    :return: list of the relevant events
+	    :rtype: list[event]
 	    """
-        sql_statement = "SELECT * FROM Products WHERE productId != " + str(product_id) + " AND blockLevel = 4"
+        sql_statement = "SELECT * FROM Events WHERE productId != " + str(product_id) + " AND blockLevel = 4"
         self.db_cursor.execute(sql_statement)
+        
         rows = self.db_cursor.fetchall()
+        events = []
+        for i in range(0, len(rows)):
+            rows[i] = list(rows[i])
+            rows[i].pop(0)
+            rows[i].pop(0)
+
+            events += [Event.Event.create_from_list(rows[i])]
+
+        return events
 
 
 
 def main():
     a = DatabaseManager("general_db.sqlite")
-    a.insert_product()
+    """
+    a.insert_event(Event.Event("5.5.5.5", 4, datetime.datetime.now()), 3)
+    a.insert_event(Event.Event("5.5.5.5", 4, datetime.datetime.now()), 3)
+    a.insert_event(Event.Event("5.5.5.5", 4, datetime.datetime.now()), 3)
+    a.insert_event(Event.Event("5.5.5.5", 4, datetime.datetime.now()), 3)
+    """
+
+    print(a.get_dangerous_events(5, 1))
 
 if __name__ == '__main__':
     main()
