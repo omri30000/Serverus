@@ -15,7 +15,7 @@ int main()
     std::cout << "Hello, World!" << std::endl;
     PacketsReaderSQLITE reader = PacketsReaderSQLITE("../db_file.sqlite");
     FeatureExtractor extractor;
-    FeatureMapper mapper(100,5,85);
+    FeatureMapper mapper(250,20,85);
     Parser* p = nullptr;
 
 
