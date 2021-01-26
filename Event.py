@@ -1,6 +1,5 @@
 # This is the Event class
-from datetime import datetime
-from datetime import timedelta
+import datetime
  
 class Event:
     
@@ -32,13 +31,15 @@ class Event:
         level = msg[0]
         ip_add =".".join([str(i) for i in msg[1:5]])
         
-        temp = sum([pow(256,i)  * int(msg[5+i]) for i in range(4)])
+        temp = sum([pow(256,3-i)  * int(msg[5+i]) for i in range(4)])
         today = datetime.date.today()
-        if Event.calc_date_param(datetime.now() > temp):
-            today -= timedelta(days=1)
-        date = today + timedelta(milliseconds = temp)    
+        if Event.calc_date_param(datetime.datetime.now()) < temp:
+            today -= datetime.timedelta(days=1)
+        date = today + datetime.timedelta(milliseconds = temp)    
         
-        print(date.days, date.hour, date.minute, date.second)
+        print(temp)
+        print(date)
+        print(date.day, date.hour, date.minute, date.second)
         print(level, ip_add)
         
         return cls(ip_add, level, date)
@@ -57,7 +58,7 @@ class Event:
         """
         ip_add = event_params[0]
         level = event_params[1]
-        date = datetime.strptime(event_params[2], '%Y-%m-%d %H:%M:%S.%f')
+        date = datetime.datetime.strptime(event_params[2], '%Y-%m-%d %H:%M:%S.%f')
         
         return cls(ip_add, level, date)
     

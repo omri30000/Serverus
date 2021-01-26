@@ -4,6 +4,7 @@ import time
 import DatabaseManager
 import Event
 import datetime
+import Config
 
 class Server:
     def __init__(self, listening_port):
@@ -75,7 +76,8 @@ class Server:
 
 
 def main():
-    pass
+    my_server = Server(Config.SERVER_PORT)
+    my_server.serve()
 
 
 if __name__ == '__main__':

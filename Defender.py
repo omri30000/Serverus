@@ -11,6 +11,7 @@ from datetime import datetime, timedelta
 import Rule
 import Event
 import Log
+import Config
 
 
 COMPUTER_ID = 1
@@ -172,7 +173,7 @@ class Defender():
             #get all events to send
             data = bytearray()
             with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
-                s.connect((HOST, PORT))
+                s.connect((Config.SERVER_IP, Config.SERVER_PORT))
                 s.sendall(message)
                 data = s.recv(1024)
             
@@ -182,11 +183,12 @@ class Defender():
                 self.defend(data[i:i+5],local=True) #at level 3
 
 def main():    
-    defender= Defender()
+    defender = Defender()
     listening_sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-    server_address = ('', LISTEN_PORT)
-    listening_sock.bind(server_address)
+    
+    listening_sock.bind(('', LISTEN_PORT))
     listening_sock.listen(1)  # wait for connection with the model
+    
     # Create a new conversation socket
     model_soc, model_address = listening_sock.accept()
     while True:
