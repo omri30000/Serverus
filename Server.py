@@ -9,6 +9,8 @@ import Config
 class Server:
     def __init__(self, listening_port):
         self.products = {}
+        self.products_lock = threading.Lock()
+
         self.LISTEN_PORT = listening_port
 
         # Create a TCP/IP socket
@@ -21,6 +23,7 @@ class Server:
         self.threads = []
 
         self.db_manager = DatabaseManager.DatabaseManager("general_db.sqlite")
+        self.db_manager_lock = threading.Lock()
         
         
     def serve(self):
@@ -55,21 +58,33 @@ class Server:
         computer_id = int(product_message[0])
         for i in range(1,len(product_message), EVENT_SIZE_BYTES):
             event = Event.Event.create_from_msg(product_message[i : i + EVENT_SIZE_BYTES])
+            
+            self.db_manager_lock.acquire()
             self.db_manager.insert_event(event,computer_id)
+            self.db_manager_lock.release()
+            
         print(events)
 
         #save to sql - events
+        self.products_lock.acquire()
         last_date = self.products[computer_id]
+        self.products_lock.release()
         #read from sql
         
+        self.db_manager_lock.acquire()
         outter_events = self.db_manager.get_dangerous_events(last_date, computer_id)
+        self.db_manager_lock.release()
+        
         msg = bytearray([0])
         for eve in outter_events:
             msg += eve.to_packet()
         
         sock.sendall(msg)
+
+        self.products_lock.acquire()
         self.products[computer_id] = datetime.datetime.now() 
-        
+        self.products_lock.release()
+
         time.sleep(seconds = 2)
         sock.close()
 
