@@ -2,6 +2,7 @@ import sqlite3
 import Event
 import datetime
 
+
 class DatabaseManager:
     def __init__(self, db_file_name):
         self.db = sqlite3.connect(db_file_name)
@@ -19,22 +20,23 @@ class DatabaseManager:
         self.db.commit()
         self.db.close()
 
-
     # -----------to be moved to the http server---------------------
     def insert_user(self, username, password, product_id):
-        sql_statement = "INSERT INTO Users (username, password, computerId) VALUES (\'" + username + "\', \'" + password + "\', " + str(product_id) + ")"
+        sql_statement = "INSERT INTO Users (username, password, computerId) VALUES (\'" + username + "\', \'" + password + "\', " + str(
+            product_id) + ")"
         self.db_cursor.execute(sql_statement)
 
     def insert_product(self):
         sql_statement = "INSERT INTO Products (joinDate) VALUES (\'" + str(datetime.datetime.now()) + "\')"
         self.db_cursor.execute(sql_statement)
 
-        sql_statement = "SELECT * FROM Products" # WHERE joinDate=\'" + str(datetime.datetime.now()) + "\'"
+        sql_statement = "SELECT * FROM Products"  # WHERE joinDate=\'" + str(datetime.datetime.now()) + "\'"
         self.db_cursor.execute(sql_statement)
         rows = self.db_cursor.fetchall()
 
         for row in rows:
             print(row)
+
     # --------------------------------------------------------------
 
     def insert_event(self, event, product_id):
@@ -49,7 +51,9 @@ class DatabaseManager:
 	    :return: nothing
 	    :rtype: None
 	    """
-        sql_statement = "INSERT INTO Events (productId, attackerIp, blockLevel, date) VALUES (" + str(product_id) + ", \'" + event.get_ip_add() + "\', " + str(event.get_level()) + ", \'" + str(event.get_date()) + "\')"
+        sql_statement = "INSERT INTO Events (productId, attackerIp, blockLevel, date) VALUES (" + str(
+            product_id) + ", \'" + event.get_ip_add() + "\', " + str(event.get_level()) + ", \'" + str(
+            event.get_date()) + "\')"
         self.db_cursor.execute(sql_statement)
 
         if event.get_level() > 1:
@@ -62,15 +66,14 @@ class DatabaseManager:
             elif event.get_level() == 4:
                 rule_id = self.db_cursor.lastrowid
 
-                sql_statement = "SELECT id FROM Products" 
+                sql_statement = "SELECT id FROM Products"
                 self.db_cursor.execute(sql_statement)
 
                 temp = self.db_cursor.fetchall()
-                all_products_ids = [temp[i][0] for i in range(0,len(temp))]
-                
+                all_products_ids = [temp[i][0] for i in range(0, len(temp))]
+
                 for single_id in all_products_ids:
                     self.__insert_block(single_id, rule_id)
-
 
     def __insert_rule(self, event_id, data):
         """
@@ -87,7 +90,6 @@ class DatabaseManager:
         sql_statement = "INSERT INTO Rules (data, eventId) VALUES (\'" + data + "\', " + str(event_id) + ")"
         self.db_cursor.execute(sql_statement)
 
-
     def __insert_block(self, product_id, rule_id):
         """
         The method will insert a new block to the database
@@ -100,9 +102,8 @@ class DatabaseManager:
 	    :return: nothing
 	    :rtype: None
 	    """
-        sql_statement = "INSERT INTO Blocks (productId, ruleId) VALUES (" + str(product_id) + ", " + str(rule_id) + ")" 
+        sql_statement = "INSERT INTO Blocks (productId, ruleId) VALUES (" + str(product_id) + ", " + str(rule_id) + ")"
         self.db_cursor.execute(sql_statement)
-
 
     def get_dangerous_events(self, time, product_id):
         """
@@ -118,7 +119,7 @@ class DatabaseManager:
 	    """
         sql_statement = "SELECT * FROM Events WHERE productId != " + str(product_id) + " AND blockLevel = 4"
         self.db_cursor.execute(sql_statement)
-        
+
         rows = self.db_cursor.fetchall()
         events = []
         for i in range(0, len(rows)):
@@ -131,16 +132,14 @@ class DatabaseManager:
         return events
 
 
-
 def main():
     a = DatabaseManager("general_db.sqlite")
-    
+
     """
     a.insert_event(Event.Event("5.5.5.5", 4, datetime.datetime.now()), 3)
     a.insert_event(Event.Event("5.5.5.5", 4, datetime.datetime.now()), 3)"""
     a.insert_event(Event.Event("100.100.100.100", 3, datetime.datetime.now()), 11)
     a.insert_event(Event.Event("101.101.101.101", 4, datetime.datetime.now()), 11)
-    
 
     #  print(a.get_dangerous_events(5, 1))
 
