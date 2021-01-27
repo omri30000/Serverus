@@ -39,7 +39,8 @@ class Defender():
         self.emerge = False #level 4 has been found
         
         try:
-            self.log = Log.Log(input("Enter log file name: "))
+            # self.log = Log.Log(input("Enter log file name: "))
+            self.log = Log.Log("Loglog.txt")
         except Exception as e:
             raise e
 
@@ -189,12 +190,16 @@ def main():
     listening_sock.bind(('', LISTEN_PORT))
     listening_sock.listen(1)  # wait for connection with the model
     
-    # Create a new conversation socket
-    model_soc, model_address = listening_sock.accept()
+    
     while True:
-        msg_answer = model_soc.recv(1024)
-        print("ok")
-        defender.defend(Event.Event.create_from_msg(msg_answer))
+        try:
+            # Create a new conversation socket
+            model_soc, model_address = listening_sock.accept()
+            
+            msg_answer = model_soc.recv(1024)
+            defender.defend(Event.Event.create_from_msg(msg_answer))
+        except Exception:
+            pass
         
     listening_sock.close()
 

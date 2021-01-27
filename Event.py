@@ -32,14 +32,21 @@ class Event:
         ip_add =".".join([str(i) for i in msg[1:5]])
         
         temp = sum([pow(256,3-i)  * int(msg[5+i]) for i in range(4)])
-        today = datetime.date.today()
-        if Event.calc_date_param(datetime.datetime.now()) < temp:
+        today = datetime.datetime.now()
+
+        today_delta = Event.calc_date_param(today)
+        today -= datetime.timedelta(milliseconds=today_delta)
+        today -= datetime.timedelta(microseconds=today.microsecond)
+        
+        if today_delta < temp:
             today -= datetime.timedelta(days=1)
+        
         date = today + datetime.timedelta(milliseconds = temp)    
         
+        print(today)
         print(temp)
         print(date)
-        print(date.day, date.hour, date.minute, date.second)
+        print(date.hour, date.minute, date.second)
         print(level, ip_add)
         
         return cls(ip_add, level, date)
@@ -112,5 +119,9 @@ class Event:
         if len(vals) < 4:
             vals += [0]*(4-len(vals))
 
-        mes.append(vals[::-1])
+        vals.reverse()
+
+        for cell in vals:
+            mes.append(cell)
+            
         return mes

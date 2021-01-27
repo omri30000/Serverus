@@ -31,7 +31,7 @@ class Server:
             product_soc, product_address = self.listening_sock.accept()
 
             try:
-                t = threading.Thread(target = self.__manage_conversation, args = product_soc)
+                t = threading.Thread(target = self.__manage_conversation, args = (product_soc,))
                 t.start()
                 self.threads.append(t)
 
