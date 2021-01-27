@@ -8,7 +8,7 @@ import socket
 
 def main():
     HOST = '127.0.0.1'  # The defender's IP address
-    PORT = 5556        # The port used by the defender
+    PORT = 3020        # The port used by the defender
 
     a = bytearray(b'\x04\x08\x08\x01\x01\x00\x36\xee\x80')
 

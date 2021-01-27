@@ -6,6 +6,7 @@ import Event
 import datetime
 import Config
 
+
 class Server:
     def __init__(self, listening_port):
         self.products = {}
@@ -24,8 +25,7 @@ class Server:
 
         self.db_manager = DatabaseManager.DatabaseManager("general_db.sqlite")
         self.db_manager_lock = threading.Lock()
-        
-        
+
     def serve(self):
         self.listening_sock.listen(1)  # wait for connection with product
         
@@ -34,7 +34,7 @@ class Server:
             product_soc, product_address = self.listening_sock.accept()
 
             try:
-                t = threading.Thread(target = self.__manage_conversation, args = (product_soc,))
+                t = threading.Thread(target=self.__manage_conversation, args=(product_soc,))
                 t.start()
                 self.threads.append(t)
 

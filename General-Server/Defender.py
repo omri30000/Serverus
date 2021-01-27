@@ -1,4 +1,3 @@
-
 import os
 from crontab import CronTab
 import datetime
@@ -13,15 +12,15 @@ import Event
 import Log
 import Config
 
-
 COMPUTER_ID = 1
-LISTEN_PORT = 5556
+LISTEN_PORT = 3020
 
-#This is the Defender class, which will execute the defensive actions against hostile entities.
 
-class Defender():
-
-    count = 0 #amount of objects created
+class Defender:
+    """
+    This is the Defender class, which will execute the defensive actions against hostile entities.
+    """
+    count = 0  # amount of objects created
 
     def __init__(self):
         """Constructor
@@ -36,7 +35,7 @@ class Defender():
         self.events = []
         self.thread = threading.Thread(target=self.__inform)
         self.cron = CronTab(user='root')
-        self.emerge = False #level 4 has been found
+        self.emerge = False  # level 4 has been found
         
         try:
             # self.log = Log.Log(input("Enter log file name: "))
@@ -46,8 +45,7 @@ class Defender():
 
         self.thread.start()
 
-
-    def defend(self,event,local =False):
+    def defend(self, event, local = False):
         """
         Primary function, provides the defence from hostile event, according to the anomaly level.
         Args:
@@ -64,13 +62,12 @@ class Defender():
 
         rule = Rule.Rule(event)
 
-        #for upgrading
+        # for upgrading
 
         self.__block(rule)
 
         if event.get_level() == 4 and not local:
             self.emerge = True
-
 
     def cancel_action(self, event):
         """This function cancel fire-wall blocking
@@ -84,21 +81,16 @@ class Defender():
             msg = os.system("iptables -D INPUT %s -j DROP"%(Rule.Rule(event,3).write_rule()))
         self.log.add_unblock_record(event)
 
-
-
     def __close_socket(self, event):
         """The function closes a specific socket
 
         Args:
             event ({Event}): Hostile event
         """
-        #terminates all sockets with event
+        # terminates all sockets with event
         os.system("ss --kill -nt dst %s "%(event.get_ip_add()))
-        #os.system("tcpkill ip host %s"%(event.get_ip_add()))
+        # os.system("tcpkill ip host %s"%(event.get_ip_add()))
         self.log.add_block_record(event,1)
-
-    
-
 
     def __block(self, rule):
 
@@ -110,7 +102,7 @@ class Defender():
 
 
         RULE_NOT_FOUND = 256
-        #check if rule already exists
+        # check if rule already exists
         try:
             if int(os.system("iptables -C INPUT %s -j DROP"%(rule.write_rule()))) != RULE_NOT_FOUND:
                 #rule already exists
@@ -121,9 +113,8 @@ class Defender():
         except Exception as e:
             self.log.add_error_record(e)
 
-
         if rule.is_temp():
-            time_to_delete = rule.get_date() + timedelta(minutes=2) #time to disable blocking
+            time_to_delete = rule.get_date() + timedelta(minutes=2)  # time to disable blocking
             print("hello")
             rule_to_write = "/sbin/iptables -D INPUT %s -j DROP"%(rule.write_rule())
 
@@ -168,10 +159,10 @@ class Defender():
             message = bytearray([COMPUTER_ID])
             for i in self.events:
                 message += i.to_packet()
-            #requires lock
+            # requires lock
             self.events = []
             
-            #get all events to send
+            # get all events to send
             data = bytearray()
             with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
                 s.connect((Config.SERVER_IP, Config.SERVER_PORT))
@@ -179,9 +170,10 @@ class Defender():
                 data = s.recv(1024)
             
             msg_code = int(data[0])
-            #block events from global server
-            for i in range(1,len(data),5):
-                self.defend(data[i:i+5],local=True) #at level 3
+            # block events from global server
+            for i in range(1, len(data), 5):
+                self.defend(data[i:i+5], local=True)  # at level 3
+
 
 def main():    
     defender = Defender()
@@ -189,8 +181,7 @@ def main():
     
     listening_sock.bind(('', LISTEN_PORT))
     listening_sock.listen(1)  # wait for connection with the model
-    
-    
+
     while True:
         try:
             # Create a new conversation socket
