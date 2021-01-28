@@ -4,14 +4,14 @@
 //constructor
 IncStatsData::IncStatsData()
 {
-    _cleaningThread =  std::thread(&IncStatsData::cleanInactiveStats,this,10);
+   // _cleaningThread =  std::thread(&IncStatsData::cleanInactiveStats,this,10);
     _isRunning = true;
 }
 
 IncStatsData::~IncStatsData()
 {
     _isRunning = false;
-    _cleaningThread.join();
+    //_cleaningThread.join();
 
 	for (map<string,vector<IncStats*>>::iterator it = this->_incStatsCollection.begin(); it != this->_incStatsCollection.end(); it++)
 	{

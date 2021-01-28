@@ -4,11 +4,11 @@
 
 RelativeIncStats::RelativeIncStats(IncStats* first, IncStats* second)
 {
-    this->_firstIncStats = first;
-    this->_secondIncStats = second;
+    this->_arr[0] = first;
+    this->_arr[1] = second;
 
-    this->_firstCurrResidule = 0;
-    this->_secondCurrResidule = 0;
+    this->_residules[0] = 0;
+    this->_residules[1] = 0;
 
     this->_sumResiduleProducts = 0;
     this->_currWeight = 0.00000000000000000001;  // very small number but not zero
@@ -16,11 +16,12 @@ RelativeIncStats::RelativeIncStats(IncStats* first, IncStats* second)
 
 RelativeIncStats::RelativeIncStats(IncStats* first, IncStats* second, Time initialTime) : _currTimeStamp(initialTime)
 {
-    this->_firstIncStats = first;
-    this->_secondIncStats = second;
 
-    this->_firstCurrResidule = 0;
-    this->_secondCurrResidule = 0;
+    this->_arr[0] = first;
+    this->_arr[1] = second;
+
+    this->_residules[0] = 0;
+    this->_residules[1] = 0;
 
     this->_sumResiduleProducts = 0;
     this->_currWeight = 0.00000000000000000001; // very small number but not zero
@@ -35,34 +36,22 @@ void RelativeIncStats::update(string iSID, float newValue, Time timeStamp)
 {
     float newResidule = 0, temp = 0;
 
-    if (iSID == this->_firstIncStats->getIdentifier())
-    {
-        this->_secondIncStats->performDecay(timeStamp);
-        this->performDecay(timeStamp, 1);
 
-        this->_firstCurrResidule = (newValue - this->_firstIncStats->calcMean());
+    int id = this->_arr[1]->getIdentifier() == iSID;
 
-        newResidule = (this->_firstCurrResidule * this->_secondCurrResidule);
-
-        this->_sumResiduleProducts += newResidule;
-        this->_currWeight += 1;
-    }
-    else if (iSID == this->_secondIncStats->getIdentifier())
-    {
-        this->_firstIncStats->performDecay(timeStamp);
-        this->performDecay(timeStamp, 2);
-
-        this->_secondCurrResidule = (newValue - this->_secondIncStats->calcMean());
-
-        newResidule = (this->_secondCurrResidule * this->_firstCurrResidule);
-        
-        this->_sumResiduleProducts += newResidule;
-        this->_currWeight += 1;
-    }
-    else
-    {
+    if(!id && iSID != this->_arr[0]->getIdentifier())
         throw std::exception();
-    }
+
+    this->_arr[!id]->performDecay(timeStamp);
+    this->performDecay(timeStamp,id);
+
+    this->_residules[id] = (newValue - this->_arr[id]->calcMean());
+    newResidule = this->_residules[id] * this->_residules[!id];
+    this->_sumResiduleProducts += newResidule;
+
+    this->_currWeight+=1;
+    return;
+
 }
 
 /*
@@ -76,39 +65,17 @@ void RelativeIncStats::performDecay(Time timeStamp, int index)
 {
     long timeDifference = timeStamp - this->_currTimeStamp;
     float factor = 0;
-    
-    /*std::cout << "****" << std::endl;
-    std::cout << timeStamp.toString() << std::endl;
-    std::cout << this->_currTimeStamp.toString() << std::endl;
-    std::cout << timeDifference << std::endl;
-    std::cout << "****" << std::endl;*/
 
     if (timeDifference > 0)
     {
-        switch (index)
-        {
-            case 1:
-                factor = pow(2, -1 *(this->_firstIncStats->getDecayFactor() * (float)timeDifference));
-                /*std::cout << "--1--" << std::endl;
-                std::cout << factor << std::endl;
-                std::cout << "--1--" << std::endl;*/
-                this->_sumResiduleProducts *= factor;
-                this->_currWeight *= factor;
-                this->_firstCurrResidule *= factor;
-                break;
-            case 2:
-                factor = pow(2, -1 *(this->_secondIncStats->getDecayFactor() * (float)timeDifference));
-                /*std::cout << "--2--" << std::endl;
-                std::cout << factor << std::endl;
-                std::cout << "--2--" << std::endl;*/
-                this->_sumResiduleProducts *= factor;
-                this->_currWeight *= factor;
-                this->_secondCurrResidule *= factor;
-                break;
-            default:
-                throw std::exception();
-                break;
-        } 
+        if(index <0 || index >1)
+            throw std::exception();
+
+        factor = pow(2,-1*(this->_arr[index]->getDecayFactor() * (float)timeDifference));
+        this->_sumResiduleProducts *= factor;
+        this->_currWeight *= factor;
+        this->_residules[index] *= factor;
+
         this->_currTimeStamp = timeStamp;
     }
 }
@@ -128,8 +95,9 @@ vector<float> RelativeIncStats::getRelativeStats() const
     std::cout << this->calcCovariance() << std::endl;
     std::cout << this->calcCorrelationCoefficiency() << std::endl;
     std::cout << "====" << std::endl;*/
-    vec.push_back(this->_firstIncStats->calcRadius(*this->_secondIncStats));
-    vec.push_back(this->_firstIncStats->calcMagnitude(*this->_secondIncStats));
+    vec.push_back(this->_arr[0]->calcRadius(*this->_arr[1]));
+    vec.push_back(this->_arr[0]->calcMagnitude(*this->_arr[1]));
+
 
     return vec;
 }
@@ -155,8 +123,7 @@ output: correlation coefficiency of 2 inc stats
 */
 float RelativeIncStats::calcCorrelationCoefficiency() const
 {
-    float stdProduct = this->_firstIncStats->calcStandardDeviation() * this->_secondIncStats->calcStandardDeviation();
-
+    float stdProduct = this->_arr[0]->calcStandardDeviation() * this->_arr[1]->calcStandardDeviation();
     return (stdProduct != 0) ? this->calcCovariance() / stdProduct : 0; 
 }
 

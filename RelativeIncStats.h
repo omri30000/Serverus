@@ -12,11 +12,10 @@ using std::string;
 class RelativeIncStats
 {
 protected:
-    IncStats* _firstIncStats;
-    IncStats* _secondIncStats;
 
-    float _firstCurrResidule;
-    float _secondCurrResidule;
+    IncStats* _arr[2];
+    float _residules[2];
+
 
     float _sumResiduleProducts; //sum of residule products (A-uA)(B-uB)
     float _currWeight;

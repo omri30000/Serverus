@@ -9,6 +9,7 @@
 #include <vector>
 #include <utility>
 #include <mutex>
+#include <thread>
 
 using std::vector;
 using std::map;
@@ -21,9 +22,10 @@ class IncStatsData
 {
 protected:
     map<string,vector<IncStats*>> _incStatsCollection;
-    map<string,vector<RelativeIncStats*>> _relIncStatsCollection; //lambda based vector, key is in format: "key1+key2"
+
+    map<string,vector<RelativeIncStats*>> _relIncStatsCollection; //lambda based vector, key is in format: "key1+key2"/2
     mutex _incStatsCollectionLock;
-    mutex _relIncStatsCollectionLock;
+
     bool _isRunning;
     std::thread _cleaningThread;
 
@@ -32,6 +34,7 @@ protected:
     void cleanInactiveStats(float limit);
     string getCombinedKey(string first, string second) const;
     void deleteStream(string key);
+
 public:
     IncStatsData();
     ~IncStatsData();
@@ -44,5 +47,5 @@ public:
 
     vector<float> getStatsOneDimension(string key) const throw();
     vector<float> getStatsTwoDimensions(string firstKey, string secondKey) const throw();
-    void updateStatsTwoDimensions(string firstKey, Time timestamp, float value) const throw();
+    void updateStatsTwoDimensions(string firstKey, Time timestamp, float value) const throw(); // TODO:not found
 };
