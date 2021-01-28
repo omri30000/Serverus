@@ -233,12 +233,17 @@ This is a thread that will do his job once per X time
 input: the limit, each stream with a weight lower than the limit will be removed
 output: none
 */
-void cleanInactiveStats(float limit)
+void IncStatsData::cleanInactiveStats(float limit)
 {
 	/*
 	map<string,vector<IncStats*>> _incStatsCollection;
     map<string,vector<RelativeIncStats*>> _relIncStatsCollection;
 	*/
+    {
+        const lock_guard<mutex> collectionLock(this->_incStatsCollectionLock);
+        const lock_guard<mutex> relCollectionLock(this->_relIncStatsCollectionLock);
 
-	
+
+    }
+
 }

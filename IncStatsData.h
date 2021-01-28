@@ -8,17 +8,22 @@
 #include <string>
 #include <vector>
 #include <utility>
+#include <mutex>
 
 using std::vector;
 using std::map;
 using std::string;
 using std::pair;
+using std::mutex;
+using std::lock_guard;
 
 class IncStatsData
 {
 protected:
     map<string,vector<IncStats*>> _incStatsCollection;
     map<string,vector<RelativeIncStats*>> _relIncStatsCollection; //lambda based vector, key is in format: "key1+key2"
+    mutex _incStatsCollectionLock;
+    mutex _relIncStatsCollectionLock;
 
     bool isStreamExists(string key) const;
     bool isRelStreamExists(string key) const;
