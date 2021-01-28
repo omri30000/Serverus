@@ -42,14 +42,10 @@ class Event:
             today -= datetime.timedelta(days=1)
         
         date = today + datetime.timedelta(milliseconds=temp)
-        
-        print(today)
-        print(temp)
-        print(date)
-        print(date.hour, date.minute, date.second)
-        print(level, ip_add)
-        
-        return cls(ip_add, level, date)
+
+        a = cls(ip_add, level, date)
+        print("created from message: ", a.date)
+        return a
 
     @classmethod
     def create_from_list(cls, event_params):
@@ -80,7 +76,7 @@ class Event:
     
     @staticmethod
     def calc_date_param(time):
-        return time.hour * 60*60 *1000 + time.minute* 60 *1000 + time.second * 1000 +int(time.microsecond /1000)
+        return time.hour * 60*60 * 1000 + time.minute * 60 * 1000 + time.second * 1000 + int(time.microsecond / 1000)
 
     def calc_date(self):
         """

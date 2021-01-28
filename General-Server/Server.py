@@ -57,7 +57,7 @@ class Server:
         events = []
         computer_id = int(product_message[0])
         for i in range(1, len(product_message), EVENT_SIZE_BYTES):
-            event = Event.Event.create_from_msg(product_message[i : i + EVENT_SIZE_BYTES])
+            event = Event.Event.create_from_msg(product_message[i: i + EVENT_SIZE_BYTES])
             
             self.db_manager_lock.acquire()
             self.db_manager.insert_event(event, computer_id)
@@ -79,8 +79,6 @@ class Server:
         
         msg = bytearray([0])
 
-        print(outer_events)
-
         for eve in outer_events:
             msg += eve.to_packet()
         
@@ -90,7 +88,7 @@ class Server:
         self.products[computer_id] = datetime.datetime.now() 
         self.products_lock.release()
 
-        time.sleep(secs=2)
+        time.sleep(2)
         sock.close()
 
 
