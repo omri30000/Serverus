@@ -56,27 +56,31 @@ class Server:
         product_message = bytearray(sock.recv(1024))
         events = []
         computer_id = int(product_message[0])
-        for i in range(1,len(product_message), EVENT_SIZE_BYTES):
+        for i in range(1, len(product_message), EVENT_SIZE_BYTES):
             event = Event.Event.create_from_msg(product_message[i : i + EVENT_SIZE_BYTES])
             
             self.db_manager_lock.acquire()
-            self.db_manager.insert_event(event,computer_id)
+            self.db_manager.insert_event(event, computer_id)
             self.db_manager_lock.release()
             
         print(events)
 
-        #save to sql - events
+        # save to sql - events
         self.products_lock.acquire()
-        last_date = self.products[computer_id]
+        if computer_id in self.products.keys():
+            last_date = self.products[computer_id]
+        else:
+            last_date = None
+
         self.products_lock.release()
-        #read from sql
+        # read from sql
         
         self.db_manager_lock.acquire()
-        outter_events = self.db_manager.get_dangerous_events(last_date, computer_id)
+        outer_events = self.db_manager.get_dangerous_events(computer_id, last_date)
         self.db_manager_lock.release()
         
         msg = bytearray([0])
-        for eve in outter_events:
+        for eve in outer_events:
             msg += eve.to_packet()
         
         sock.sendall(msg)
@@ -85,9 +89,8 @@ class Server:
         self.products[computer_id] = datetime.datetime.now() 
         self.products_lock.release()
 
-        time.sleep(seconds = 2)
+        time.sleep(secs=2)
         sock.close()
-
 
 
 def main():

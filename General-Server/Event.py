@@ -1,6 +1,7 @@
 # This is the Event class
 import datetime
- 
+
+
 class Event:
     
     def __init__(self, _ip, _level, _date):
@@ -14,7 +15,6 @@ class Event:
         self.level = _level
         self.date = _date
 
-
     @classmethod
     def create_from_msg(cls, msg):
         """
@@ -23,15 +23,15 @@ class Event:
         :type cls: Event class
         :param msg: the binary message to be parsed
         :type msg: bytearray
-	    :return: an Event object made by the binary message
-	    :rtype: Event
+        :return: an Event object made by the binary message
+        :rtype: Event
         """
         print(msg)
         
         level = msg[0]
-        ip_add =".".join([str(i) for i in msg[1:5]])
+        ip_add = ".".join([str(i) for i in msg[1:5]])
         
-        temp = sum([pow(256,3-i)  * int(msg[5+i]) for i in range(4)])
+        temp = sum([pow(256, 3-i) * int(msg[5+i]) for i in range(4)])
         today = datetime.datetime.now()
 
         today_delta = Event.calc_date_param(today)
@@ -41,7 +41,7 @@ class Event:
         if today_delta < temp:
             today -= datetime.timedelta(days=1)
         
-        date = today + datetime.timedelta(milliseconds = temp)    
+        date = today + datetime.timedelta(milliseconds=temp)
         
         print(today)
         print(temp)
@@ -51,7 +51,6 @@ class Event:
         
         return cls(ip_add, level, date)
 
-    
     @classmethod
     def create_from_list(cls, event_params):
         """
@@ -60,18 +59,16 @@ class Event:
         :type cls: Event class
         :param event_params: list of attributes to be parsed (Example: ['5.5.5.5', 4, '2021-01-24 16:07:45.029904'])
         :type event_params: list
-	    :return: an Event object made by the given list
-	    :rtype: Event
+        :return: an Event object made by the given list
+        :rtype: Event
         """
         ip_add = event_params[0]
         level = event_params[1]
         date = datetime.datetime.strptime(event_params[2], '%Y-%m-%d %H:%M:%S.%f')
         
         return cls(ip_add, level, date)
-    
 
-
-    """getters functions"""
+    # getters functions
     def get_ip_add(self):
         return self.ip_add
     
@@ -94,7 +91,6 @@ class Event:
         """
 
         return Event.calc_date_param(self.date)
-    
 
     def to_packet(self):
         """
@@ -106,14 +102,14 @@ class Event:
         
         mes.append(self.level)  # add the level of blocking
         
-        for i in self.ip_add.split('.'): # add IP address
+        for i in self.ip_add.split('.'):  # add IP address
             mes.append(int(i))
         
         BASE = 256
         date = self.calc_date()
-        vals =[]
-        while date >0:
-            vals += [date%BASE]
+        vals = []
+        while date > 0:
+            vals += [date % BASE]
             date //= BASE
         
         if len(vals) < 4:

@@ -5,7 +5,7 @@ import datetime
 
 class DatabaseManager:
     def __init__(self, db_file_name):
-        self.db = sqlite3.connect(db_file_name)
+        self.db = sqlite3.connect(db_file_name, check_same_thread=False)
         self.db_cursor = self.db.cursor()
         print("Opened DB successfully")
 
@@ -14,16 +14,16 @@ class DatabaseManager:
         The destructor of the DatabaseManager object
         :param self: the instance of manager
         :type self: DatabaseManager
-	    :return: no return value
-	    :rtype: None
-	    """
+        :return: no return value
+        :rtype: None
+        """
         self.db.commit()
         self.db.close()
 
     # -----------to be moved to the http server---------------------
     def insert_user(self, username, password, product_id):
-        sql_statement = "INSERT INTO Users (username, password, computerId) VALUES (\'" + username + "\', \'" + password + "\', " + str(
-            product_id) + ")"
+        sql_statement = "INSERT INTO Users (username, password, computerId) VALUES (\'" + username + "\', \'" + \
+                        password + "\', " + str(product_id) + ")"
         self.db_cursor.execute(sql_statement)
 
     def insert_product(self):
@@ -48,9 +48,9 @@ class DatabaseManager:
         :type event: Event
         :param product_id: the id of the product that inserts the event
         :type product_id: int
-	    :return: nothing
-	    :rtype: None
-	    """
+        :return: nothing
+        :rtype: None
+        """
         sql_statement = "INSERT INTO Events (productId, attackerIp, blockLevel, date) VALUES (" + str(
             product_id) + ", \'" + event.get_ip_add() + "\', " + str(event.get_level()) + ", \'" + str(
             event.get_date()) + "\')"
@@ -84,9 +84,9 @@ class DatabaseManager:
         :type event_id: int
         :param data: the ip that is blocked by the specific rule
         :type data: str
-	    :return: nothing
-	    :rtype: None
-	    """
+        :return: nothing
+        :rtype: None
+        """
         sql_statement = "INSERT INTO Rules (data, eventId) VALUES (\'" + data + "\', " + str(event_id) + ")"
         self.db_cursor.execute(sql_statement)
 
@@ -99,13 +99,13 @@ class DatabaseManager:
         :type product_id: int
         :param rule_id: the identifier of the rule that the block should relate to
         :type rule_id: int
-	    :return: nothing
-	    :rtype: None
-	    """
+        :return: nothing
+        :rtype: None
+        """
         sql_statement = "INSERT INTO Blocks (productId, ruleId) VALUES (" + str(product_id) + ", " + str(rule_id) + ")"
         self.db_cursor.execute(sql_statement)
 
-    def get_dangerous_events(self, time, product_id):
+    def get_dangerous_events(self, product_id, time=None):
         """
         The method will find all the events of level 4 that isn't related to the given user and appeared after a specific time
         :param self: the instance of manager
@@ -114,9 +114,9 @@ class DatabaseManager:
         :type time: Datetime
         :param product_id: the id of the product that needs the data
         :type product_id: int
-	    :return: list of the relevant events
-	    :rtype: list[Event]
-	    """
+        :return: list of the relevant events
+        :rtype: list[Event]
+        """
         sql_statement = "SELECT * FROM Events WHERE productId != " + str(product_id) + " AND blockLevel = 4"
         self.db_cursor.execute(sql_statement)
 
@@ -126,8 +126,9 @@ class DatabaseManager:
             rows[i] = list(rows[i])
             rows[i].pop(0)
             rows[i].pop(0)
-
-            events += [Event.Event.create_from_list(rows[i])]
+            single_event = Event.Event.create_from_list(rows[i])
+            if time is None or time < single_event.get_date():
+                events += [single_event]
 
         return events
 

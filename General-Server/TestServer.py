@@ -6,10 +6,11 @@ import Defender
 import Config
 import socket
 
-def main():
-    HOST = '127.0.0.1'  # The defender's IP address
-    PORT = 3020        # The port used by the defender
+HOST = '127.0.0.1'  # The defender's IP address
+PORT = 3020  # The port used by the defender
 
+
+def main():
     a = bytearray(b'\x04\x08\x08\x01\x01\x00\x36\xee\x80')
 
     with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
