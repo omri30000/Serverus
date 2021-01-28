@@ -1,13 +1,18 @@
+#include <thread>
 #include "IncStatsData.h"
 
 //constructor
 IncStatsData::IncStatsData()
 {
-
+    _cleaningThread =  std::thread(&IncStatsData::cleanInactiveStats,this,10);
+    _isRunning = true;
 }
 
 IncStatsData::~IncStatsData()
 {
+    _isRunning = false;
+    _cleaningThread.join();
+
 	for (map<string,vector<IncStats*>>::iterator it = this->_incStatsCollection.begin(); it != this->_incStatsCollection.end(); it++)
 	{
 		for (int i = 0; i < 5; i++)
@@ -223,7 +228,7 @@ bool IncStatsData::isRelStreamExists(string key) const
 string IncStatsData::getCombinedKey(string first, string second) const {
     if(first.compare(second) <0)
         return first +"+" + second;
-    return second +"+" + first;
+    return second + "+" + first;
 }
 
 
@@ -235,15 +240,67 @@ output: none
 */
 void IncStatsData::cleanInactiveStats(float limit)
 {
-	/*
-	map<string,vector<IncStats*>> _incStatsCollection;
-    map<string,vector<RelativeIncStats*>> _relIncStatsCollection;
-	*/
+    while(_isRunning)
     {
+        std::this_thread::sleep_for(std::chrono::minutes (20));
         const lock_guard<mutex> collectionLock(this->_incStatsCollectionLock);
-        const lock_guard<mutex> relCollectionLock(this->_relIncStatsCollectionLock);
 
+        vector<string> toRemove;
+        //find
+        for(auto stream : _incStatsCollection)
+        {
+            for (int i = 0; i < stream.second.size(); ++i)
+            {
+                if(stream.second[i]->getWeight() < limit && (Time(1) - stream.second[i]->getLastTime() ) > Time::DAY)
+                {
+                    // last time > day
+                    toRemove.push_back(stream.first);
+                    break;
+                }
+           }
+        }
+        for(string remove : toRemove)
+        {
+            this->deleteStream(remove);
+
+            for (auto it : _relIncStatsCollection)
+            {
+                string secondPart;
+                int find = it.first.find(remove);
+                int plus = it.first.find('+');
+
+                if (find != string::npos)
+                {
+                    for (int i = 0; i < it.second.size(); ++i)
+                    {
+                        delete it.second[i];
+                    }
+
+                    //current is the first in key
+                    if(find == 0)
+                        secondPart =it.first.substr(plus+1,it.first.size() - plus-1);
+                    else
+                        secondPart = it.first.substr(0,plus);
+
+                    this->deleteStream(secondPart);
+                    break;
+                }
+
+            }
+        }
 
     }
+}
+
+void IncStatsData::deleteStream(string key)
+{
+    if(!this->isStreamExists(key))
+        return;
+    map<string,vector<IncStats*>>::iterator it =_incStatsCollection.find(key) ;
+    for (int i = 0; i < it->second.size(); ++i)
+    {
+        delete it->second[i];
+    }
+    _incStatsCollection.erase(it);
 
 }

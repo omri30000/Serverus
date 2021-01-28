@@ -1,4 +1,8 @@
 #include "Time.h"
+#include <ctime>
+
+const int Time::DAY =24*60*60*1000;
+
 
 Time::Time()
 {
@@ -12,6 +16,21 @@ Time::Time()
     this->_minute = 0;
     this->_second = 0;
     this->_miliSec = 0;
+}
+Time::Time(int i)
+{
+    std::time_t t = std::time(0);   // get time now
+    std::tm* now = std::localtime(&t);
+
+    this->_year = now->tm_year +1900;
+    this->_month = now->tm_mon+1;
+    this->_day = now->tm_mday;
+    this->_hour = now->tm_hour;
+    this->_minute = now->tm_min;
+    this->_second = now->tm_sec;
+    this->_miliSec = 0; // unnecessary
+    this->_isFirst = false;
+
 }
 
 Time::Time(const Time& other)

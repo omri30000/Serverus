@@ -39,6 +39,9 @@ public:
     //getters&setters
     string getIdentifier() const;
     float getDecayFactor() const;
+
+    float getWeight() const;
+    Time getLastTime() const;
 };
 
 

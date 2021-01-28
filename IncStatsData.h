@@ -24,11 +24,14 @@ protected:
     map<string,vector<RelativeIncStats*>> _relIncStatsCollection; //lambda based vector, key is in format: "key1+key2"
     mutex _incStatsCollectionLock;
     mutex _relIncStatsCollectionLock;
+    bool _isRunning;
+    std::thread _cleaningThread;
 
     bool isStreamExists(string key) const;
     bool isRelStreamExists(string key) const;
     void cleanInactiveStats(float limit);
     string getCombinedKey(string first, string second) const;
+    void deleteStream(string key);
 public:
     IncStatsData();
     ~IncStatsData();

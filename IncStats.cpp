@@ -127,3 +127,11 @@ float IncStats::getDecayFactor() const
 {
     return this->_decayFactor;
 }
+
+float IncStats::getWeight() const {
+    return _weight;
+}
+
+Time IncStats::getLastTime() const {
+    return _timeStamp;
+}

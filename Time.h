@@ -7,6 +7,7 @@ using std::string;
 
 class Time {
 private:
+
     int _year;
     int _month;
     int _day;
@@ -18,10 +19,7 @@ private:
     bool _isFirst;
 
     int daysSinceYearStart() const;
-    /*
-    The Time class's c'tor
-    #TODO: check time format comes from the data base
-    */
+
 public:
     Time();
     Time(int year, int month, int day, int hour, int minute, int second, int miliSec);
@@ -48,6 +46,10 @@ public:
     int getSecond() const;
     void setMiliSec(int miliSec);
     int getMiliSec() const;
+
+    static const int DAY;
+
+    Time(int i);
 };
 
 
