@@ -115,9 +115,6 @@ class Event:
         if len(vals) < 4:
             vals += [0]*(4-len(vals))
 
-        vals.reverse()
-
-        for cell in vals:
-            mes.append(cell)
+        mes.append(bytearray(vals[::-1]))
             
         return mes
