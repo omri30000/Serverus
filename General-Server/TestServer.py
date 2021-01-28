@@ -7,7 +7,7 @@ import Config
 import socket
 
 HOST = '127.0.0.1'  # The defender's IP address
-PORT = 3020  # The port used by the defender
+PORT = 4123  # The port used by the defender
 
 
 def main():

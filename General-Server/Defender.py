@@ -13,7 +13,7 @@ import Log
 import Config
 
 COMPUTER_ID = 1
-LISTEN_PORT = 3020
+LISTEN_PORT = 4123
 
 
 class Defender:
@@ -51,7 +51,9 @@ class Defender:
         Args:
             event ({event}): The hostile event the defend from
         """
-        type(event)
+        print(type(event))
+        print("cululululu")
+
         if not local:
             self.events += [event]
 
@@ -78,7 +80,7 @@ class Defender:
         ERROR_CODE = "256"
         msg = ""
         while str(msg).find(ERROR_CODE) < 0:
-            msg = os.system("iptables -D INPUT %s -j DROP"%(Rule.Rule(event,3).write_rule()))
+            msg = os.system("iptables -D INPUT %s -j DROP" % (Rule.Rule(event, 3).write_rule()))
         self.log.add_unblock_record(event)
 
     def __close_socket(self, event):

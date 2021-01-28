@@ -62,8 +62,6 @@ class Server:
             self.db_manager_lock.acquire()
             self.db_manager.insert_event(event, computer_id)
             self.db_manager_lock.release()
-            
-        print(events)
 
         # save to sql - events
         self.products_lock.acquire()
@@ -80,6 +78,9 @@ class Server:
         self.db_manager_lock.release()
         
         msg = bytearray([0])
+
+        print(outer_events)
+
         for eve in outer_events:
             msg += eve.to_packet()
         
