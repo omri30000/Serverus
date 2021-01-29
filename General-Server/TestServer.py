@@ -7,11 +7,12 @@ import Config
 import socket
 
 HOST = '127.0.0.1'  # The defender's IP address
-PORT = 4123  # The port used by the defender
+PORT = 9876  # The port used by the defender
 
 
 def main():
-    a = bytearray(b'\x04\x09\x08\x02\x01\x00\x36\xee\x80')
+
+    a = bytearray(b'\x04\x09\x0B\x04\x01\x00\x36\xfe\x80')
 
     with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
         s.connect((HOST, PORT))

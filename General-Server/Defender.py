@@ -12,7 +12,7 @@ import Event
 import Log
 import Config
 
-COMPUTER_ID = 1
+COMPUTER_ID = 3
 LISTEN_PORT = 4123
 
 
@@ -117,7 +117,7 @@ class Defender:
         if rule.is_temp():
             time_to_delete = rule.get_date() + timedelta(minutes=2)  # time to disable blocking
             # print("hello")
-            rule_to_write = "/sbin/iptables -D INPUT %s -j DROP"%(rule.write_rule())
+            rule_to_write = "/sbin/iptables -D INPUT %s -j DROP" % (rule.write_rule())
 
             job = self.cron.new(command=rule_to_write + "; sudo crontab -l | grep \"" + rule_to_write + "\" | crontab -r")
             job.setall("%d %d * * *" % (time_to_delete.minute, time_to_delete.hour))
@@ -150,7 +150,7 @@ class Defender:
 
         while True:
             start = datetime.now()
-            while not self.emerge and (datetime.now() - start).seconds <= 10*60:
+            while not self.emerge and (datetime.now() - start).seconds <= 1*60:
                 time.sleep(10)  # sleep 10 seconds
             
             self.emerge = False
@@ -169,7 +169,8 @@ class Defender:
                 s.sendall(message)
                 data = s.recv(1024)
 
-            if len(data) > 2:  # there are external events
+            print("data: ", data)
+            if len(data) >= 2:  # there are external events
                 msg_code = int(data[0])
                 # block events from global server
                 for i in range(1, len(data), 9):
@@ -180,7 +181,7 @@ def main():
     defender = Defender()
     listening_sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     
-    listening_sock.bind(('', LISTEN_PORT))
+    listening_sock.bind(('', int(input("listening port: "))))
     listening_sock.listen(1)  # wait for connection with the model
 
     while True:
