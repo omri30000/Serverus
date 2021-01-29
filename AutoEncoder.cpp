@@ -3,7 +3,7 @@
 //
 
 #include "AutoEncoder.h"
-
+#include "utils.h"
 //constructor
 AutoEncoder::AutoEncoder(int inputSize,float learningRate = 1.0)
 {
@@ -68,7 +68,7 @@ void AutoEncoder::getHiddenLayer(valarray<float> vals, valarray<float> &res)
     {
         res[i] = (vals * _weights[i]).sum();
     }
-    //hidden.apply(sigmoid);
+    res.apply(sigmoid);
     res += _hiddenBias;
 }
 /*
@@ -87,7 +87,7 @@ void AutoEncoder::getVisibleLayer(valarray<float> vals, valarray<float> &res)
             res[i] += _weights[j][i] * vals[j];
         }
     }
-    //res.apply(sigmoid);
+    res.apply(sigmoid);
 
     res += _visibleBias;
 }
