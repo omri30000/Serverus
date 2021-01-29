@@ -4,36 +4,29 @@
 
 #include "AutoEncoder.h"
 
-AutoEncoder::AutoEncoder(int inputSize)
+//constructor
+AutoEncoder::AutoEncoder(int inputSize,float learningRate = 1.0)
 {
+    _inputSize = inputSize;
     float b = 0.75;
-    pair<float,float> range = {-1/inputSize,1/inputSize};
-    this->_layers = vector<vector<Neuron>>(2);
-    for (int i = 0; i <_layers.size(); ++i)
-    {
-        for (int j = 0; j < inputSize; ++j)
-        {
-            _layers[i].push_back(Neuron(range,inputSize));
-        }
-        inputSize *= b;
 
-    }
-    //TODO:fix this
-    _learningRate = 1;// for now only
-}
+    double a = 1.0/inputSize;
 
-valarray<float> AutoEncoder::feedForward(valarray<float> input) {
-    std::valarray<float> res = input;
-    for (int i = 0; i < _layers.size(); ++i)
+    _weights = valarray<valarray<float>>(_inputSize*b);
+    for (int i = 0; i < _weights.size(); ++i)
     {
-        valarray<float> tmp = res;
-        res = valarray<float>(_layers[i].size());
-        for (int j = 0; j < _layers[i].size(); ++j)
+        _weights[i] = valarray<float>((double)0, _inputSize);
+        for (int j = 0; j <_weights[i].size() ; ++j)
         {
-            res[j] = _layers[i][j].feedForward(tmp);
+            _weights[i][j] = uniform({-a,a});
         }
     }
-    return res;
+    _hiddenBias = valarray<float>((double)0,_inputSize*b);
+    _visibleBias = valarray<float>((double)0,_inputSize);
+
+
+
+    _learningRate = learningRate;// for now only
 }
 
 /*
@@ -41,7 +34,101 @@ valarray<float> AutoEncoder::feedForward(valarray<float> input) {
  Input: input to the AE : valarray<float>
  Output: The RMSE value
  */
-float AutoEncoder::calcRmse(valarray<float> input) {
-    return std::pow(feedForward(input) - input,2).sum();
+float AutoEncoder::feedForward(valarray<float> input)
+{
+
+    std::valarray<float> res(_inputSize);
+    std::valarray<float> hidden(_weights.size());
+
+    getHiddenLayer(input,hidden);
+    getVisibleLayer(hidden,res);
+
+    return calcRmse(input,res);
+}
+
+/*
+ This function calculates the RMSE value between 2 tensors
+ Input:
+        input: input of the AE : valarray<float>
+        reconstruct: input of the AE : valarray<float>
+ Output: The RMSE value
+ */
+float AutoEncoder::calcRmse(valarray<float> input,valarray<float> reconstruct) {
+    return std::pow(input- reconstruct,2).sum();
+}
+/*
+ This function returns the Hidden Layer - The second layer (feed forward)
+ Input:vals : the input to the AE
+       res: refrence to the hidden layer values
+  Output :None
+ */
+void AutoEncoder::getHiddenLayer(valarray<float> vals, valarray<float> &res)
+{
+    for (int i = 0; i < _weights.size(); ++i)
+    {
+        res[i] = (vals * _weights[i]).sum();
+    }
+    //hidden.apply(sigmoid);
+    res += _hiddenBias;
+}
+/*
+ This function returns the Visible Layer - The third layer (feed forward)
+ Input:vals : the input to the AE
+       res: refrence to the visible layer values
+  Output :None
+ */
+void AutoEncoder::getVisibleLayer(valarray<float> vals, valarray<float> &res)
+{
+    for (int i = 0; i < _inputSize; ++i)
+    {
+        res[i] = 0;
+        for (int j = 0; j < _weights.size(); ++j)
+        {
+            res[i] += _weights[j][i] * vals[j];
+        }
+    }
+    //res.apply(sigmoid);
+
+    res += _visibleBias;
+}
+/*
+ This function trains the AE with SDG
+ Input: The input to the AE
+ Output:The RMSE value
+ */
+float AutoEncoder::train(valarray<float> input)
+{
+
+    std::valarray<float> res(_inputSize);
+    std::valarray<float> hidden(_weights.size());
+
+    getHiddenLayer(input,hidden);
+    getVisibleLayer(hidden,res);
+
+    valarray<float> tmp_visible(_inputSize);
+    //update visible bias
+    tmp_visible = input - res;
+    _visibleBias += _learningRate * tmp_visible; //1 -N
+
+    //update hidden bias
+    valarray<float>tmp_hidden(_weights.size());
+    for (int i = 0; i < _weights.size(); ++i) {
+        tmp_hidden[i] = (_weights[i]*tmp_visible).sum();
+    }
+    tmp_hidden *= hidden*(1-hidden);
+
+    _hiddenBias += _learningRate * tmp_hidden;//1 - N
+
+    //update Weights
+    for (int i = 0; i < _weights.size(); ++i)
+    {
+        for (int j = 0; j < _weights[i].size(); ++j)
+        {
+            _weights[i][j] = _learningRate * (tmp_hidden[i] *input[j] + tmp_visible[j] * res[i]);//1 -N
+        }
+    }
+
+
+    return (input - res).sum();
 }
 
