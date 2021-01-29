@@ -169,7 +169,7 @@ class Defender:
                 s.sendall(message)
                 data = s.recv(1024)
 
-            if len(data) < 2:  # there are no events
+            if len(data) > 2:  # there are external events
                 msg_code = int(data[0])
                 # block events from global server
                 for i in range(1, len(data), 9):
