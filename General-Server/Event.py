@@ -60,8 +60,11 @@ class Event:
         """
         ip_add = event_params[0]
         level = event_params[1]
-        date = datetime.datetime.strptime(event_params[2], '%Y-%m-%d %H:%M:%S.%f')
-        
+        try:
+            date = datetime.datetime.strptime(event_params[2], '%Y-%m-%d %H:%M:%S.%f')
+        except Exception:
+            date = datetime.datetime.strptime(event_params[2], '%Y-%m-%d %H:%M:%S')
+
         return cls(ip_add, level, date)
 
     # getters functions
