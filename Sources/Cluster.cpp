@@ -2,7 +2,7 @@
 // Created by ofir on 09/01/2021.
 //
 
-#include "Cluster.h"
+#include "../Headers/Cluster.h"
 #include <algorithm>
 #include <math.h>
 #include <iostream>

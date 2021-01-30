@@ -1,7 +1,7 @@
 //
 // Created by ofir on 30/12///
 
-#include "FeatureExtractor.h"
+#include "../Headers/FeatureExtractor.h"
 
 
 const vector<float> FeatureExtractor::DEFAULT_LAMBDAS= {0.01,0.1,1,3,5};

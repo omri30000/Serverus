@@ -1,5 +1,5 @@
 #include <thread>
-#include "IncStatsData.h"
+#include "../Headers/IncStatsData.h"
 
 //constructor
 IncStatsData::IncStatsData()

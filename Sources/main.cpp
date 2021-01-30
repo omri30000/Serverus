@@ -2,10 +2,10 @@
 #include <string>
 
 
-#include "PacketsReaderSQLITE.h"
-#include "FeatureExtractor.h"
-#include "FeatureMapper.h"
-#include "Parser.h"
+#include "../Headers/PacketsReaderSQLITE.h"
+#include "../Headers/FeatureExtractor.h"
+#include "../Headers/FeatureMapper.h"
+#include "../Headers/Parser.h"
 #include <cstdlib>
 
 // NOTE: Make sure to run program with sudo in order to be able to delete data from db

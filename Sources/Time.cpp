@@ -1,4 +1,4 @@
-#include "Time.h"
+#include "../Headers/Time.h"
 #include <ctime>
 
 const int Time::DAY =24*60*60*1000;
