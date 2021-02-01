@@ -1,8 +1,8 @@
 #pragma once
 
-#include "IncStats.h"
-#include "RelativeIncStats.h"
-#include "Time.h"
+#include "../Headers/IncStats.h"
+#include "../Headers/RelativeIncStats.h"
+#include "../Headers/Time.h"
 
 #include <map>
 #include <string>
@@ -45,7 +45,7 @@ public:
     void insertPacket(string firstKey, string secondKey, float value, Time timestamp) throw();
     void insertPacket(string key, float value, Time timestamp, int lambdaIndex) throw();
 
-    vector<float> getStatsOneDimension(string key) const throw();
-    vector<float> getStatsTwoDimensions(string firstKey, string secondKey) const throw();
+    vector<float> getStatsOneDimension(string key) throw();
+    vector<float> getStatsTwoDimensions(string firstKey, string secondKey) throw();
     void updateStatsTwoDimensions(string firstKey, Time timestamp, float value) const throw(); // TODO:not found
 };

@@ -1,17 +1,16 @@
-#include <thread>
 #include "../Headers/IncStatsData.h"
 
 //constructor
 IncStatsData::IncStatsData()
 {
-   // _cleaningThread =  std::thread(&IncStatsData::cleanInactiveStats,this,10);
+    _cleaningThread =  std::thread(&IncStatsData::cleanInactiveStats,this,10);
     _isRunning = true;
 }
 
 IncStatsData::~IncStatsData()
 {
     _isRunning = false;
-    //_cleaningThread.join();
+    _cleaningThread.join();
 
 	for (map<string,vector<IncStats*>>::iterator it = this->_incStatsCollection.begin(); it != this->_incStatsCollection.end(); it++)
 	{
@@ -99,6 +98,7 @@ vector<RelativeIncStats*> IncStatsData::registerRelatedStreams(string firstUniqu
  */
 void IncStatsData::insertPacket(string firstKey, string secondKey, float value, Time timestamp) throw()
 {
+    const lock_guard<mutex> collectionLock(this->_incStatsCollectionLock);
     vector<RelativeIncStats*> vec = this->registerRelatedStreams(firstKey, secondKey, timestamp);
 
     for (int i = 0; i < this->_incStatsCollection[firstKey].size() ; ++i) // for each lambda
@@ -135,6 +135,7 @@ void IncStatsData::insertPacket(string key, float value, Time timestamp, int lam
 */
 void IncStatsData::insertPacket(string key, Time timestamp) throw()
 {
+    const lock_guard<mutex> collectionLock(this->_incStatsCollectionLock);
     if (!this->isStreamExists(key))
         this->registerStream(key);
 
@@ -150,8 +151,9 @@ void IncStatsData::insertPacket(string key, Time timestamp) throw()
  Output: all stats of stream : vector<float>
  Throw: std::exception
  */
-vector<float> IncStatsData::getStatsOneDimension(string key) const throw()
+vector<float> IncStatsData::getStatsOneDimension(string key) throw()
 {
+    const lock_guard<mutex> collectionLock(this->_incStatsCollectionLock);
 	if (!this->isStreamExists(key))
         throw std::runtime_error("Stream doesn't exist");
 
@@ -173,8 +175,10 @@ vector<float> IncStatsData::getStatsOneDimension(string key) const throw()
  Output: all stats of stream : vector<float>
  Throw: std::exception
 */
-vector<float> IncStatsData::getStatsTwoDimensions(string firstKey, string secondKey) const throw()
+vector<float> IncStatsData::getStatsTwoDimensions(string firstKey, string secondKey) throw()
 {
+    const lock_guard<mutex> collectionLock(this->_incStatsCollectionLock);
+
 	string uniqueKey = this->getCombinedKey(firstKey,secondKey);
 	if (!this->isRelStreamExists(uniqueKey))
 	{
