@@ -13,3 +13,4 @@ FeatureExtractor
 CMakeLists.txt
 *.db
 *.sqlite
+*.xml
