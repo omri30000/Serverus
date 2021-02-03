@@ -7,6 +7,9 @@
 #include "Event.h"
 
 class Communicator {
+    protected:
+        void openSocket();
+
     public:
         Communicator();
         ~Communicator() = default;
