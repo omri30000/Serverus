@@ -6,9 +6,7 @@
 
 const vector<float> FeatureExtractor::DEFAULT_LAMBDAS= {0.01,0.1,1,3,5};
 //constructors
-FeatureExtractor::FeatureExtractor() : FeatureExtractor(FeatureExtractor::DEFAULT_LAMBDAS)
-{
-}
+FeatureExtractor::FeatureExtractor() : FeatureExtractor(FeatureExtractor::DEFAULT_LAMBDAS) {}
 
 FeatureExtractor::FeatureExtractor(vector<float> lambdas)
 {

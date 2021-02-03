@@ -31,9 +31,6 @@ int main()
         cond = false;
     }
     while (cond) {
-        a++;
-        if(a > 250)
-            a++;
         //std::cout<<pack.toString();
         vector<float> stats = extractor.extractNewFeaturesVector(pack);
         //std::cout<<stats.size();
@@ -67,10 +64,14 @@ int main()
 
         try {
             pack = reader.getNextPacket();
+            std::cout << "a: " << a;
+            a++;
         }
         catch (std::exception &e) {
             cond = false;
         }
     }
+
+
     return 0;
 }

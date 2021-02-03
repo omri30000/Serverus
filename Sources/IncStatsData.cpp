@@ -1,5 +1,6 @@
 #include "../Headers/IncStatsData.h"
 
+
 //constructor
 IncStatsData::IncStatsData()
 {
@@ -246,7 +247,7 @@ void IncStatsData::cleanInactiveStats(float limit)
 {
     while(_isRunning)
     {
-        std::this_thread::sleep_for(std::chrono::minutes (20));
+        std::this_thread::sleep_for(std::chrono::seconds (3));
         const lock_guard<mutex> collectionLock(this->_incStatsCollectionLock);
 
         vector<string> toRemove;
@@ -255,7 +256,8 @@ void IncStatsData::cleanInactiveStats(float limit)
         {
             for (int i = 0; i < stream.second.size(); ++i)
             {
-                if(stream.second[i]->getWeight() < limit && (Time(1) - stream.second[i]->getLastTime() ) > Time::DAY)
+                float diff = (Time(1) - stream.second[i]->getLastTime() );
+                if(stream.second[i]->getWeight() < limit && diff > Time::DAY)
                 {
                     // last time > day
                     toRemove.push_back(stream.first);
@@ -306,5 +308,4 @@ void IncStatsData::deleteStream(string key)
         delete it->second[i];
     }
     _incStatsCollection.erase(it);
-
 }
