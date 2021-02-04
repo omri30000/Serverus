@@ -1,12 +1,12 @@
 #include <iostream>
 #include <string>
-
+#include <cstdlib>
 
 #include "../Headers/PacketsReaderSQLITE.h"
 #include "../Headers/FeatureExtractor.h"
 #include "../Headers/FeatureMapper.h"
 #include "../Headers/Parser.h"
-#include <cstdlib>
+#include "../Headers/Communicator.h"
 
 // NOTE: Make sure to run program with sudo in order to be able to delete data from db
 int main()
@@ -17,8 +17,7 @@ int main()
     FeatureExtractor extractor;
     FeatureMapper mapper(250,20,85);
     Parser* p = nullptr;
-
-
+    //todo: Communicator communicator;
 
     bool cond = true;
     Packet pack;
@@ -59,7 +58,6 @@ int main()
                 }
                 std::cout << std::endl;
             }
-
         }
 
         try {

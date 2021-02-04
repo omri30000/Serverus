@@ -85,7 +85,7 @@ vector<byte> Event::castDateToBin() const throw()
     vector<byte> vec = { 0, 0, 0, 0 };
     int millisec = this->calcDateMilliseconds();
 
-    if (millisec > std::pow(8,4))
+    if (millisec > std::pow(BYTE_SIZE,BYTES_AMOUNT))
     {
         throw std::runtime_error("date value is invalid");
     }

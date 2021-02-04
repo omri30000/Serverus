@@ -5,7 +5,7 @@
 #include "../Headers/Communicator.h"
 
 /*
-c'tor
+Constructor
 */
 Communicator::Communicator(){}
 
