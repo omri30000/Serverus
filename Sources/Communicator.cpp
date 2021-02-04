@@ -42,7 +42,16 @@ output: none
 */
 void Communicator::sendMessage(Event event)
 {
-    ClientSocket sock = this->openSocket(1234); // Defender's port, get from config file
-
-    sock << event.castToBinMessage();
+    try{
+        ClientSocket sock = this->openSocket(1234); // Defender's port, get from config file
+        sock << event.castToBinMessage();
+    }
+    catch (SocketException& e)
+    {
+        std::cout << "Exception was caught: " << e.description() << "\n";
+    }
+    catch (...)
+    {
+        std::cout << "Exception was caught while sending message \n";
+    }
 }
