@@ -15,7 +15,7 @@ int main()
     std::cout << "Hello, World!" << std::endl;
     PacketsReaderSQLITE reader = PacketsReaderSQLITE("../db_file.sqlite");
     FeatureExtractor extractor;
-    FeatureMapper mapper(250,20,85);
+    //FeatureMapper mapper(250,20,85);
     Parser* p = nullptr;
     //todo: Communicator communicator;
 
@@ -40,6 +40,7 @@ int main()
         std::cout << "\n-----------\n";
 
         std::cout << std::endl;
+        /*
         if (p == nullptr) {
             if (!mapper.getState())
                 mapper.update(stats);
@@ -59,7 +60,7 @@ int main()
                 std::cout << std::endl;
             }
         }
-
+        */
         try {
             pack = reader.getNextPacket();
             std::cout << "a: " << a;

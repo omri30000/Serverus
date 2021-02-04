@@ -245,11 +245,13 @@ output: none
 */
 void IncStatsData::cleanInactiveStats(float limit)
 {
+    int i = 0;
+
     while(_isRunning)
     {
-        std::this_thread::sleep_for(std::chrono::seconds (3));
+        std::this_thread::sleep_for(std::chrono::milliseconds (50));
         const lock_guard<mutex> collectionLock(this->_incStatsCollectionLock);
-
+        i++;
         vector<string> toRemove;
         //find
         for(auto stream : _incStatsCollection)
@@ -265,28 +267,25 @@ void IncStatsData::cleanInactiveStats(float limit)
                 }
            }
         }
-        for(string remove : toRemove)
-        {
+        vector<string> toRemoveRelative;
+        for(string remove : toRemove) {
             this->deleteStream(remove);
 
-            for (auto it : _relIncStatsCollection)
-            {
+            for (auto it : _relIncStatsCollection) {
                 string secondPart;
                 int find = it.first.find(remove);
                 int plus = it.first.find('+');
 
-                if (find != string::npos)
-                {
-                    for (int i = 0; i < it.second.size(); ++i)
-                    {
+                if (find != string::npos) {
+                    for (int i = 0; i < it.second.size(); ++i) {
                         delete it.second[i];
                     }
-
+                    toRemoveRelative.push_back(it.first);
                     //current is the first in key
-                    if(find == 0)
-                        secondPart =it.first.substr(plus+1,it.first.size() - plus-1);
+                    if (find == 0)
+                        secondPart = it.first.substr(plus + 1, it.first.size() - plus - 1);
                     else
-                        secondPart = it.first.substr(0,plus);
+                        secondPart = it.first.substr(0, plus);
 
                     this->deleteStream(secondPart);
                     break;
@@ -295,7 +294,15 @@ void IncStatsData::cleanInactiveStats(float limit)
             }
         }
 
+        for (auto remove : toRemoveRelative)
+        {
+            this->_relIncStatsCollection.erase(remove);
+        }
+
+
+        std::cout<<"finish thread" <<i<<std::endl;
     }
+
 }
 
 void IncStatsData::deleteStream(string key)
@@ -303,6 +310,9 @@ void IncStatsData::deleteStream(string key)
     if(!this->isStreamExists(key))
         return;
     map<string,vector<IncStats*>>::iterator it =_incStatsCollection.find(key) ;
+    if(it == _incStatsCollection.end())
+        return;
+
     for (int i = 0; i < it->second.size(); ++i)
     {
         delete it->second[i];

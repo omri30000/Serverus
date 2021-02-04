@@ -16,8 +16,8 @@ protected:
 
     vector<float> _lambdas;
     
-    IncStatsDataChannel _channelJitter;
-    IncStatsDataChannel _channelSize;
+    //IncStatsDataChannel _channelJitter;
+    //IncStatsDataChannel _channelSize;
     IncStatsDataSocket _socketSize;
 
 
