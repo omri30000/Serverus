@@ -5,10 +5,13 @@
 #pragma once
 
 #include "Event.h"
+#include "../ClientSocket.h"
+#include "../SocketException.h"
 
 class Communicator {
     protected:
-        void openSocket();
+        ClientSocket openSocket(int port); // open with local host
+        ClientSocket openSocket(string host, int port);
 
     public:
         Communicator();
