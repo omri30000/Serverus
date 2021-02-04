@@ -7,3 +7,4 @@
 
 float uniform(std::pair<float,float> range);
 float sigmoid(float val);
+int binomial(int n, double p);

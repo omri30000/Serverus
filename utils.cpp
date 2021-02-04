@@ -11,7 +11,8 @@
  */
 float uniform(std::pair<float, float> range) {
     float val = rand() / (float)RAND_MAX;
-    return range.first +val*(range.second - range.first);
+    val= range.first +val*(range.second - range.first+1);
+    return val;
 }
 
 /*
@@ -20,6 +21,22 @@ float uniform(std::pair<float, float> range) {
  Output: The sigmoid value of a nubmer
  */
 float sigmoid(float val) {
-    return 1/(1+exp(-val));
+    float v=  1/(1+exp(-val));
+    return v;
+    }
+
+int binomial(int n, double p)
+{
+    if(p < 0 || p > 1) return 0;
+
+    int c = 0;
+    double r;
+
+    for(int i=0; i<n; i++) {
+        r = rand() / (RAND_MAX + 1.0);
+        if (r < p) c++;
+    }
+
+    return c;
 }
 

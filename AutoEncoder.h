@@ -9,8 +9,7 @@ using std::valarray;
 
 class AutoEncoder
 {
-protected:
-    valarray<valarray<float>> _weights;
+public:
     valarray<float> _hiddenBias;
     valarray<float> _visibleBias;
 
@@ -20,7 +19,7 @@ protected:
     void getHiddenLayer(valarray<float>vals ,valarray<float>& res);
     void getVisibleLayer(valarray<float> vals,valarray<float>& res);
 
-public:
+    valarray<valarray<float>> _weights;
 
     AutoEncoder(int inputSize,float learningRate);
     float train(valarray<float> input);

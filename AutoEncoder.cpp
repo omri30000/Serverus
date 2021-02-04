@@ -2,10 +2,12 @@
 // Created by ofir on 25/01/2021.
 //
 
+#include <iostream>
 #include "AutoEncoder.h"
 #include "utils.h"
+//void printValAraay(valarray<float> t);
 //constructor
-AutoEncoder::AutoEncoder(int inputSize,float learningRate = 1.0)
+AutoEncoder::AutoEncoder(int inputSize,float learningRate =0.1)
 {
     _inputSize = inputSize;
     float b = 0.75;
@@ -68,8 +70,8 @@ void AutoEncoder::getHiddenLayer(valarray<float> vals, valarray<float> &res)
     {
         res[i] = (vals * _weights[i]).sum();
     }
-    res.apply(sigmoid);
     res += _hiddenBias;
+    res= res.apply(sigmoid);
 }
 /*
  This function returns the Visible Layer - The third layer (feed forward)
@@ -87,9 +89,8 @@ void AutoEncoder::getVisibleLayer(valarray<float> vals, valarray<float> &res)
             res[i] += _weights[j][i] * vals[j];
         }
     }
-    res.apply(sigmoid);
-
     res += _visibleBias;
+    res = res.apply(sigmoid);
 }
 /*
  This function trains the AE with SDG
@@ -104,6 +105,7 @@ float AutoEncoder::train(valarray<float> input)
 
     getHiddenLayer(input,hidden);
     getVisibleLayer(hidden,res);
+
 
     valarray<float> tmp_visible(_inputSize);
     //update visible bias
@@ -124,7 +126,9 @@ float AutoEncoder::train(valarray<float> input)
     {
         for (int j = 0; j < _weights[i].size(); ++j)
         {
-            _weights[i][j] = _learningRate * (tmp_hidden[i] *input[j] + tmp_visible[j] * res[i]);//1 -N
+            _weights[i][j] += _learningRate * (tmp_hidden[i] *input[j] + tmp_visible[j] * res[i]);
+            if(std::isnan(_weights[i][j]))
+                int a= 0;
         }
     }
 
@@ -132,3 +136,82 @@ float AutoEncoder::train(valarray<float> input)
     return (input - res).sum();
 }
 
+//for debug use only
+/*
+int main(void) {
+    srand(0);
+
+    double learning_rate = 0.1;
+    double corruption_level = 0.3;
+    int training_epochs = 100;
+
+    int train_N = 10;
+    int test_N = 2;
+    int n_visible = 20;
+    int n_hidden = 5;
+
+    // training data
+    valarray<valarray<float>> train_X = {
+            {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+            {1, 0, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+            {1, 1, 0, 1, 1, 1, 1, 1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+            {1, 1, 1, 1, 0, 0, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+            {0, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+            {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1},
+            {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 1, 1, 1, 1, 1, 1, 1, 1},
+            {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 1, 1, 1, 1, 1, 0, 1},
+            {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 0, 0, 1, 1, 1, 1},
+            {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 0}
+    };
+
+    for (int i = 0; i < train_X.size(); ++i)
+    {
+        for (int j = 0; j < train_X[i].size(); ++j)
+        {
+            if(train_X[i][j] != 0)
+                train_X[i][j] = binomial(1,0.7);
+        }
+    }
+
+    // construct dA
+    AutoEncoder da(n_visible,0.05);
+
+    // train
+    for (int epoch = 0; epoch < 20; epoch++) {
+        for (int i = 0; i < train_N; ++i) {
+            std::cout<<da.train(train_X[i])<<std::endl;
+
+        }
+
+    }
+    for (int i = 0; i < da._weights.size(); ++i)
+    {
+        for (int j = 0; j < da._weights[i].size(); ++j) {
+            std::cout << da._weights[i][j] << ", ";
+        }
+        std::cout << std::endl;
+    }
+
+    valarray<valarray<float>> test_X = {
+            {1, 0, 1, 0, 1, 0, 1, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+            {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 1, 1, 0, 1, 1, 0}
+    };
+    for (int i = 0; i < 2; ++i) {
+        std::cout<<da.feedForward(test_X[i])<<std::endl;
+    }
+
+
+}
+
+void printValAraay(valarray<float> t)
+{
+    //std::cout<<t.sum();
+
+    for (int j = 0; j < t.size() ;++j)
+    {
+        //std::cout << t[j] << ", ";
+    }
+    std::cout<<std::endl<< "======================"<<std::endl ;
+
+}
+*/
