@@ -10,7 +10,7 @@
 AutoEncoder::AutoEncoder(int inputSize,float learningRate =0.1)
 {
     _inputSize = inputSize;
-    float b = 0.75;
+    float b = 1;
 
     double a = 1.0/inputSize;
 
@@ -127,8 +127,6 @@ float AutoEncoder::train(valarray<float> input)
         for (int j = 0; j < _weights[i].size(); ++j)
         {
             _weights[i][j] += _learningRate * (tmp_hidden[i] *input[j] + tmp_visible[j] * res[i]);
-            if(std::isnan(_weights[i][j]))
-                int a= 0;
         }
     }
 
@@ -174,10 +172,10 @@ int main(void) {
     }
 
     // construct dA
-    AutoEncoder da(n_visible,0.05);
+    AutoEncoder da(n_visible,0.1);
 
     // train
-    for (int epoch = 0; epoch < 20; epoch++) {
+    for (int epoch = 0; epoch < 10000; epoch++) {
         for (int i = 0; i < train_N; ++i) {
             std::cout<<da.train(train_X[i])<<std::endl;
 
