@@ -15,21 +15,24 @@ int main()
     std::cout << "Hello, World!" << std::endl;
     PacketsReaderSQLITE reader = PacketsReaderSQLITE("../db_file.sqlite");
     FeatureExtractor extractor;
-    //FeatureMapper mapper(250,20,85);
+    FeatureMapper mapper(250,20,85);
     Parser* p = nullptr;
     //todo: Communicator communicator;
 
     bool cond = true;
     Packet pack;
     int a = 0;
-    try
-    {
-        pack = reader.getNextPacket();
-    }
-    catch (std::exception &e) {
-        cond = false;
-    }
+
     while (cond) {
+
+        try {
+            pack = reader.getNextPacket();
+            std::cout << "a: " << a;
+            a++;
+        }
+        catch (std::exception &e) {
+            continue;
+        }
         //std::cout<<pack.toString();
         vector<float> stats = extractor.extractNewFeaturesVector(pack);
         //std::cout<<stats.size();
@@ -40,14 +43,13 @@ int main()
         std::cout << "\n-----------\n";
 
         std::cout << std::endl;
-        /*
+
         if (p == nullptr) {
             if (!mapper.getState())
                 mapper.update(stats);
-            else
-                {
+            else {
                 vector<vector<int>> a = mapper.cluster();
-                std::cout<<"Clusters amount: " <<a.size()<<std::endl;
+                std::cout << "Clusters amount: " << a.size() << std::endl;
                 p = new Parser(a);
                 //exit(1);
             }
@@ -60,15 +62,8 @@ int main()
                 std::cout << std::endl;
             }
         }
-        */
-        try {
-            pack = reader.getNextPacket();
-            std::cout << "a: " << a;
-            a++;
-        }
-        catch (std::exception &e) {
-            cond = false;
-        }
+
+
     }
 
 
