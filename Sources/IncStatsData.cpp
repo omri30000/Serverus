@@ -65,18 +65,20 @@ Output: pointer to the vector of relative inc stats (with different lambda in ea
 Throw: std::exception
 */
 
-vector<RelativeIncStats*> IncStatsData::registerRelatedStreams(string firstUniqueKey, string secondUniqueKey, Time timestamp) throw()
+vector<RelativeIncStats*> IncStatsData::registerRelatedStreams(string key, Time timestamp) throw()
 {
-	string uniqueKey = this->getCombinedKey(firstUniqueKey,secondUniqueKey);;
+	string uniqueKey = this->getCombinedKey(key);
 
     if (this->isRelStreamExists(uniqueKey))
     {
         return this->_relIncStatsCollection.at(uniqueKey);
     }
 
+    int plus = uniqueKey.find('+');
 	vector<RelativeIncStats*> vec;
-	std::vector<IncStats*> firstGroup = this->registerStream(firstUniqueKey);
-	std::vector<IncStats*> secondGroup = this->registerStream(secondUniqueKey);
+	std::vector<IncStats*> firstGroup = this->registerStream(uniqueKey);
+	//opposite
+	std::vector<IncStats*> secondGroup = this->registerStream(uniqueKey.substr(plus+1,uniqueKey.size()-(plus+1)) + '+' + uniqueKey.substr(0,plus));
 
 	//create new relative incremental statistics
 	for (int i = 0 ; i < 5 ; i++) // for each lambda
@@ -97,15 +99,16 @@ vector<RelativeIncStats*> IncStatsData::registerRelatedStreams(string firstUniqu
  Output: None
  Throw: std::exception
  */
-void IncStatsData::insertPacket(string firstKey, string secondKey, float value, Time timestamp) throw()
+void IncStatsData::insertPacket(string key, float value, Time timestamp) throw()
 {
     const lock_guard<mutex> collectionLock(this->_incStatsCollectionLock);
     std::cout<<"insert start" <<std::endl;
-    vector<RelativeIncStats*> vec = this->registerRelatedStreams(firstKey, secondKey, timestamp);
 
-    for (int i = 0; i < this->_incStatsCollection[firstKey].size() ; ++i) // for each lambda
+    vector<RelativeIncStats*> vec = this->registerRelatedStreams(key, timestamp);
+
+    for (int i = 0; i < this->_incStatsCollection[key].size() ; ++i) // for each lambda
     {
-        this->insertPacket(firstKey,value,timestamp,i);
+        this->insertPacket(key,value,timestamp,i);
     }
     std::cout<<"finish 1d insert" <<std::endl;
 
@@ -113,7 +116,7 @@ void IncStatsData::insertPacket(string firstKey, string secondKey, float value, 
     {
         try
         {
-            vec[i]->update(firstKey, value, timestamp);
+            vec[i]->update(key, value, timestamp);
 
         }
         catch(std::exception e)
@@ -187,11 +190,11 @@ vector<float> IncStatsData::getStatsOneDimension(string key) throw()
  Output: all stats of stream : vector<float>
  Throw: std::exception
 */
-vector<float> IncStatsData::getStatsTwoDimensions(string firstKey, string secondKey) throw()
+vector<float> IncStatsData::getStatsTwoDimensions(string key) throw()
 {
     const lock_guard<mutex> collectionLock(this->_incStatsCollectionLock);
 
-	string uniqueKey = this->getCombinedKey(firstKey,secondKey);
+	string uniqueKey = this->getCombinedKey(key);
 	if (!this->isRelStreamExists(uniqueKey))
 	{
 		throw std::runtime_error("the required link doesn't exist");
@@ -241,10 +244,27 @@ bool IncStatsData::isRelStreamExists(string key) const
 	return true;
 }
 
-string IncStatsData::getCombinedKey(string first, string second) const {
+string IncStatsData::getCombinedKey(string key) const {
+    string parts[2];
+    int place = 0;
+
+    for (int i = 0; i < key.size(); ++i) {
+        if (key[i] == '+')
+            place = !place;
+        else
+            parts[place] += key[i];
+    }
+    return std::min(parts[0], parts[1]) +'+'+ std::max(parts[0], parts[1]);
+}
+
+string IncStatsData::getCombinedKey(string first, string second) const
+{
+
     if(first.compare(second) <0)
         return first +"+" + second;
     return second + "+" + first;
+
+
 }
 
 
@@ -282,49 +302,30 @@ void IncStatsData::cleanInactiveStats(float limit)
         }
         std::cout<<"thread part1" <<std::endl;
         vector<string> toRemoveRelative;
-        for(string remove : toRemove)
-        {
+        for(string remove : toRemove) {
 
             this->deleteStream(remove);
 
-            for (auto it : _relIncStatsCollection)
-            {
-                string secondPart;
+            string relativeKey = this->getCombinedKey(remove);
 
-                int finded = it.first.find(remove);
-                int plus = it.first.find('+');
+            if (!isRelStreamExists(relativeKey))
+                continue;
 
-                if (finded != string::npos)
-                {
-                    if(find(toRemoveRelative.begin(),toRemoveRelative.end(),it.first) != toRemoveRelative.end())//already added
-                        break;
+            auto rel = _relIncStatsCollection.at(relativeKey);
 
-                    for (int i = 0; i < it.second.size(); ++i) {
-                        delete it.second[i];
-                        it.second[i] = nullptr;
-                    }
-                    toRemoveRelative.push_back(it.first);
-                    //current is the first in key
-                    if (finded == 0)
-                        secondPart = it.first.substr(plus + 1, it.first.size() - plus - 1);
-                    else
-                        secondPart = it.first.substr(0, plus);
-
-                    this->deleteStream(secondPart);
-                    break;
-                }
-
+            for (int i = 0; i < rel.size(); ++i) {
+                delete rel[i];
+                rel[i] = nullptr;
             }
+
+            this->_relIncStatsCollection.erase(relativeKey);
+            int plus = remove.find('+');
+            string second = remove.substr(plus + 1, remove.size() - (plus + 1)) + '+' + remove.substr(0,plus);
+
+            this->deleteStream(second);
+
         }
-        std::cout<<"thread part2" <<std::endl;
-
-        for (auto remove : toRemoveRelative)
-        {
-            this->_relIncStatsCollection.erase(remove);
-        }
-
-
-        std::cout<<"finish thread" <<i<<std::endl;
+            std::cout<<"finish thread" <<i<<std::endl;
     }
 
 }

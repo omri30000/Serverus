@@ -22,10 +22,10 @@ vector<float> FeatureExtractor::extractNewFeaturesVector(Packet pack) {
     //update
     string channelKey = this->_channelSize.getStreamKey(pack);
     //string socketKey = this->_socketSize.getStreamKey(pack);
-    string channelForeignKey = this->_channelSize.getForeignKey(pack);
+    //string channelForeignKey = this->_channelSize.getForeignKey(pack);
     //string socketForeignKey = this->_socketSize.getForeignKey(pack);
 
-    this->_channelSize.insertPacket(channelKey, channelForeignKey, (float)pack.getLength(), pack.getArrivalTime());
+    this->_channelSize.insertPacket(channelKey, (float)pack.getLength(), pack.getArrivalTime());
     //this->_channelJitter.insertPacket(channelKey,  pack.getArrivalTime());
     //this->_socketSize.insertPacket(socketKey, socketForeignKey, (float)pack.getLength(), pack.getArrivalTime());
 
@@ -35,7 +35,7 @@ vector<float> FeatureExtractor::extractNewFeaturesVector(Packet pack) {
     tmp = this->_channelSize.getStatsOneDimension(channelKey); // returns 15 features
     res.insert(res.begin(), tmp.begin(), tmp.end());
 
-    tmp = this->_channelSize.getStatsTwoDimensions(channelKey, channelForeignKey); // returns 20 features
+    tmp = this->_channelSize.getStatsTwoDimensions(channelKey); // returns 20 features
     res.insert(res.begin(), tmp.begin(), tmp.end());
 
     //Jitter --> 1D only

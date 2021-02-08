@@ -39,13 +39,16 @@ public:
     IncStatsData();
     ~IncStatsData();
     vector<IncStats*> registerStream(string uniqueKey) throw();
-    vector<RelativeIncStats*> registerRelatedStreams(string firstUniqueKey, string secondUniqueKey, Time timestamp) throw();
+    vector<RelativeIncStats*> registerRelatedStreams(string key, Time timestamp) throw();
 
     void insertPacket(string key, Time timestamp) throw();
-    void insertPacket(string firstKey, string secondKey, float value, Time timestamp) throw();
+
+    void insertPacket(string key, float value, Time timestamp) throw();
+
     void insertPacket(string key, float value, Time timestamp, int lambdaIndex) throw();
 
     vector<float> getStatsOneDimension(string key) throw();
-    vector<float> getStatsTwoDimensions(string firstKey, string secondKey) throw();
+    vector<float> getStatsTwoDimensions(string key) throw();
     void updateStatsTwoDimensions(string firstKey, Time timestamp, float value) const throw(); // TODO:not found
+    string getCombinedKey(string key) const;
 };
