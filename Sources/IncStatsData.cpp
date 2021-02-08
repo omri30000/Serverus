@@ -1,5 +1,5 @@
 #include "../Headers/IncStatsData.h"
-
+#include <algorithm>
 
 //constructor
 IncStatsData::IncStatsData()
@@ -100,17 +100,28 @@ vector<RelativeIncStats*> IncStatsData::registerRelatedStreams(string firstUniqu
 void IncStatsData::insertPacket(string firstKey, string secondKey, float value, Time timestamp) throw()
 {
     const lock_guard<mutex> collectionLock(this->_incStatsCollectionLock);
+    std::cout<<"insert start" <<std::endl;
     vector<RelativeIncStats*> vec = this->registerRelatedStreams(firstKey, secondKey, timestamp);
 
     for (int i = 0; i < this->_incStatsCollection[firstKey].size() ; ++i) // for each lambda
     {
         this->insertPacket(firstKey,value,timestamp,i);
     }
+    std::cout<<"finish 1d insert" <<std::endl;
 
     for (int i = 0 ; i < vec.size(); i++)
     {
-        vec[i]->update(firstKey, value, timestamp);
+        try
+        {
+            vec[i]->update(firstKey, value, timestamp);
+
+        }
+        catch(std::exception e)
+        {
+            std::cout<<"fuck"<<std::endl;
+        }
     }
+    std::cout<<"insert finish" <<std::endl;
 
 }
 
@@ -125,8 +136,8 @@ void IncStatsData::insertPacket(string firstKey, string secondKey, float value, 
  */
 void IncStatsData::insertPacket(string key, float value, Time timestamp, int lambdaIndex) throw()
 {
-	if (!this->isStreamExists(key))
-        throw std::runtime_error("Stream doesn't exist");
+    if (!this->isStreamExists(key))
+            throw std::runtime_error("Stream doesn't exist");
 
 	this->_incStatsCollection[key][lambdaIndex]->insertElement(value, timestamp);
 }
@@ -249,8 +260,10 @@ void IncStatsData::cleanInactiveStats(float limit)
 
     while(_isRunning)
     {
-        std::this_thread::sleep_for(std::chrono::milliseconds (50));
+        std::this_thread::sleep_for(std::chrono::milliseconds (400));
         const lock_guard<mutex> collectionLock(this->_incStatsCollectionLock);
+        std::cout<<"thread start" <<std::endl;
+
         i++;
         vector<string> toRemove;
         //find
@@ -267,22 +280,32 @@ void IncStatsData::cleanInactiveStats(float limit)
                 }
            }
         }
+        std::cout<<"thread part1" <<std::endl;
         vector<string> toRemoveRelative;
-        for(string remove : toRemove) {
+        for(string remove : toRemove)
+        {
+
             this->deleteStream(remove);
 
-            for (auto it : _relIncStatsCollection) {
+            for (auto it : _relIncStatsCollection)
+            {
                 string secondPart;
-                int find = it.first.find(remove);
+
+                int finded = it.first.find(remove);
                 int plus = it.first.find('+');
 
-                if (find != string::npos) {
+                if (finded != string::npos)
+                {
+                    if(find(toRemoveRelative.begin(),toRemoveRelative.end(),it.first) != toRemoveRelative.end())//already added
+                        break;
+
                     for (int i = 0; i < it.second.size(); ++i) {
                         delete it.second[i];
+                        it.second[i] = nullptr;
                     }
                     toRemoveRelative.push_back(it.first);
                     //current is the first in key
-                    if (find == 0)
+                    if (finded == 0)
                         secondPart = it.first.substr(plus + 1, it.first.size() - plus - 1);
                     else
                         secondPart = it.first.substr(0, plus);
@@ -293,6 +316,7 @@ void IncStatsData::cleanInactiveStats(float limit)
 
             }
         }
+        std::cout<<"thread part2" <<std::endl;
 
         for (auto remove : toRemoveRelative)
         {
@@ -309,13 +333,12 @@ void IncStatsData::deleteStream(string key)
 {
     if(!this->isStreamExists(key))
         return;
-    map<string,vector<IncStats*>>::iterator it =_incStatsCollection.find(key) ;
-    if(it == _incStatsCollection.end())
-        return;
+    map<string,vector<IncStats*>>::iterator it =_incStatsCollection.find(key);
 
     for (int i = 0; i < it->second.size(); ++i)
     {
         delete it->second[i];
+        it->second[i] = nullptr;
     }
     _incStatsCollection.erase(it);
 }
