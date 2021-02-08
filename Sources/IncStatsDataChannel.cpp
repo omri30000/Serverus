@@ -11,7 +11,7 @@ output: a key that represents the stream
 */
 string IncStatsDataChannel::getStreamKey(Packet pack)
 {
-    return pack.getSourceIP();
+    return pack.getSourceIP() +'+' + pack.getDestIP();
 }
 
 /*
@@ -21,5 +21,5 @@ output: a key that represents the stream
 */
 string IncStatsDataChannel::getForeignKey(Packet pack)
 {
-    return pack.getDestIP();
+    return pack.getDestIP()  + '+' + pack.getSourceIP();
 }
