@@ -20,18 +20,19 @@ Output: The statistics vector :Vector<float>
 */
 vector<float> FeatureExtractor::extractNewFeaturesVector(Packet pack) {
     //update
-    string channelKey = this->_channelSize.getStreamKey(pack);
-    //string socketKey = this->_socketSize.getStreamKey(pack);
+    string channelKey = this->_channelJitter.getStreamKey(pack);
+    string socketKey = this->_socketSize.getStreamKey(pack);
     //string channelForeignKey = this->_channelSize.getForeignKey(pack);
     //string socketForeignKey = this->_socketSize.getForeignKey(pack);
 
     this->_channelSize.insertPacket(channelKey, (float)pack.getLength(), pack.getArrivalTime());
-    //this->_channelJitter.insertPacket(channelKey,  pack.getArrivalTime());
-    //this->_socketSize.insertPacket(socketKey, socketForeignKey, (float)pack.getLength(), pack.getArrivalTime());
+    this->_channelJitter.insertPacket(channelKey,  pack.getArrivalTime());
+    this->_socketSize.insertPacket(socketKey, (float)pack.getLength(), pack.getArrivalTime());
 
     vector<float> res;
     vector<float> tmp;
 
+    //should be merged
     tmp = this->_channelSize.getStatsOneDimension(channelKey); // returns 15 features
     res.insert(res.begin(), tmp.begin(), tmp.end());
 
@@ -39,15 +40,15 @@ vector<float> FeatureExtractor::extractNewFeaturesVector(Packet pack) {
     res.insert(res.begin(), tmp.begin(), tmp.end());
 
     //Jitter --> 1D only
-    //tmp = this->_channelJitter.getStatsOneDimension(channelKey); // returns 15 features
-    //res.insert(res.begin(), tmp.begin(), tmp.end());
+    tmp = this->_channelJitter.getStatsOneDimension(channelKey); // returns 15 features
+    res.insert(res.begin(), tmp.begin(), tmp.end());
 
 
-    //tmp = this->_socketSize.getStatsOneDimension(socketKey); // returns 15 featurs
-    //res.insert(res.begin(), tmp.begin(), tmp.end());
+    tmp = this->_socketSize.getStatsOneDimension(socketKey); // returns 15 featurs
+    res.insert(res.begin(), tmp.begin(), tmp.end());
 
-    //tmp = this->_socketSize.getStatsTwoDimensions(socketKey, socketForeignKey); // returns 20 features
-    //res.insert(res.begin(), tmp.begin(), tmp.end());
+    tmp = this->_socketSize.getStatsTwoDimensions(socketKey); // returns 20 features
+    res.insert(res.begin(), tmp.begin(), tmp.end());
 
     return res;
 

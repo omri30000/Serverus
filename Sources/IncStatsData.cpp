@@ -169,9 +169,12 @@ void IncStatsData::insertPacket(string key, Time timestamp) throw()
 vector<float> IncStatsData::getStatsOneDimension(string key) throw()
 {
     const lock_guard<mutex> collectionLock(this->_incStatsCollectionLock);
-	if (!this->isStreamExists(key))
-        throw std::runtime_error("Stream doesn't exist");
 
+	if (!this->isStreamExists(key))
+    {
+        //throw std::runtime_error("cant find stream");
+        return vector<float>(15);
+    }
 	vector<float> result;
 	for (size_t i = 0; i < this->_incStatsCollection.at(key).size() ; i++) // An iteration for each lambda index
 	{
@@ -197,7 +200,8 @@ vector<float> IncStatsData::getStatsTwoDimensions(string key) throw()
 	string uniqueKey = this->getCombinedKey(key);
 	if (!this->isRelStreamExists(uniqueKey))
 	{
-		throw std::runtime_error("the required link doesn't exist");
+		//throw std::runtime_error("the required link doesn't exist");
+		return vector<float>(20);
 	}
 	
 	vector<float> result;
@@ -280,7 +284,7 @@ void IncStatsData::cleanInactiveStats(float limit)
 
     while(_isRunning)
     {
-        std::this_thread::sleep_for(std::chrono::milliseconds (400));
+        std::this_thread::sleep_for(std::chrono::milliseconds (4000));
         const lock_guard<mutex> collectionLock(this->_incStatsCollectionLock);
         std::cout<<"thread start" <<std::endl;
 
