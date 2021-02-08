@@ -2,7 +2,7 @@
 
 
 Packet::Packet(Time arrivalTime, string sourceIP, string destIP, int sourcePort, 
-            int destPort, int length, bool protocol, string data)
+            int destPort, float length, bool protocol, string data)
 {
     this->_arrivalTime = arrivalTime;
     this->_sourceIP = sourceIP;
@@ -23,7 +23,7 @@ Packet::Packet(vector<string> record, int startIndex)
     this->_sourcePort = std::stoi(record[startIndex + 2]);
     this->_destPort = std::stoi(record[startIndex + 3]);
     this->_protocol = (record[startIndex + 4] == "UDP" || record[startIndex + 4] == "TCP");
-    this->_length = std::stoi(record[startIndex + 5]);
+    this->_length = std::stof(record[startIndex + 5]);
     this->_data = record[startIndex + 6];
     this->_arrivalTime = Time(record[startIndex + 7]); 
 
@@ -59,7 +59,7 @@ int Packet::getSourcePort() { return this->_sourcePort; }
 void Packet::setDestPort(int destPort) { this->_destPort = destPort; } 
 int Packet::getDestPort() { return this->_destPort; }
 void Packet::setLength(int length) { this->_length = length; } 
-int Packet::getLength() { return this->_length; }
+float Packet::getLength() { return this->_length; }
 void Packet::setProtocol(bool protocol) { this->_protocol = protocol; } 
 bool Packet::getProtocol() { return this->_protocol; }
 void Packet::setData(string data) { this->_data = data; } 
