@@ -25,8 +25,8 @@ class AnomalyDetector {
         vector<AutoEncoder> _ensembleLayer;
         AutoEncoder _outputLayer;
 
-        float train(valarray<float> input);
-        float calcAnomalyScore(valarray<float> input);
+        float train(valarray<valarray<float>> input);
+        float calcAnomalyScore(valarray<valarray<float>> input);
 
     public:
         AnomalyDetector(int numOfFeatures, int amountToLearnFrom,

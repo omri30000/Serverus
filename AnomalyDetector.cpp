@@ -43,15 +43,24 @@ float AnomalyDetector::perform(valarray<float> input)
 /*
 The function
 */
-float AnomalyDetector::train(valarray<float> input)
+float AnomalyDetector::train(valarray<valarray<float>> input)
 {
-
+    return 0;
 }
 
 /*
-the function
+the function will calculate an anomaly score to a specific packet
+input: the mapped features of the specific packet
+output: anomaly score of the packet
 */
-float AnomalyDetector::calcAnomalyScore(valarray<float> input)
+float AnomalyDetector::calcAnomalyScore(valarray<valarray<float>> input)
 {
+    //create an empty array represents the input to the output layer
+    valarray<float> inputOfOutputLayer(this->_ensembleLayer.size());
 
+    for (int i = 0; i < inputOfOutputLayer.size(); i++) {
+        inputOfOutputLayer[i] = this->_ensembleLayer[i].feedForward(input[i]);
+    }
+
+    return this->_outputLayer.feedForward(inputOfOutputLayer);
 }
