@@ -56,9 +56,18 @@ The function will train the model and calc the anomaly score during training (no
 input: the mapped features of a specific packet
 output: anomaly score of the packet (meaningless)
 */
-float AnomalyDetector::train(valarray<valarray<float>> input)
+void AnomalyDetector::train(valarray<valarray<float>> input)
 {
-    return 0;
+    //create an empty array represents the input to the output layer
+    valarray<float> inputOfOutputLayer(this->_ensembleLayer.size());
+
+    for (int i = 0; i < inputOfOutputLayer.size(); i++) {
+        inputOfOutputLayer[i] = this->_ensembleLayer[i].train(input[i]);
+    }
+
+    this->_outputLayer.train(inputOfOutputLayer);
+
+    this->_trainedInstancesAmount++;
 }
 
 /*
