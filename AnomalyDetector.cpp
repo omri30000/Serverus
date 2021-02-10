@@ -3,3 +3,27 @@
 //
 
 #include "AnomalyDetector.h"
+
+/*
+The function ...
+*/
+float AnomalyDetector::perform(valarray<float> input)
+{
+
+}
+
+/*
+The function
+*/
+float AnomalyDetector::train(valarray<float> input)
+{
+
+}
+
+/*
+the function
+*/
+float AnomalyDetector::calcAnomalyScore(valarray<float> input)
+{
+
+}
