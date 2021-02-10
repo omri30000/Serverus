@@ -33,15 +33,28 @@ AnomalyDetector::AnomalyDetector(int numOfFeatures, int amountToLearnFrom, float
 }
 
 /*
-The function ...
+The function will check weather the AD should perform training or execution and perform the action
+input: the mapped features of a specific packet
+output: anomaly score of the packet (meaningless)
 */
-float AnomalyDetector::perform(valarray<float> input)
+float AnomalyDetector::perform(valarray<valarray<float>> input)
 {
+    float anomalyScore = 0;
 
+    if (this->_trainedInstancesAmount > this->_amountToLearn) {
+        anomalyScore = this->calcAnomalyScore(input);
+    }
+    else {
+        this->train(input);
+    }
+
+    return anomalyScore;
 }
 
 /*
-The function
+The function will train the model and calc the anomaly score during training (not for use)
+input: the mapped features of a specific packet
+output: anomaly score of the packet (meaningless)
 */
 float AnomalyDetector::train(valarray<valarray<float>> input)
 {

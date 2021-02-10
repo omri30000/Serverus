@@ -33,7 +33,7 @@ class AnomalyDetector {
                         float learningRate, float hiddenLayerRatio, vector<vector<float>> featuresMap);
         ~AnomalyDetector() = default;
 
-        float perform(valarray<float> input);
+        float perform(valarray<valarray<float>> input);
 };
 
 #endif //IDPS_20_21_ANOMALYDETECTOR_H
