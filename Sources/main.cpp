@@ -7,6 +7,7 @@
 #include "../Headers/FeatureMapper.h"
 #include "../Headers/Parser.h"
 #include "../Headers/Communicator.h"
+#include "../Headers/AnomalyDetector.h"
 
 // NOTE: Make sure to run program with sudo in order to be able to delete data from db
 int main()
@@ -17,6 +18,7 @@ int main()
     FeatureExtractor extractor;
     FeatureMapper mapper(250,20,85);
     Parser* p = nullptr;
+    AnomalyDetector* ad = nullptr; // todo: check if should be initialized
     //todo: Communicator communicator;
 
     bool cond = true;
@@ -55,15 +57,18 @@ int main()
             }
         } else {
             vector<vector<float>> a = p->organizeData(stats);
+
+            // print the mapped features
             for (int i = 0; i < a.size(); ++i) {
                 for (int j = 0; j < a[i].size(); ++j) {
                     std::cout << a[i][j] << ",";
                 }
                 std::cout << std::endl;
             }
+
+            //ad = ad->getInstance(85, 30, learningRate, 0.75, a);
+            //ad->perform(a);
         }
-
-
     }
 
 
