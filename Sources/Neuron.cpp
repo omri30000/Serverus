@@ -2,7 +2,7 @@
 // Created by ofir on 25/01/2021.
 //
 
-#include "Neuron.h"
+#include "../Headers/Neuron.h"
 #include <cstdlib>
 #include <ctime>
 

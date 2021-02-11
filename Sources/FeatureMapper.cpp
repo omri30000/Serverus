@@ -2,7 +2,7 @@
 // Created by ofir on 09/01/2021.
 //
 
-#include "FeatureMapper.h"
+#include "../Headers/FeatureMapper.h"
 #include <cmath>
 
 //constructor

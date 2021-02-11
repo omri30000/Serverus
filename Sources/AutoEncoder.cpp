@@ -3,8 +3,8 @@
 //
 
 #include <iostream>
-#include "AutoEncoder.h"
-#include "utils.h"
+#include "../Headers/AutoEncoder.h"
+#include "../Headers/utils.h"
 //void printValAraay(valarray<float> t);
 //constructor
 AutoEncoder::AutoEncoder(int inputSize,float learningRate =0.1)

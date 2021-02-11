@@ -1,7 +1,7 @@
 #include <iostream>
 #include <string>
-#include "PacketsReaderSQLITE.h"
-#include "FeatureExtractor.h"
+#include "../Headers/PacketsReaderSQLITE.h"
+#include "../Headers/FeatureExtractor.h"
 
 /*
 void readPackets(string filePath);
