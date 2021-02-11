@@ -12,6 +12,7 @@
 using std::vector;
 
 class AnomalyDetector {
+
     protected:
         int _featuresAmount; // the amount of features (received from FE -> 85)
         int _amountToLearn; // the number of instances that the component will learn from
@@ -20,7 +21,7 @@ class AnomalyDetector {
 
         int _trainedInstancesAmount; // the amount of instances that has being trained
 
-        vector<vector<float>> _featuresMap;
+        //vector<vector<float>> _featuresMap;
 
         vector<AutoEncoder> _ensembleLayer;
         AutoEncoder _outputLayer;
@@ -28,12 +29,22 @@ class AnomalyDetector {
         void train(valarray<valarray<float>> input);
         float calcAnomalyScore(valarray<valarray<float>> input);
 
-    public:
         AnomalyDetector(int numOfFeatures, int amountToLearnFrom,
-                        float learningRate, float hiddenLayerRatio, vector<vector<float>> featuresMap);
-        ~AnomalyDetector() = default;
+                    float learningRate, float hiddenLayerRatio, valarray<valarray<float>> featuresMap);
+
+    public:
+
+        static AnomalyDetector& getInstance(int numOfFeatures, int amountToLearnFrom,
+                                     float learningRate, float hiddenLayerRatio, valarray<valarray<float>> featuresMap);
+
+        AnomalyDetector(AnomalyDetector const&) = delete;
+        void operator=(AnomalyDetector const&) = delete;
 
         float perform(valarray<valarray<float>> input);
+
+        ~AnomalyDetector() = default;
+
+
 };
 
 #endif //IDPS_20_21_ANOMALYDETECTOR_H

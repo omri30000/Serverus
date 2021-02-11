@@ -16,7 +16,7 @@ Output:
  * An object of AnomalyDetector
 */
 AnomalyDetector::AnomalyDetector(int numOfFeatures, int amountToLearnFrom, float learningRate,
-                                 float hiddenLayerRatio, vector<vector<float>> featuresMap) : _outputLayer(featuresMap.size(), learningRate)
+                                 float hiddenLayerRatio, valarray<valarray<float>> featuresMap) : _outputLayer(featuresMap.size(), learningRate)
 {
     this->_featuresAmount = numOfFeatures;
     this->_amountToLearn = amountToLearnFrom;
@@ -24,12 +24,31 @@ AnomalyDetector::AnomalyDetector(int numOfFeatures, int amountToLearnFrom, float
     this->_ratioOfHiddenLayer = hiddenLayerRatio;
 
     this->_trainedInstancesAmount = 0;
-    this->_featuresMap = featuresMap;
 
     // initialize ensemble layer
     for (int i = 0; i < featuresMap.size(); i++) {
         this->_ensembleLayer.push_back(AutoEncoder(featuresMap[i].size(), learningRate));
     }
+}
+
+/*
+The function will make sure that the AnomalyDetector will be created only once
+ input:
+ * numOfFeatures --> the amount of features in the input data set
+ * amountToLearn --> the amount of instances to train the AD on before executing
+ * learningRate --> the learningRate for all the auto encoders
+ * hiddenLayerRatio --> the "beta" as represented in the article
+ * featureMap --> the mapped features given from the FM
+Output:
+ * An object of AnomalyDetector
+*/
+AnomalyDetector& AnomalyDetector::getInstance(int numOfFeatures, int amountToLearnFrom,
+                                    float learningRate, float hiddenLayerRatio, valarray<valarray<float>> featuresMap)
+{
+    static AnomalyDetector instance(numOfFeatures, amountToLearnFrom,
+                                    learningRate, hiddenLayerRatio, featuresMap);
+
+    return instance;
 }
 
 /*
