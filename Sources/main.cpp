@@ -51,9 +51,9 @@ int main()
             if (!mapper.getState())
                 mapper.update(stats);
             else {
-                vector<vector<int>> a = mapper.cluster();
-                std::cout << "Clusters amount: " << a.size() << std::endl;
-                p = new Parser(a);
+                vector<vector<int>> vec = mapper.cluster();
+                std::cout << "Clusters amount: " << vec.size() << std::endl;
+                p = new Parser(vec);
                 //exit(1);
             }
         } else {
