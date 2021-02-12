@@ -4,8 +4,10 @@
 #pragma once
 
 #include <vector>
+#include <valarray>
 
 using std::vector;
+using std::valarray;
 
 class Parser {
 protected:
@@ -14,5 +16,5 @@ protected:
 public:
     Parser(vector<vector<int>> order);
 
-    vector<vector<float>> organizeData(vector<float> stats);
+    valarray<valarray<float>> organizeData(vector<float> stats);
 };

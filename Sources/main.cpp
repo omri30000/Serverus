@@ -19,6 +19,7 @@ int main()
     FeatureMapper mapper(250,20,85);
     Parser* p = nullptr;
     AnomalyDetector* ad = nullptr; // todo: check if should be initialized
+
     //todo: Communicator communicator;
 
     bool cond = true;
@@ -56,18 +57,18 @@ int main()
                 //exit(1);
             }
         } else {
-            vector<vector<float>> a = p->organizeData(stats);
+            valarray<valarray<float>> featuresMap = p->organizeData(stats);
 
             // print the mapped features
-            for (int i = 0; i < a.size(); ++i) {
-                for (int j = 0; j < a[i].size(); ++j) {
-                    std::cout << a[i][j] << ",";
+            for (int i = 0; i < featuresMap.size(); ++i) {
+                for (int j = 0; j < featuresMap[i].size(); ++j) {
+                    std::cout << featuresMap[i][j] << ",";
                 }
                 std::cout << std::endl;
             }
 
-            //ad = ad->getInstance(85, 30, learningRate, 0.75, a);
-            //ad->perform(a);
+            ad = &ad->getInstance(85, 30, 0.1, 0.75, featuresMap);
+            ad->perform(featuresMap);
         }
     }
 

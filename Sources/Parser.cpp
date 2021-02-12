@@ -13,14 +13,17 @@ Parser::Parser(vector<vector<int>> order) {
  input: stats : statistics from FE : vector<float>
  Output: data in correct order to the AD : vector<vector<float>>
  */
-vector<vector<float>> Parser::organizeData(vector<float> stats) {
-    vector<vector<float>> result;
+valarray<valarray<float>> Parser::organizeData(vector<float> stats) {
+    valarray<valarray<float>> result(this->_order.size());
+
     for (int i = 0; i < _order.size(); ++i) {
-        result.push_back(std::vector<float>(_order[i].size()));
+        result[i] = valarray<float>(this->_order[i].size());
+
         for (int j = 0; j < _order[i].size(); ++j) {
             result[i][j] = stats[_order[i][j]];
         }
     }
+
     return result;
 }
 
