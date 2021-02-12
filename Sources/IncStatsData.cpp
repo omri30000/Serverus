@@ -102,7 +102,7 @@ vector<RelativeIncStats*> IncStatsData::registerRelatedStreams(string key, Time 
 void IncStatsData::insertPacket(string key, float value, Time timestamp) throw()
 {
     const lock_guard<mutex> collectionLock(this->_incStatsCollectionLock);
-    std::cout<<"insert start" <<std::endl;
+    //std::cout<<"insert start" <<std::endl;
 
     vector<RelativeIncStats*> vec = this->registerRelatedStreams(key, timestamp);
 
@@ -110,7 +110,7 @@ void IncStatsData::insertPacket(string key, float value, Time timestamp) throw()
     {
         this->insertPacket(key,value,timestamp,i);
     }
-    std::cout<<"finish 1d insert" <<std::endl;
+    //std::cout<<"finish 1d insert" <<std::endl;
 
     for (int i = 0 ; i < vec.size(); i++)
     {
@@ -124,7 +124,7 @@ void IncStatsData::insertPacket(string key, float value, Time timestamp) throw()
             std::cout<<"fuck"<<std::endl;
         }
     }
-    std::cout<<"insert finish" <<std::endl;
+    //std::cout<<"insert finish" <<std::endl;
 
 }
 
@@ -286,7 +286,8 @@ void IncStatsData::cleanInactiveStats(float limit)
     {
         std::this_thread::sleep_for(std::chrono::milliseconds (4000));
         const lock_guard<mutex> collectionLock(this->_incStatsCollectionLock);
-        std::cout<<"thread start" <<std::endl;
+
+        //std::cout<<"thread start" <<std::endl;
 
         i++;
         vector<string> toRemove;
@@ -304,8 +305,11 @@ void IncStatsData::cleanInactiveStats(float limit)
                 }
            }
         }
-        std::cout<<"thread part1" <<std::endl;
+
+        // std::cout<<"thread part1" <<std::endl;
+
         vector<string> toRemoveRelative;
+
         for(string remove : toRemove) {
 
             this->deleteStream(remove);
@@ -329,7 +333,7 @@ void IncStatsData::cleanInactiveStats(float limit)
             this->deleteStream(second);
 
         }
-            std::cout<<"finish thread" <<i<<std::endl;
+        // std::cout<<"finish thread" <<i<<std::endl;
     }
 
 }

@@ -3,6 +3,7 @@
 //
 
 #include "../Headers/AnomalyDetector.h"
+#include <iostream>
 
 /*
 AnomalyDetector class's constructor.
@@ -84,7 +85,7 @@ void AnomalyDetector::train(valarray<valarray<float>> input)
         inputOfOutputLayer[i] = this->_ensembleLayer[i].train(input[i]);
     }
 
-    this->_outputLayer.train(inputOfOutputLayer);
+    std::cout << "train anomaly: " << this->_outputLayer.train(inputOfOutputLayer) << std::endl;
 
     this->_trainedInstancesAmount++;
 }

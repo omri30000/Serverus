@@ -30,22 +30,22 @@ int main()
 
         try {
             pack = reader.getNextPacket();
-            std::cout << "a: " << a;
+            std::cout << "packet number: " << a << std::endl;
             a++;
         }
         catch (std::exception &e) {
             continue;
         }
+
         //std::cout<<pack.toString();
+
         vector<float> stats = extractor.extractNewFeaturesVector(pack);
-        //std::cout<<stats.size();
-        std::cout << "#########\n";
+
+        std::cout << "#########" << std::endl;
         for (int i = 0; i < stats.size(); ++i) {
             std::cout << stats[i] << ',';
         }
-        std::cout << "\n-----------\n";
-
-        std::cout << std::endl;
+        std::cout << std::endl << "#########" << std::endl;
 
         if (p == nullptr) {
             if (!mapper.getState())
@@ -60,15 +60,18 @@ int main()
             valarray<valarray<float>> featuresMap = p->organizeData(stats);
 
             // print the mapped features
+
+            std::cout << "-----MAP-----" << std::endl;
             for (int i = 0; i < featuresMap.size(); ++i) {
                 for (int j = 0; j < featuresMap[i].size(); ++j) {
                     std::cout << featuresMap[i][j] << ",";
                 }
                 std::cout << std::endl;
             }
+            std::cout << "-----END-----" << std::endl;
 
-            ad = &ad->getInstance(85, 30, 0.1, 0.75, featuresMap);
-            ad->perform(featuresMap);
+            ad = &ad->getInstance(85, 10000, 0.1, 0.75, featuresMap);
+            std::cout << "Anomaly Score: " << ad->perform(featuresMap) << std::endl << std::endl;
         }
     }
 
