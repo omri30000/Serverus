@@ -56,7 +56,8 @@ float AutoEncoder::feedForward(valarray<float> input)
  Output: The RMSE value
  */
 float AutoEncoder::calcRmse(valarray<float> input,valarray<float> reconstruct) {
-    return std::pow(input- reconstruct,2).sum();
+    valarray<float>  v = std::pow(input- reconstruct,2);
+    return sqrt(v.sum() / v.size());
 }
 /*
  This function returns the Hidden Layer - The second layer (feed forward)
@@ -130,12 +131,14 @@ float AutoEncoder::train(valarray<float> input)
         }
     }
 
-
-    return (input - res).sum();
+    //std::cout<<"dif: "<<(input-res).sum()<<std::endl;//<std::endl<<"rmse: ";
+    return calcRmse(input,res);
 }
 
-//for debug use only
+
 /*
+//for debug use only
+
 int main(void) {
     srand(0);
 
@@ -175,7 +178,7 @@ int main(void) {
     AutoEncoder da(n_visible,0.1);
 
     // train
-    for (int epoch = 0; epoch < 10000; epoch++) {
+    for (int epoch = 0; epoch < 20; epoch++) {
         for (int i = 0; i < train_N; ++i) {
             std::cout<<da.train(train_X[i])<<std::endl;
 
@@ -185,9 +188,9 @@ int main(void) {
     for (int i = 0; i < da._weights.size(); ++i)
     {
         for (int j = 0; j < da._weights[i].size(); ++j) {
-            std::cout << da._weights[i][j] << ", ";
+            //std::cout << da._weights[i][j] << ", ";
         }
-        std::cout << std::endl;
+//        std::cout << std::endl;
     }
 
     valarray<valarray<float>> test_X = {

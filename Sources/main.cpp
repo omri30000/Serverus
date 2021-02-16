@@ -8,6 +8,7 @@
 #include "../Headers/Parser.h"
 #include "../Headers/Communicator.h"
 #include "../Headers/AnomalyDetector.h"
+#include "../Headers/utils.h"
 
 // NOTE: Make sure to run program with sudo in order to be able to delete data from db
 int main()
@@ -43,7 +44,9 @@ int main()
 
         std::cout << "#########" << std::endl;
         for (int i = 0; i < stats.size(); ++i) {
-            std::cout << stats[i] << ',';
+            //if(stats[i] > 1 || stats[i] < -1)
+                stats[i] = sigmoid(stats[i]);
+            //std::cout << stats[i] << ',';
         }
         std::cout << std::endl << "#########" << std::endl;
 
@@ -52,7 +55,7 @@ int main()
                 mapper.update(stats);
             else {
                 vector<vector<int>> vec = mapper.cluster();
-                std::cout << "Clusters amount: " << vec.size() << std::endl;
+                //std::cout << "Clusters amount: " << vec.size() << std::endl;
                 p = new Parser(vec);
                 //exit(1);
             }
@@ -70,8 +73,9 @@ int main()
             }
             std::cout << "-----END-----" << std::endl;
 
-            ad = &ad->getInstance(85, 1000, 0.1, 0.75, featuresMap);
+            ad = &ad->getInstance(85, 1500, 0.05, 0.75, featuresMap);
             std::cout << "Anomaly Score: " << ad->perform(featuresMap) << std::endl << std::endl;
+
         }
     }
 

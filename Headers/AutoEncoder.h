@@ -15,9 +15,7 @@ class AutoEncoder
         float _learningRate;
         int _inputSize;
 
-        valarray<valarray<float>> _weights;
-
-        void getHiddenLayer(valarray<float>vals ,valarray<float>& res);
+    void getHiddenLayer(valarray<float>vals ,valarray<float>& res);
         void getVisibleLayer(valarray<float> vals,valarray<float>& res);
         float calcRmse(valarray<float> input,valarray<float> reconstruct);
 
@@ -26,6 +24,8 @@ class AutoEncoder
 
         float train(valarray<float> input);
         float feedForward(valarray<float> input);
+
+    valarray<valarray<float>> _weights;
 };
 
 

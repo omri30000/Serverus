@@ -86,13 +86,10 @@ void AnomalyDetector::train(valarray<valarray<float>> input)
         inputOfOutputLayer[i] = this->_ensembleLayer[i].train(input[i]);
 
     }
-    std::cout<<"each "<< inputOfOutputLayer.sum()<<std::endl;
 
-    float v = this->_outputLayer.train(inputOfOutputLayer);
-    std::cout << "train anomaly: " <<  v <<"  "<< _trainedInstancesAmount<< std::endl;
+        float v = this->_outputLayer.train(inputOfOutputLayer);
+        std::cout << "train anomaly: " << v << "  " << _trainedInstancesAmount << std::endl;
 
-   // if(isnan(v))
-    //    return ;
     this->_trainedInstancesAmount++;
 }
 
