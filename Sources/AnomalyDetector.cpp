@@ -4,7 +4,7 @@
 
 #include "../Headers/AnomalyDetector.h"
 #include <iostream>
-
+#include "math.h"
 /*
 AnomalyDetector class's constructor.
 input:
@@ -61,6 +61,7 @@ float AnomalyDetector::perform(valarray<valarray<float>> input)
 {
     float anomalyScore = 0;
 
+
     if (this->_trainedInstancesAmount > this->_amountToLearn) {
         anomalyScore = this->calcAnomalyScore(input);
     }
@@ -83,10 +84,15 @@ void AnomalyDetector::train(valarray<valarray<float>> input)
 
     for (int i = 0; i < inputOfOutputLayer.size(); i++) {
         inputOfOutputLayer[i] = this->_ensembleLayer[i].train(input[i]);
+
     }
+    std::cout<<"each "<< inputOfOutputLayer.sum()<<std::endl;
 
-    std::cout << "train anomaly: " << this->_outputLayer.train(inputOfOutputLayer) << std::endl;
+    float v = this->_outputLayer.train(inputOfOutputLayer);
+    std::cout << "train anomaly: " <<  v <<"  "<< _trainedInstancesAmount<< std::endl;
 
+   // if(isnan(v))
+    //    return ;
     this->_trainedInstancesAmount++;
 }
 

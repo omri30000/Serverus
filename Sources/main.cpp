@@ -64,13 +64,13 @@ int main()
             std::cout << "-----MAP-----" << std::endl;
             for (int i = 0; i < featuresMap.size(); ++i) {
                 for (int j = 0; j < featuresMap[i].size(); ++j) {
-                    std::cout << featuresMap[i][j] << ",";
+           //         std::cout << featuresMap[i][j] << ",";
                 }
-                std::cout << std::endl;
+             //   std::cout << std::endl;
             }
             std::cout << "-----END-----" << std::endl;
 
-            ad = &ad->getInstance(85, 10000, 0.1, 0.75, featuresMap);
+            ad = &ad->getInstance(85, 1000, 0.1, 0.75, featuresMap);
             std::cout << "Anomaly Score: " << ad->perform(featuresMap) << std::endl << std::endl;
         }
     }
