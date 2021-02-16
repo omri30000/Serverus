@@ -74,7 +74,7 @@ class Sniffer:
 	    :return: no return value
 	    :rtype: None
 	    """
-        sniff(prn=self.__write_packet, count=50)
+        sniff(prn=self.__write_packet, count=5000)
 
     def __write_packet(self, pkt):
         """
