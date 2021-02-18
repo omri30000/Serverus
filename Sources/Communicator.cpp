@@ -43,7 +43,7 @@ output: none
 void Communicator::sendMessage(Event event)
 {
     try{
-        ClientSocket sock = this->openSocket(1234); // Defender's port, get from config file
+        ClientSocket sock = this->openSocket(1250); // Defender's port, get from config file
         sock << event.castToBinMessage();
     }
     catch (SocketException& e)

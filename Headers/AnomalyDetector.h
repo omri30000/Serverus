@@ -30,12 +30,12 @@ class AnomalyDetector {
         float calcAnomalyScore(valarray<valarray<float>> input);
 
         AnomalyDetector(int numOfFeatures, int amountToLearnFrom,
-                    float learningRate, float hiddenLayerRatio, valarray<valarray<float>> featuresMap);
+                    float learningRate, float hiddenLayerRatio, vector<int> featuresMap);
 
     public:
 
         static AnomalyDetector& getInstance(int numOfFeatures, int amountToLearnFrom,
-                                     float learningRate, float hiddenLayerRatio, valarray<valarray<float>> featuresMap);
+                                     float learningRate, float hiddenLayerRatio, vector<int> featuresMap);
 
         AnomalyDetector(AnomalyDetector const&) = delete;
         void operator=(AnomalyDetector const&) = delete;

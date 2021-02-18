@@ -10,6 +10,7 @@
 #include "../Headers/AnomalyDetector.h"
 #include "../Headers/utils.h"
 
+
 // NOTE: Make sure to run program with sudo in order to be able to delete data from db
 int main()
 {
@@ -19,16 +20,18 @@ int main()
     FeatureExtractor extractor;
     FeatureMapper mapper(500,20,85);
     Parser* p = nullptr;
-    AnomalyDetector* ad = nullptr; // todo: check if should be initialized
+    AnomalyDetector* ad = nullptr;
 
-    //todo: Communicator communicator;
+    Communicator communicator;
+
+
 
     bool cond = true;
     Packet pack;
     int a = 0;
 
-    while (cond) {
-
+    while (cond)
+    {
         try {
             pack = reader.getNextPacket();
             std::cout << "packet number: " << a << std::endl;
@@ -55,6 +58,14 @@ int main()
                 vector<vector<int>> vec = mapper.cluster();
                 //std::cout << "Clusters amount: " << vec.size() << std::endl;
                 p = new Parser(vec);
+                vector<int> size;
+
+                for (int i = 0; i <vec.size() ; ++i)
+                {
+                    size.push_back(vec[i].size());
+                }
+                ad = &AnomalyDetector::getInstance(85, 1000, 0.05, 0.75, size);
+
                 //exit(1);
             }
         } else {
@@ -63,20 +74,21 @@ int main()
             // print the mapped features
 
             std::cout << "-----MAP-----" << std::endl;
-            for (int i = 0; i < featuresMap.size(); ++i) {
-                for (int j = 0; j < featuresMap[i].size(); ++j) {
-           //         std::cout << featuresMap[i][j] << ",";
+            for (int i = 0; i < featuresMap.size(); ++i)
+            {
+                for (int j = 0; j < featuresMap[i].size(); ++j)
+                {
+                   //std::cout << featuresMap[i][j] << ",";
                 }
-             //   std::cout << std::endl;
+                //std::cout << std::endl;
             }
+
             std::cout << "-----END-----" << std::endl;
+            float anomalyScore = ad->perform(featuresMap);
+            std::cout << "Anomaly Score: " << anomalyScore << std::endl << std::endl;
 
-            ad = &ad->getInstance(85, 1000, 0.05, 0.75, featuresMap);
-            std::cout << "Anomaly Score: " << ad->perform(featuresMap) << std::endl << std::endl;
-
+            communicator.sendMessage(Event("127.0.0.1",(int)anomalyScore,pack.getArrivalTime()));
         }
     }
-
-
     return 0;
 }

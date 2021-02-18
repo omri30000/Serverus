@@ -17,7 +17,7 @@ Output:
  * An object of AnomalyDetector
 */
 AnomalyDetector::AnomalyDetector(int numOfFeatures, int amountToLearnFrom, float learningRate,
-                                 float hiddenLayerRatio, valarray<valarray<float>> featuresMap) : _outputLayer(featuresMap.size(), learningRate)
+                                 float hiddenLayerRatio, vector<int> featuresMap) : _outputLayer(featuresMap.size(), learningRate)
 {
     this->_featuresAmount = numOfFeatures;
     this->_amountToLearn = amountToLearnFrom;
@@ -28,7 +28,7 @@ AnomalyDetector::AnomalyDetector(int numOfFeatures, int amountToLearnFrom, float
 
     // initialize ensemble layer
     for (int i = 0; i < featuresMap.size(); i++) {
-        this->_ensembleLayer.push_back(AutoEncoder(featuresMap[i].size(), learningRate));
+        this->_ensembleLayer.push_back(AutoEncoder(featuresMap[i], learningRate));
     }
 }
 
@@ -44,7 +44,7 @@ Output:
  * An object of AnomalyDetector
 */
 AnomalyDetector& AnomalyDetector::getInstance(int numOfFeatures, int amountToLearnFrom,
-                                    float learningRate, float hiddenLayerRatio, valarray<valarray<float>> featuresMap)
+                                    float learningRate, float hiddenLayerRatio, vector<int> featuresMap)
 {
     static AnomalyDetector instance(numOfFeatures, amountToLearnFrom,
                                     learningRate, hiddenLayerRatio, featuresMap);
