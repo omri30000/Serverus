@@ -9,10 +9,13 @@
 //constructor
 AutoEncoder::AutoEncoder(int inputSize,float learningRate =0.1)
 {
+
+
     _inputSize = inputSize;
     float b = 1;
 
     double a = 1.0/inputSize;
+
 
     _weights = valarray<valarray<float>>(_inputSize*b);
     for (int i = 0; i < _weights.size(); ++i)
@@ -29,6 +32,11 @@ AutoEncoder::AutoEncoder(int inputSize,float learningRate =0.1)
 
 
     _learningRate = learningRate;// for now only
+
+    normMax = valarray<float>(-std::numeric_limits<float>::infinity(),inputSize);
+    normMin = valarray<float>(std::numeric_limits<float>::infinity(),inputSize);
+
+
 }
 
 /*
@@ -38,7 +46,7 @@ AutoEncoder::AutoEncoder(int inputSize,float learningRate =0.1)
  */
 float AutoEncoder::feedForward(valarray<float> input)
 {
-
+    norm(input);
     std::valarray<float> res(_inputSize);
     std::valarray<float> hidden(_weights.size());
 
@@ -100,7 +108,7 @@ void AutoEncoder::getVisibleLayer(valarray<float> vals, valarray<float> &res)
  */
 float AutoEncoder::train(valarray<float> input)
 {
-
+    norm(input);
     std::valarray<float> res(_inputSize);
     std::valarray<float> hidden(_weights.size());
 
@@ -133,6 +141,19 @@ float AutoEncoder::train(valarray<float> input)
 
     //std::cout<<"dif: "<<(input-res).sum()<<std::endl;//<std::endl<<"rmse: ";
     return calcRmse(input,res);
+}
+
+void AutoEncoder::norm(valarray<float> &vals)
+{
+    for (int i = 0; i < vals.size(); ++i) {
+        normMax[i] = std::max(normMax[i],vals[i]);
+        normMin[i] = std::min(normMin[i],vals[i]);
+    }
+    vals = (vals-normMin) / (normMax - normMin + 0.00000000001);
+    for (int i = 0; i < vals.size(); ++i) {
+     //std::cout<<vals[i]<<",";
+    }
+    //std::cout<<std::endl;
 }
 
 

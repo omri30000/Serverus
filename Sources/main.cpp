@@ -17,7 +17,7 @@ int main()
     std::cout << "Hello, World!" << std::endl;
     PacketsReaderSQLITE reader = PacketsReaderSQLITE("../db_file.sqlite");
     FeatureExtractor extractor;
-    FeatureMapper mapper(250,20,85);
+    FeatureMapper mapper(500,20,85);
     Parser* p = nullptr;
     AnomalyDetector* ad = nullptr; // todo: check if should be initialized
 
@@ -44,8 +44,6 @@ int main()
 
         std::cout << "#########" << std::endl;
         for (int i = 0; i < stats.size(); ++i) {
-            //if(stats[i] > 1 || stats[i] < -1)
-                stats[i] = sigmoid(stats[i]);
             //std::cout << stats[i] << ',';
         }
         std::cout << std::endl << "#########" << std::endl;
@@ -73,7 +71,7 @@ int main()
             }
             std::cout << "-----END-----" << std::endl;
 
-            ad = &ad->getInstance(85, 1500, 0.05, 0.75, featuresMap);
+            ad = &ad->getInstance(85, 1000, 0.05, 0.75, featuresMap);
             std::cout << "Anomaly Score: " << ad->perform(featuresMap) << std::endl << std::endl;
 
         }
