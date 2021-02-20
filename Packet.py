@@ -37,19 +37,35 @@ class Packet:
                 raise Exception("can't create packet - TCP/UDP")
             
         try:
-            self.length = pack.len
             self.data = pack[Raw].load.decode()
             print("##data##")
             print(type(self.data))
             print("########")
         except:
-            self.length = 0
             self.data = ''
         
+        self.length = len(pack)  # the packet's size in bytes
         self.arrival_time = time
 
+        self.__activate()
 
-    
+
+    def __activate(self):
+        """
+        The method will operate an activation on the packet's size
+        the function is the linear function: y = (1/MAX_SIZE_MEASURED)*x for 0 <= x < 1000
+        :param self: the instance of Packet
+        :type self: Packet
+	    :return: None
+	    :rtype: None
+        """
+        MAX_SIZE_MEASURED = 1000
+        
+        if self.length > MAX_SIZE_MEASURED:  # the size is very big
+            self.length = 1
+        else:
+            self.length = (1 / MAX_SIZE_MEASURED) * length
+
 
     def asdict(self):
         """
