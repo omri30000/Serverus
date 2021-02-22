@@ -74,7 +74,7 @@ class Sniffer:
 	    :return: no return value
 	    :rtype: None
 	    """
-        sniff(prn=self.__write_packet, count=5000)
+        sniff(prn=self.__write_packet)
 
     def __write_packet(self, pkt):
         """
@@ -92,7 +92,8 @@ class Sniffer:
             self.db_cursor.execute(pack.cast_to_sql_statement())
             print("written to DB")
         except Exception as e:
-            print(e)
+            #rint(e)
+            pass
         finally:
             self.lock.release()
 

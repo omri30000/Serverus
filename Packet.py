@@ -59,12 +59,12 @@ class Packet:
 	    :return: None
 	    :rtype: None
         """
-        MAX_SIZE_MEASURED = 1000
+        MAX_SIZE_MEASURED = 5000.0
         
         if self.length > MAX_SIZE_MEASURED:  # the size is very big
             self.length = 1
         else:
-            self.length = (1 / MAX_SIZE_MEASURED) * length
+            self.length = (1 / MAX_SIZE_MEASURED) * self.length
 
 
     def asdict(self):
