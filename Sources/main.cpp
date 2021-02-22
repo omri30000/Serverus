@@ -68,7 +68,9 @@ int main()
 
                 //exit(1);
             }
-        } else {
+        }
+        else
+            {
             valarray<valarray<float>> featuresMap = p->organizeData(stats);
 
             // print the mapped features
@@ -87,7 +89,7 @@ int main()
             float anomalyScore = ad->perform(featuresMap);
             std::cout << "Anomaly Score: " << anomalyScore << std::endl << std::endl;
 
-            communicator.sendMessage(Event("127.0.0.1",(int)anomalyScore,pack.getArrivalTime()));
+            //communicator.sendMessage(Event("127.0.0.1",(int)anomalyScore,pack.getArrivalTime()));
         }
     }
     return 0;

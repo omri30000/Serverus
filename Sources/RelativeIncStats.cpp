@@ -45,7 +45,7 @@ void RelativeIncStats::update(string iSID, float newValue, Time timeStamp)
     this->_arr[!id]->performDecay(timeStamp);
     this->performDecay(timeStamp,id);
 
-    this->_residules[id] = (newValue - this->_arr[id]->calcMean());
+    this->_residules[id] += (newValue - this->_arr[id]->calcMean());
     newResidule = this->_residules[id] * this->_residules[!id];
     this->_sumResiduleProducts += newResidule;
 
