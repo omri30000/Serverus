@@ -60,7 +60,7 @@ output: anomaly score of the packet (meaningless)
 float AnomalyDetector::perform(valarray<valarray<float>> input)
 {
     float anomalyScore = 0;
-
+    static float max = 0;
 
     if (this->_trainedInstancesAmount > this->_amountToLearn) {
         anomalyScore = this->calcAnomalyScore(input);

@@ -16,13 +16,15 @@ int main()
 {
     srand (time(NULL));
     std::cout << "Hello, World!" << std::endl;
-    PacketsReaderSQLITE reader = PacketsReaderSQLITE("../db_file.sqlite");
+    PacketsReaderSQLITE reader = PacketsReaderSQLITE("../../db_file.sqlite");
     FeatureExtractor extractor;
     FeatureMapper mapper(500,20,85);
     Parser* p = nullptr;
     AnomalyDetector* ad = nullptr;
 
     Communicator communicator;
+    float min = 5;
+    float max = -5;
 
 
 
@@ -38,10 +40,11 @@ int main()
             a++;
         }
         catch (std::exception &e) {
+            //std::cout<<"been here"<<std::endl;
             continue;
         }
-
-        //std::cout<<pack.toString();
+        if(a==502)
+            a++;
 
         vector<float> stats = extractor.extractNewFeaturesVector(pack);
 
@@ -64,32 +67,33 @@ int main()
                 {
                     size.push_back(vec[i].size());
                 }
-                ad = &AnomalyDetector::getInstance(85, 1000, 0.05, 0.75, size);
+                ad = &AnomalyDetector::getInstance(85, 2500, 0.05, 0.75, size);
 
                 //exit(1);
             }
         }
-        else
-            {
+        else {
             valarray<valarray<float>> featuresMap = p->organizeData(stats);
 
             // print the mapped features
 
             std::cout << "-----MAP-----" << std::endl;
-            for (int i = 0; i < featuresMap.size(); ++i)
-            {
-                for (int j = 0; j < featuresMap[i].size(); ++j)
-                {
-                   //std::cout << featuresMap[i][j] << ",";
+            for (int i = 0; i < featuresMap.size(); ++i) {
+                for (int j = 0; j < featuresMap[i].size(); ++j) {
+                    //std::cout << featuresMap[i][j] << ",";
                 }
                 //std::cout << std::endl;
             }
 
             std::cout << "-----END-----" << std::endl;
-            float anomalyScore = ad->perform(featuresMap);
-            std::cout << "Anomaly Score: " << anomalyScore << std::endl << std::endl;
 
-            //communicator.sendMessage(Event("127.0.0.1",(int)anomalyScore,pack.getArrivalTime()));
+            float anomalyScore = ad->perform(featuresMap);
+            if (anomalyScore != 0)
+            {
+                min = anomalyScore < min ? anomalyScore : min;
+                max = anomalyScore > max ? anomalyScore : max;
+                std::cout << "Anomaly Score: " << anomalyScore << std::endl << std::endl;
+            }
         }
     }
     return 0;

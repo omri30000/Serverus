@@ -60,7 +60,12 @@ void FeatureMapper::calcInitialDistanceMatrix()
         this->_initialDistanceMatrix.push_back(vector<float>(i+1,0));
         for (int j = 0; j < i; ++j)
         {
-            _initialDistanceMatrix[i][j] = 1 - (_correlation[i][j]/(sqrt(_crs[i]) * sqrt(_crs[j])));
+            float sqrt_val = sqrt(_crs[i]) * sqrt(_crs[j]);
+            sqrt_val = sqrt_val ==0? pow(10,-8) :sqrt_val;
+
+            _initialDistanceMatrix[i][j] = 1 - (_correlation[i][j]/sqrt_val);
+            if(_initialDistanceMatrix[i][j] <0)
+                _initialDistanceMatrix[i][j] = 0;
         }
         _initialDistanceMatrix[i][i] = 0;
     }
