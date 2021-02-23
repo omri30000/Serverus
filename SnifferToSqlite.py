@@ -45,7 +45,7 @@ class Sniffer:
 
             try:
                 self.db_cursor.execute('''CREATE TABLE packets
-                        (id INTEGER PRIMARY KEY AUTOINCREMENT, source_mac text, source_IP text, dest_IP text, source_port real, 
+                        (source_mac text, source_IP text, dest_IP text, source_port real, 
                         dest_port real, protocol text, length real, data text, arrival_time text)''')
             except Exception:
                 pass
