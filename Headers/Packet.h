@@ -24,7 +24,7 @@ class Packet
         Packet(Time arrivalTime, string sourceIP, string destIP, int sourcePort, 
             int destPort,float length, bool protocol, string data);
         Packet(vector<string> record, int startIndex);//row of data from csv file
-        Packet() = default; // remove this after bulding PacketsReaderSQLITE class
+        Packet() = default; // remove this after building PacketsReaderSQLITE class
         
         string toString();
 

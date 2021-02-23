@@ -41,7 +41,7 @@ Packet PacketsReaderSQLITE::getNextPacket() {
     std::thread t =  std::thread(&PacketsReaderSQLITE::removeSeenPackets,this);
     t.detach();
 
-    return Packet(record, 2);
+    return Packet(record, 1);
 }
 
 /*
