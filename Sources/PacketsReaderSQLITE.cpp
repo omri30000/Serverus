@@ -28,7 +28,7 @@ PacketsReaderSQLITE::~PacketsReaderSQLITE()
 
 
 Packet PacketsReaderSQLITE::getNextPacket() {
-    string sqlStatement = "SELECT * FROM packets WHERE id = " + std::to_string(this->_cursor);
+    string sqlStatement = "SELECT * FROM packets WHERE arrival_time = (SELECT MIN(arrival_time) FROM packets)";
     vector<string> record;
 
     executeCommand(sqlStatement.c_str(), callbackGetData, &record);
