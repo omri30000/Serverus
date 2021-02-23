@@ -1,12 +1,12 @@
+#include <thread>
 #include "../Headers/PacketsReaderSQLITE.h"
 //constructor
 PacketsReaderSQLITE::PacketsReaderSQLITE(string filePath) :PacketsReader(filePath)
 {
     int status = 0;
     this->_cursor = 0;
-
-    status = sqlite3_open(filePath.c_str(), &this->_dbFile); 
-  
+    status = sqlite3_open(filePath.c_str(), &this->_dbFile);
+    sqlite3_exec(this->_dbFile, "pragma journal_mode = WAL", NULL, NULL, NULL);
     if (status) { 
         std::cerr << "Error open DB " << sqlite3_errmsg(this->_dbFile) << std::endl; 
         throw std::exception(); 
@@ -35,10 +35,13 @@ Packet PacketsReaderSQLITE::getNextPacket() {
 
     if(record.size() == 0)
     {
-        throw std::exception();
+        throw std::runtime_error("wow");
     }
 
     this->_cursor = this->find_next_row();
+
+     std::thread t =  std::thread(&PacketsReaderSQLITE::removeSeenPackets,this);
+    t.detach();
 
     return Packet(record, 2);
 }
@@ -85,9 +88,10 @@ void PacketsReaderSQLITE::executeCommand(const char* statement, int (*callback)(
 	if (res != SQLITE_OK)
 	{
         std::cout << "err " << res << std::endl;
-		throw std::exception();
+		throw std::runtime_error("sqlite_error");
 	}
 }
+
 
 /*
  This function returns the id of the next unread row in the db
@@ -113,6 +117,22 @@ void PacketsReaderSQLITE::removeOutgoingPackets()
     hostMac = this->getHostMac();
     
     sqlStatement = "DELETE FROM packets WHERE source_mac = \'" + hostMac + "\'";
-    
+
     executeCommand(sqlStatement.c_str(), callbackGetInt, &val);
+}
+
+void PacketsReaderSQLITE::removeSeenPackets()
+{
+    string sql = "DELETE FROM packets WHERE id < " + std::to_string(this->_cursor);
+
+    try
+    {
+        executeCommand(sql.c_str(), nullptr, nullptr);
+        std::cout<<"deleted"<<std::endl;
+    }
+    catch (std::exception &e)
+    {
+        std::cout<<e.what()<<std::endl;
+
+    }
 }

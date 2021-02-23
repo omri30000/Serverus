@@ -18,7 +18,7 @@ class PacketsReaderSQLITE : public PacketsReader
 
         void executeCommand(const char* statement, int (*callback)(void*, int, char**, char**), void* arg);
         void removeOutgoingPackets();
-    
+        void removeSeenPackets();
     public:
         PacketsReaderSQLITE(string filePath);
         ~PacketsReaderSQLITE();
