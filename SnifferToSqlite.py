@@ -15,6 +15,7 @@ import csv
 import sqlite3
 import threading
 
+
 class Sniffer:
     amount = 0
 
@@ -30,23 +31,26 @@ class Sniffer:
             Sniffer.amount += 1
             
             self.lock = threading.Lock()
-            
+            self.a = 0
             self.lock.acquire()
             
-            self.db = sqlite3.connect('db_file.sqlite')
-            self.db_cursor = self.db.cursor()
+            self.db = sqlite3.connect('../db_file.sqlite',isolation_level = None)
 
+            self.db_cursor = self.db.cursor()
+            self.db_cursor.execute('pragma journal_mode=wal;')
+            #self.db_cursor.execute('PRAGMA journal_size_limit=10;')
+
+            print("ok")
             # Create packets table
+
             try:
                 self.db_cursor.execute('''CREATE TABLE packets
                         (id INTEGER PRIMARY KEY AUTOINCREMENT, source_mac text, source_IP text, dest_IP text, source_port real, 
                         dest_port real, protocol text, length real, data text, arrival_time text)''')
-
             except Exception:
                 pass
 
             self.lock.release()
-
             self.packet_index = 0
 
         else:
@@ -89,8 +93,13 @@ class Sniffer:
         try:
             self.lock.acquire()
             pack = Packet(datetime.now(), pkt)
+            print("go")
             self.db_cursor.execute(pack.cast_to_sql_statement())
-            print("written to DB")
+            
+            self.db_cursor.execute("PRAGMA wal_checkpoint(FULL);")
+            self.a += 1
+            print("written to DB " + str(self.a))
+
         except Exception as e:
             #rint(e)
             pass
