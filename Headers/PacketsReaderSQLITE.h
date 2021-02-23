@@ -12,13 +12,16 @@ class PacketsReaderSQLITE : public PacketsReader
 {
     protected:
         sqlite3* _dbFile;
-        
+        string _lastDate;
+
         static int callbackGetData(void* data, int argc, char** argv, char** azColName);
         static int callbackGetInt(void *data, int argc, char **argv, char **azColName);
 
         void executeCommand(const char* statement, int (*callback)(void*, int, char**, char**), void* arg);
         void removeOutgoingPackets();
         void removeSeenPackets();
+
+
     public:
         PacketsReaderSQLITE(string filePath);
         ~PacketsReaderSQLITE();

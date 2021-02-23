@@ -4,7 +4,7 @@
 PacketsReaderSQLITE::PacketsReaderSQLITE(string filePath) :PacketsReader(filePath)
 {
     int status = 0;
-    this->_cursor = 0;
+    this->_lastDate = "0000-00-00 00:00:00.000000";
     status = sqlite3_open(filePath.c_str(), &this->_dbFile);
     sqlite3_exec(this->_dbFile, "pragma journal_mode = WAL", NULL, NULL, NULL);
     if (status) { 
@@ -12,9 +12,7 @@ PacketsReaderSQLITE::PacketsReaderSQLITE(string filePath) :PacketsReader(filePat
         throw std::exception(); 
     } 
     else
-        std::cout << "Opened Database Successfully!" << std::endl; 
-
-    this->_cursor = this->find_next_row();
+        std::cout << "Opened Database Successfully!" << std::endl;
 }
 
 //destructor
@@ -28,7 +26,9 @@ PacketsReaderSQLITE::~PacketsReaderSQLITE()
 
 
 Packet PacketsReaderSQLITE::getNextPacket() {
-    string sqlStatement = "SELECT * FROM packets WHERE arrival_time = (SELECT MIN(arrival_time) FROM packets)";
+    string sqlStatement = "SELECT * FROM packets WHERE arrival_time > \"" + this->_lastDate
+            + "\" ORDER BY arrival_time LIMIT 1";
+
     vector<string> record;
 
     executeCommand(sqlStatement.c_str(), callbackGetData, &record);
@@ -38,9 +38,7 @@ Packet PacketsReaderSQLITE::getNextPacket() {
         throw std::runtime_error("wow");
     }
 
-    this->_cursor = this->find_next_row();
-
-     std::thread t =  std::thread(&PacketsReaderSQLITE::removeSeenPackets,this);
+    std::thread t =  std::thread(&PacketsReaderSQLITE::removeSeenPackets,this);
     t.detach();
 
     return Packet(record, 2);
@@ -93,21 +91,6 @@ void PacketsReaderSQLITE::executeCommand(const char* statement, int (*callback)(
 }
 
 
-/*
- This function returns the id of the next unread row in the db
- Input:None
- Output:ID of the next unread record in db, if none new record - return the current cursor value
- */
-int PacketsReaderSQLITE::find_next_row() {
-    string sqlStatement = "SELECT MIN(id) FROM packets WHERE id > " + std::to_string(this->_cursor) ;
-    int val = -1;
-
-    executeCommand(sqlStatement.c_str(), callbackGetInt, &val);
-
-    return  val != -1 ? val : this->_cursor+1;
-}
-
-
 void PacketsReaderSQLITE::removeOutgoingPackets()
 {
     
@@ -123,7 +106,7 @@ void PacketsReaderSQLITE::removeOutgoingPackets()
 
 void PacketsReaderSQLITE::removeSeenPackets()
 {
-    string sql = "DELETE FROM packets WHERE id < " + std::to_string(this->_cursor);
+    string sql = "DELETE FROM packets WHERE arrival_time < \"" + this->_lastDate + "\"";
 
     try
     {
