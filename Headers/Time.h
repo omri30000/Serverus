@@ -52,4 +52,5 @@ public:
     Time(int i);
 };
 
+std::string padNumber(int val,int requiredLen);
 

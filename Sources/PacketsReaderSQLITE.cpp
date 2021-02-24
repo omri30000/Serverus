@@ -4,7 +4,7 @@
 PacketsReaderSQLITE::PacketsReaderSQLITE(string filePath) :PacketsReader(filePath)
 {
     int status = 0;
-    this->_lastDate = "0000-00-00 00:00:00.000000";
+    this->_lastDate = "0000-00-00 00:00:00.000";
     status = sqlite3_open(filePath.c_str(), &this->_dbFile);
     sqlite3_exec(this->_dbFile, "pragma journal_mode = WAL", NULL, NULL, NULL);
     if (status) { 
@@ -26,7 +26,7 @@ PacketsReaderSQLITE::~PacketsReaderSQLITE()
 
 
 Packet PacketsReaderSQLITE::getNextPacket() {
-    string sqlStatement = "SELECT * FROM packets WHERE arrival_time > \"" + this->_lastDate
+    string sqlStatement = "SELECT * FROM packets WHERE substr(arrival_time,0,24) > \"" + this->_lastDate
             + "\" ORDER BY arrival_time LIMIT 1";
 
     vector<string> record;
@@ -37,11 +37,13 @@ Packet PacketsReaderSQLITE::getNextPacket() {
     {
         throw std::runtime_error("wow");
     }
+    Packet p(record,1);
+    this->_lastDate = p.getArrivalTime().toString();
 
     std::thread t =  std::thread(&PacketsReaderSQLITE::removeSeenPackets,this);
     t.detach();
 
-    return Packet(record, 1);
+    return p;
 }
 
 /*
@@ -85,7 +87,7 @@ void PacketsReaderSQLITE::executeCommand(const char* statement, int (*callback)(
 
 	if (res != SQLITE_OK)
 	{
-        std::cout << "err " << res << std::endl;
+        //std::cout << "err " << res << std::endl;
 		throw std::runtime_error("sqlite_error");
 	}
 }
@@ -106,16 +108,16 @@ void PacketsReaderSQLITE::removeOutgoingPackets()
 
 void PacketsReaderSQLITE::removeSeenPackets()
 {
-    string sql = "DELETE FROM packets WHERE arrival_time < \"" + this->_lastDate + "\"";
+    string sql = "DELETE FROM packets WHERE substr(arrival_time,0,24) < \"" + this->_lastDate + "\"";
 
     try
     {
         executeCommand(sql.c_str(), nullptr, nullptr);
-        std::cout<<"deleted"<<std::endl;
+        //std::cout<<"deleted"<<std::endl;
     }
     catch (std::exception &e)
     {
-        std::cout<<e.what()<<std::endl;
-
+        //std::cout<<e.what()<<std::endl;
+        return;
     }
 }

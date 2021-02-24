@@ -1,5 +1,7 @@
 #include "../Headers/Time.h"
 #include <ctime>
+#include <sstream>
+#include <iomanip>
 
 const int Time::DAY =24*60*60*1000;
 
@@ -141,15 +143,22 @@ int Time::daysSinceYearStart() const {
 
 string Time::toString()
 {
-    string s = std::to_string(this->_year) + "-" +
-                std::to_string(this->_month) + "-" +
-                std::to_string(this->_day) + " " +
-                std::to_string(this->_hour) + ":" +
-                std::to_string(this->_minute) + ":" +
-                std::to_string(this->_second) + "." +
-                std::to_string(this->_miliSec);
+    string s = padNumber(this->_year,4) + "-" +
+                padNumber(this->_month,2) + "-" +
+                padNumber(this->_day,2) + " " +
+                padNumber(this->_hour,2) + ":" +
+                padNumber(this->_minute,2) + ":" +
+                padNumber(this->_second,2) + "." +
+                padNumber(this->_miliSec,3);
     
     return s;
+}
+
+std::string padNumber(int val,int requiredLen)
+{
+    std::stringstream ss;
+    ss << std::setw(requiredLen) << std::setfill('0') << val;
+    return ss.str();
 }
 
 void Time::setYear(int year) { this->_year = year; } 

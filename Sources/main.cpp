@@ -10,7 +10,6 @@
 #include "../Headers/AnomalyDetector.h"
 #include "../Headers/utils.h"
 
-
 // NOTE: Make sure to run program with sudo in order to be able to delete data from db
 int main()
 {
@@ -26,8 +25,7 @@ int main()
     float min = 5;
     float max = -5;
 
-
-
+    vector<double> values;
     bool cond = true;
     Packet pack;
     int a = 0;
@@ -48,7 +46,7 @@ int main()
 
         vector<float> stats = extractor.extractNewFeaturesVector(pack);
 
-        std::cout << "#########" << std::endl;
+        //std::cout << "#########" << std::endl;
         for (int i = 0; i < stats.size(); ++i) {
             //std::cout << stats[i] << ',';
         }
@@ -77,7 +75,7 @@ int main()
 
             // print the mapped features
 
-            std::cout << "-----MAP-----" << std::endl;
+            //std::cout << "-----MAP-----" << std::endl;
             for (int i = 0; i < featuresMap.size(); ++i) {
                 for (int j = 0; j < featuresMap[i].size(); ++j) {
                     //std::cout << featuresMap[i][j] << ",";
@@ -85,15 +83,18 @@ int main()
                 //std::cout << std::endl;
             }
 
-            std::cout << "-----END-----" << std::endl;
+            //std::cout << "-----END-----" << std::endl;
 
             float anomalyScore = ad->perform(featuresMap);
             if (anomalyScore != 0)
             {
                 min = anomalyScore < min ? anomalyScore : min;
                 max = anomalyScore > max ? anomalyScore : max;
-                std::cout << "Anomaly Score: " << anomalyScore << std::endl << std::endl;
+                //std::cout << "Anomaly Score: " << anomalyScore << std::endl << std::endl;
+                std::cout<<anomalyScore<<std::endl;
             }
+            values.push_back(anomalyScore);
+
         }
     }
     return 0;
