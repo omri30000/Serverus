@@ -8,10 +8,15 @@ PacketsReader::PacketsReader(string filePath)
 
 string PacketsReader::getHostMac()
 {
-    string s = this->execTerminalCommand("ifconfig | grep ether");
+    static string s = "";
 
-    s = s.substr(s.find("ether") + 6, 17);
+    if (s == "")
+    {
+        s = PacketsReader::execTerminalCommand("ifconfig | grep ether");
+        s = s.substr(s.find("ether") + 6, 17);
+    }
 
+    std::cout << "macmac: " << s << std::endl;
     return s;
 }
 

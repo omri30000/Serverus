@@ -25,11 +25,11 @@ class PacketsReader
 
         virtual void removeOutgoingPackets() = 0;
         
-        string execTerminalCommand(const char* cmd);
+        static string execTerminalCommand(const char* cmd);
 
     public:
         PacketsReader(string filePath);
         virtual Packet getNextPacket() = 0;
 
-        string getHostMac();
+        static string getHostMac();
 };
