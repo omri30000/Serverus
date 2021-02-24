@@ -46,10 +46,12 @@ int main()
 
         vector<float> stats = extractor.extractNewFeaturesVector(pack);
 
-        //std::cout << "#########" << std::endl;
+        /*
+        std::cout << "#########" << std::endl;
         for (int i = 0; i < stats.size(); ++i) {
-            //std::cout << stats[i] << ',';
+            std::cout << stats[i] << ',';
         }
+        */
         std::cout << std::endl << "#########" << std::endl;
 
         if (p == nullptr) {

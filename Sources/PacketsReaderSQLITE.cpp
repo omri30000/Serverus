@@ -113,11 +113,11 @@ void PacketsReaderSQLITE::removeSeenPackets()
     try
     {
         executeCommand(sql.c_str(), nullptr, nullptr);
-        //std::cout<<"deleted"<<std::endl;
+        std::cout<<"deleted"<<std::endl;
     }
     catch (std::exception &e)
     {
-        //std::cout<<e.what()<<std::endl;
+        std::cout<< "not deleted" <<std::endl;
         return;
     }
 }
