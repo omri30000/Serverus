@@ -4,6 +4,7 @@
 #pragma once
 
 #include <map>
+#include <string>
 
 float uniform(std::pair<float,float> range);
 float sigmoid(float val);

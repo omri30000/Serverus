@@ -34,6 +34,11 @@ int main()
     {
         try {
             pack = reader.getNextPacket();
+            if (reader.getHostMac() == pack.getSourceMac())
+            {
+                //std::cout << "outgoing" << a << std::endl;
+                continue;
+            }
             std::cout << "packet number: " << a << std::endl;
             a++;
         }

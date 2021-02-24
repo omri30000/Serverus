@@ -39,4 +39,3 @@ int binomial(int n, double p)
 
     return c;
 }
-

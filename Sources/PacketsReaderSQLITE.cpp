@@ -19,7 +19,6 @@ PacketsReaderSQLITE::PacketsReaderSQLITE(string filePath) :PacketsReader(filePat
 PacketsReaderSQLITE::~PacketsReaderSQLITE()
 {
     //std::cout << "PRSQLITE DETOR" << std::endl;
-    this->removeOutgoingPackets();
     sqlite3_close(this->_dbFile);
     //std::cout << "finsh PRSQLITE DETOR" << std::endl;
 }
@@ -37,7 +36,7 @@ Packet PacketsReaderSQLITE::getNextPacket() {
     {
         throw std::runtime_error("wow");
     }
-    Packet p(record,1);
+    Packet p(record,0);
     this->_lastDate = p.getArrivalTime().toString();
 
     std::thread t =  std::thread(&PacketsReaderSQLITE::removeSeenPackets,this);
