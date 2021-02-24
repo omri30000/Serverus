@@ -108,7 +108,7 @@ void PacketsReaderSQLITE::removeOutgoingPackets()
 
 void PacketsReaderSQLITE::removeSeenPackets()
 {
-    string sql = "DELETE FROM packets WHERE substr(arrival_time,0,24) < \"" + this->_lastDate + "\"";
+    string sql = "DELETE FROM packets WHERE substr(arrival_time,0,24) <= \"" + this->_lastDate + "\"";
 
     try
     {
