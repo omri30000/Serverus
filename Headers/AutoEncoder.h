@@ -16,10 +16,10 @@ class AutoEncoder
         int _inputSize;
         valarray<float> normMax;
         valarray<float> normMin;
-        void norm(valarray<float>& vals);
-        void getHiddenLayer(valarray<float>vals ,valarray<float>& res);
-        void getVisibleLayer(valarray<float> vals,valarray<float>& res);
-        float calcRmse(valarray<float> input,valarray<float> reconstruct);
+        void norm(valarray<float>& vals,bool isLearning);
+        void getHiddenLayer(valarray<float>vals ,valarray<float>& res) const;
+        void getVisibleLayer(valarray<float> vals,valarray<float>& res) const;
+        float calcRmse(valarray<float> input,valarray<float> reconstruct) const;
 
     public:
         AutoEncoder(int inputSize,float learningRate);

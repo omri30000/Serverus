@@ -29,27 +29,25 @@ int main()
     bool cond = true;
     Packet pack;
     int a = 0;
-
     while (cond)
     {
         try {
             pack = reader.getNextPacket();
-            if (reader.getHostMac() == pack.getSourceMac())
+            /*if (reader.getHostMac() == pack.getSourceMac())
             {
                 //std::cout << "outgoing" << a << std::endl;
                 continue;
-            }
-            std::cout << "packet number: " << a << std::endl;
+            }*/
+            //std::cout << "packet number: " << a << std::endl;
             a++;
         }
         catch (std::exception &e) {
             //std::cout<<"been here"<<std::endl;
             continue;
         }
-        if(a==502)
-            a++;
-
         vector<float> stats = extractor.extractNewFeaturesVector(pack);
+
+
 
         /*
         std::cout << "#########" << std::endl;
@@ -57,7 +55,7 @@ int main()
             std::cout << stats[i] << ',';
         }
         */
-        std::cout << std::endl << "#########" << std::endl;
+        //std::cout << std::endl << "#########" << std::endl;
 
         if (p == nullptr) {
             if (!mapper.getState())
@@ -72,7 +70,7 @@ int main()
                 {
                     size.push_back(vec[i].size());
                 }
-                ad = &AnomalyDetector::getInstance(85, 2500, 0.05, 0.75, size);
+                ad = &AnomalyDetector::getInstance(85, 1000, 0.05, 0.75, size);
 
                 //exit(1);
             }
@@ -98,8 +96,9 @@ int main()
                 min = anomalyScore < min ? anomalyScore : min;
                 max = anomalyScore > max ? anomalyScore : max;
                 //std::cout << "Anomaly Score: " << anomalyScore << std::endl << std::endl;
-                std::cout<<anomalyScore<<std::endl;
+                std::cout<<anomalyScore<<"---"<<a<<std::endl;
             }
+
             values.push_back(anomalyScore);
 
         }

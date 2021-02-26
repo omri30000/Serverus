@@ -108,15 +108,14 @@ void PacketsReaderSQLITE::removeOutgoingPackets()
 void PacketsReaderSQLITE::removeSeenPackets()
 {
     string sql = "DELETE FROM packets WHERE substr(arrival_time,0,24) <= \"" + this->_lastDate + "\"";
-
     try
     {
         executeCommand(sql.c_str(), nullptr, nullptr);
-        std::cout<<"deleted"<<std::endl;
+        //std::cout<<"deleted"<<std::endl;
     }
     catch (std::exception &e)
     {
-        std::cout<< "not deleted" <<std::endl;
+        //std::cout<< "not deleted" <<std::endl;
         return;
     }
 }

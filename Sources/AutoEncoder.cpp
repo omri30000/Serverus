@@ -46,7 +46,7 @@ AutoEncoder::AutoEncoder(int inputSize,float learningRate =0.1)
  */
 float AutoEncoder::feedForward(valarray<float> input)
 {
-    norm(input);
+    norm(input,false);
     std::valarray<float> res(_inputSize);
     std::valarray<float> hidden(_weights.size());
 
@@ -63,7 +63,8 @@ float AutoEncoder::feedForward(valarray<float> input)
         reconstruct: input of the AE : valarray<float>
  Output: The RMSE value
  */
-float AutoEncoder::calcRmse(valarray<float> input,valarray<float> reconstruct) {
+float AutoEncoder::calcRmse(valarray<float> input,valarray<float> reconstruct)  const
+{
     valarray<float>  v = std::pow(input- reconstruct,2);
     return sqrt(v.sum() / v.size());
 }
@@ -73,7 +74,7 @@ float AutoEncoder::calcRmse(valarray<float> input,valarray<float> reconstruct) {
        res: refrence to the hidden layer values
   Output :None
  */
-void AutoEncoder::getHiddenLayer(valarray<float> vals, valarray<float> &res)
+void AutoEncoder::getHiddenLayer(valarray<float> vals, valarray<float> &res) const
 {
     for (int i = 0; i < _weights.size(); ++i)
     {
@@ -88,7 +89,7 @@ void AutoEncoder::getHiddenLayer(valarray<float> vals, valarray<float> &res)
        res: refrence to the visible layer values
   Output :None
  */
-void AutoEncoder::getVisibleLayer(valarray<float> vals, valarray<float> &res)
+void AutoEncoder::getVisibleLayer(valarray<float> vals, valarray<float> &res) const
 {
     for (int i = 0; i < _inputSize; ++i)
     {
@@ -108,7 +109,7 @@ void AutoEncoder::getVisibleLayer(valarray<float> vals, valarray<float> &res)
  */
 float AutoEncoder::train(valarray<float> input)
 {
-    norm(input);
+    norm(input,true);
     std::valarray<float> res(_inputSize);
     std::valarray<float> hidden(_weights.size());
 
@@ -143,11 +144,14 @@ float AutoEncoder::train(valarray<float> input)
     return calcRmse(input,res);
 }
 
-void AutoEncoder::norm(valarray<float> &vals)
+void AutoEncoder::norm(valarray<float> &vals,bool isLearning)
 {
-    for (int i = 0; i < vals.size(); ++i) {
-        normMax[i] = std::max(normMax[i],vals[i]);
-        normMin[i] = std::min(normMin[i],vals[i]);
+    if(isLearning)
+    {
+        for (int i = 0; i < vals.size(); ++i) {
+            normMax[i] = std::max(normMax[i], vals[i]);
+            normMin[i] = std::min(normMin[i], vals[i]);
+        }
     }
     vals = (vals-normMin) / (normMax - normMin + 0.00000000001);
     for (int i = 0; i < vals.size(); ++i) {

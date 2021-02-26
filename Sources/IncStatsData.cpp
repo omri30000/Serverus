@@ -76,6 +76,7 @@ vector<RelativeIncStats*> IncStatsData::registerRelatedStreams(string key, Time 
 
     int plus = uniqueKey.find('+');
 	vector<RelativeIncStats*> vec;
+
 	std::vector<IncStats*> firstGroup = this->registerStream(uniqueKey);
 	//opposite
 	std::vector<IncStats*> secondGroup = this->registerStream(uniqueKey.substr(plus+1,uniqueKey.size()-(plus+1)) + '+' + uniqueKey.substr(0,plus));
@@ -124,7 +125,6 @@ void IncStatsData::insertPacket(string key, float value, Time timestamp) throw()
             std::cout<<"fuck"<<std::endl;
         }
     }
-    //std::cout<<"insert finish" <<std::endl;
 
 }
 
@@ -151,8 +151,8 @@ void IncStatsData::insertPacket(string key, float value, Time timestamp, int lam
 void IncStatsData::insertPacket(string key, Time timestamp) throw()
 {
     const lock_guard<mutex> collectionLock(this->_incStatsCollectionLock);
-    if (!this->isStreamExists(key))
-        this->registerStream(key);
+
+    this->registerStream(key);//
 
     for (int i = 0; i < this->_incStatsCollection[key].size() ; ++i)
     {

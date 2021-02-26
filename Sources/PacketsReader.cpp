@@ -16,7 +16,6 @@ string PacketsReader::getHostMac()
         s = s.substr(s.find("ether") + 6, 17);
     }
 
-    std::cout << "macmac: " << s << std::endl;
     return s;
 }
 
