@@ -39,6 +39,18 @@ class DatabaseManager:
 
     # --------------------------------------------------------------
 
+    def get_last_date(self,computer_id):
+        sql_statement = "SELECT lastJoin FROM Products WHERE computerId = " + str(computer_id)
+        self.db_cursor.execute(sql_statement)
+
+        if len(rows) != 1:
+            raise Exception("couldn't find computer id")
+
+        rows = self.db_cursor.fetchall()
+
+        time = datetime.datetime.strptime(list(rows[0][0]), '%Y-%m-%d %H:%M:%S.%f')
+        return time
+
     def insert_event(self, event, product_id):
         """
         The method will insert a new event to the database
@@ -138,10 +150,10 @@ def main():
 
     """
     a.insert_event(Event.Event("5.5.5.5", 4, datetime.datetime.now()), 3)
-    a.insert_event(Event.Event("5.5.5.5", 4, datetime.datetime.now()), 3)"""
+    a.insert_event(Event.Event("5.5.5.5", 4, datetime.datetime.now()), 3)
     a.insert_event(Event.Event("100.100.100.100", 3, datetime.datetime.now()), 11)
     a.insert_event(Event.Event("101.101.101.101", 4, datetime.datetime.now()), 11)
-
+    """
     #  print(a.get_dangerous_events(5, 1))
 
 

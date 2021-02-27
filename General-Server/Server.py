@@ -1,4 +1,4 @@
-import socket
+אimport socket
 import threading
 import time
 import DatabaseManager
@@ -9,7 +9,7 @@ import Config
 
 class Server:
     def __init__(self, listening_port):
-        self.products = {}
+        #self.products = {}
         self.products_lock = threading.Lock()
 
         self.LISTEN_PORT = listening_port
@@ -65,9 +65,10 @@ class Server:
 
         # save to sql - events
         self.products_lock.acquire()
-        if computer_id in self.products.keys():
-            last_date = self.products[computer_id]
-        else:
+
+        try:
+            last_date = db_manager.get_last_date(computer_id)
+        except Exception as e:
             last_date = None
 
         self.products_lock.release()
