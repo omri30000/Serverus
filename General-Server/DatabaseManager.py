@@ -172,7 +172,7 @@ def main():
     a.insert_event(Event.Event("100.100.100.100", 3, datetime.datetime.now()), 11)
     a.insert_event(Event.Event("101.101.101.101", 4, datetime.datetime.now()), 11)
     
-    print(a.get_dangerous_events(5, 1))
+    print(a.get_dangerous_events(5, datetime.datetime.now()))
 
 
 if __name__ == '__main__':
