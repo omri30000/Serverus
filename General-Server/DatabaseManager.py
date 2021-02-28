@@ -48,7 +48,7 @@ class DatabaseManager:
         :type computer_id: int
         :return:No return value
         """
-        """
+        
         now = datetime.datetime.now()
         now_date = today.strftime("%%Y-%m-%d %H:%M:%S.%f")
 
