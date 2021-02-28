@@ -44,7 +44,6 @@ class Event:
         date = today + datetime.timedelta(milliseconds=temp)
 
         a = cls(ip_add, level, date)
-        print("created from message: ", a.date)
         return a
 
     @classmethod

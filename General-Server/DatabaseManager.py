@@ -39,8 +39,26 @@ class DatabaseManager:
 
     # --------------------------------------------------------------
 
+    def set_last_date(self,computer_id):
+        #TODO: add documentation for this function asap
+        now = datetime.datetime.now()
+        now_date = today.strftime("%%Y-%m-%d %H:%M:%S.%f")
+
+        sql_statement = "Update Products set lastSeenDate = " + now_date +  "WHERE computerId = " + str(computer_id)
+        self.db_cursor.execute(sql_statement)
+
+
     def get_last_date(self,computer_id):
-        sql_statement = "SELECT lastJoin FROM Products WHERE computerId = " + str(computer_id)
+        """
+        The method returns the last time the product accessed the server
+        :param self: the instance of manager
+        :type self: DatabaseManager
+        :param computer_id: the id of the product
+        :type event: int
+        :return: the date of the last access
+        :rtype: datetime.datetime
+        """
+        sql_statement = "SELECT lastSeenDate FROM Products WHERE computerId = " + str(computer_id)
         self.db_cursor.execute(sql_statement)
 
         if len(rows) != 1:
@@ -148,13 +166,13 @@ class DatabaseManager:
 def main():
     a = DatabaseManager("general_db.sqlite")
 
-    """
+    
     a.insert_event(Event.Event("5.5.5.5", 4, datetime.datetime.now()), 3)
     a.insert_event(Event.Event("5.5.5.5", 4, datetime.datetime.now()), 3)
     a.insert_event(Event.Event("100.100.100.100", 3, datetime.datetime.now()), 11)
     a.insert_event(Event.Event("101.101.101.101", 4, datetime.datetime.now()), 11)
-    """
-    #  print(a.get_dangerous_events(5, 1))
+    
+    print(a.get_dangerous_events(5, 1))
 
 
 if __name__ == '__main__':
