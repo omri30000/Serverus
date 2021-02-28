@@ -40,7 +40,15 @@ class DatabaseManager:
     # --------------------------------------------------------------
 
     def set_last_date(self,computer_id):
-        #TODO: add documentation for this function asap
+        """
+        This function sets the new last seen date of a product
+        :param self: the instance of manager
+        :type self: DatabaseManager
+        :param: computer_id: the id of the requested product
+        :type computer_id: int
+        :return:No return value
+        """
+        """
         now = datetime.datetime.now()
         now_date = today.strftime("%%Y-%m-%d %H:%M:%S.%f")
 
@@ -143,7 +151,7 @@ class DatabaseManager:
         :param time: the minimum approved date of an event
         :type time: Datetime
         :param product_id: the id of the product that needs the data
-        :type product_id: int
+        :type product_id: intעןא
         :return: list of the relevant events
         :rtype: list[Event]
         """
@@ -162,7 +170,7 @@ class DatabaseManager:
 
         return events
 
-
+"""
 def main():
     a = DatabaseManager("general_db.sqlite")
 
@@ -173,7 +181,7 @@ def main():
     a.insert_event(Event.Event("101.101.101.101", 4, datetime.datetime.now()), 11)
     
     print(a.get_dangerous_events(5, datetime.datetime.now()))
-
+"""
 
 if __name__ == '__main__':
     main()
