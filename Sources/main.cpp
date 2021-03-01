@@ -17,7 +17,7 @@ int main()
     std::cout << "Hello, World!" << std::endl;
     PacketsReaderSQLITE reader = PacketsReaderSQLITE("../../db_file.sqlite");
     FeatureExtractor extractor;
-    FeatureMapper mapper(500,20,85);
+    FeatureMapper mapper(5000,10,85);
     Parser* p = nullptr;
     AnomalyDetector* ad = nullptr;
 
@@ -70,7 +70,7 @@ int main()
                 {
                     size.push_back(vec[i].size());
                 }
-                ad = &AnomalyDetector::getInstance(85, 1000, 0.05, 0.75, size);
+                ad = &AnomalyDetector::getInstance(85, 50000, 0.05, 0.75, size);
 
                 //exit(1);
             }
@@ -96,7 +96,7 @@ int main()
                 min = anomalyScore < min ? anomalyScore : min;
                 max = anomalyScore > max ? anomalyScore : max;
                 //std::cout << "Anomaly Score: " << anomalyScore << std::endl << std::endl;
-                std::cout<<anomalyScore<<"---"<<a<<std::endl;
+                //std::cout<<anomalyScore<<"---"<<a<<std::endl;
             }
 
             values.push_back(anomalyScore);

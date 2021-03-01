@@ -60,9 +60,9 @@ string Packet::getSourceIP() { return this->_sourceIP; }
 void Packet::setDestIP(string destIP) { this->_destIP = destIP; } 
 string Packet::getDestIP() { return this->_destIP; }
 void Packet::setSourcePort(int sourcePort) { this->_sourcePort = sourcePort; } 
-int Packet::getSourcePort() { return this->_sourcePort; }
+string Packet::getSourcePort() { return this->_sourcePort; }
 void Packet::setDestPort(int destPort) { this->_destPort = destPort; } 
-int Packet::getDestPort() { return this->_destPort; }
+string Packet::getDestPort() { return this->_destPort; }
 void Packet::setLength(int length) { this->_length = length; } 
 float Packet::getLength() { return this->_length; }
 void Packet::setProtocol(bool protocol) { this->_protocol = protocol; } 

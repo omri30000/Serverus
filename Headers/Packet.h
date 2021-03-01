@@ -15,8 +15,8 @@ class Packet
         string _sourceMac;
         string _sourceIP;
         string _destIP;
-        int _sourcePort;
-        int _destPort;
+        string _sourcePort;
+        string _destPort;
         float _length;
         bool _protocol;
         string _data;
@@ -39,9 +39,9 @@ class Packet
         void setDestIP(string destIP);
         string getDestIP();
         void setSourcePort(int sourcePort);
-        int getSourcePort();
+        string getSourcePort();
         void setDestPort(int destPort);
-        int getDestPort();
+        string getDestPort();
         void setLength(int length);
         float getLength();
         void setProtocol(bool protocol);
