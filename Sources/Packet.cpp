@@ -31,13 +31,12 @@ Packet::Packet(vector<string> record, int startIndex)
     this->_data = record[startIndex + 8];
     this->_arrivalTime = Time(record[startIndex + 9]);
 
-
-    if(_sourcePort + _destPort == "") //there is no ports L3 and below
+    if(_sourcePort =="NONE" || _destPort == "NONE") //there is no ports L3 and below
     {
         _sourcePort = _protocol;
         _destPort = _protocol;
     }
-    if(_sourceIP + _destIP == "") //there is no ip's L2 and below
+    if(_sourceIP =="NONE" || _destIP == "NONE") //there is no ip's L2 and below
     {
         _sourceIP = _sourceMac;
         _destIP = _destMac;
@@ -52,6 +51,7 @@ string Packet::toString()
 
     string s = "##PACKET##\n";
      s += this->_sourceMac + "\n";
+     s += this->_destMac + "\n";
      s += this->_sourceIP + "\n";
      s += this->_destIP + "\n"; 
      s += this->_sourcePort + "\n";
@@ -84,3 +84,11 @@ void Packet::setProtocol(string protocol) { this->_protocol = protocol; }
 string Packet::getProtocol() { return this->_protocol; }
 void Packet::setData(string data) { this->_data = data; } 
 string Packet::getData() { return this->_data; }
+
+void Packet::setDestMac(string destMac) {
+    _destMac = destMac;
+}
+string Packet::getDestMac() {
+    return _destMac;
+}
+

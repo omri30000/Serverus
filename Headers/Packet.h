@@ -34,8 +34,10 @@ class Packet
         //Set & Get
         void setArrivalTime(Time arrivalTime);
         Time getArrivalTime();
-        void setSourceMac(string sourceIP);
+        void setSourceMac(string sourceMac);
         string getSourceMac();
+        void setDestMac(string destMac);
+        string getDestMac();
         void setSourceIP(string sourceIP);
         string getSourceIP();
         void setDestIP(string destIP);
