@@ -13,29 +13,45 @@ class Packet:
 	    :return: no return value
 	    :rtype: None
 	    """
-        if Ether in pack:
-            self.source_mac = pack[Ether].src
-        else:
-            raise Exception("can't create packet - Ether")
         
+        self.arrival_time = time
+        self.length = len(pack)  # the packet's size in bytes
+
         if IP in pack:
             self.source_IP = pack[IP].src
             self.dest_IP = pack[IP].dst
+            self.protocol = "IP"
         else:
-            raise Exception("can't create packet - IP")
+            self.source_IP = ""
+            self.dest_IP = ""
+            self.protocol = ""
         
-        try:
-            self.source_port = pack[UDP].sport
-            self.dest_port = pack[UDP].dport
+        if pack.haslayer(ARP):
+            self.source_port = "NONE"
+            self.dest_port = "NONE"  
+        elif TCP in pack:
+            self.source_port = str(pack[TCP].sport)
+            self.dest_port = str(pack[TCP].dport)
+            self.protocol = "TCP"
+        elif UDP in pack:
+            self.source_port = str(pack[UDP].sport)
+            self.dest_port = str(pack[UDP].dport)
             self.protocol = "UDP"
-        except:
-            try: 
-                self.source_port = pack[TCP].sport
-                self.dest_port = pack[TCP].dport
-                self.protocol = "TCP"
-            except:
-                raise Exception("can't create packet - TCP/UDP")
-            
+        else:
+            self.source_port = "NONE"
+            self.dest_port = "NONE"                
+        
+        self.source_mac = pack.src
+        self.dest_mac = pack.src
+        
+        if self.source_port == "NONE":
+            if pack.haslayer(ARP):
+                self.source_IP = pack[ARP].psrc
+                self.dest_IP = pack[ARP].pdst
+                self.protocol = "ARP"
+            elif pack.haslayer(ICMP):
+                self.protocol = "ICMP"
+
         try:
             self.data = pack[Raw].load.decode()
             print("##data##")
@@ -44,8 +60,6 @@ class Packet:
         except:
             self.data = ''
         
-        self.length = len(pack)  # the packet's size in bytes
-        self.arrival_time = time
 
         self.__activate()
 
@@ -89,9 +103,9 @@ class Packet:
 	    :rtype: string
 	    """
 
-        statement = '''INSERT INTO packets (source_mac,source_IP,dest_IP,source_port,
-                        dest_port,protocol,length,data,arrival_time)''' + " VALUES (\'" + self.source_mac + "\',\'" + self.source_IP + "\',\'" + self.dest_IP + \
-        "\'," + str(self.source_port) + "," + str(self.dest_port) + ",\'" + self.protocol + "\'," + str(self.length) + \
+        statement = '''INSERT INTO packets (source_mac,destination_mac,source_IP,dest_IP,source_port,
+                        dest_port,protocol,length,data,arrival_time)''' + " VALUES (\'" + self.source_mac + "\',\'" + self.dest_mac + "\',\'" + self.source_IP + "\',\'" + self.dest_IP + \
+        "\',\'" + self.source_port + "\',\'" + self.dest_port + "\',\'" + self.protocol + "\'," + str(self.length) + \
         ",\'" + self.data + "\',\'" + str(self.arrival_time) + "\')"
         
         return statement

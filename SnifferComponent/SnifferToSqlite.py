@@ -45,7 +45,7 @@ class Sniffer:
 
             try:
                 self.db_cursor.execute('''CREATE TABLE packets
-                        (source_mac text, source_IP text, dest_IP text, source_port real, 
+                        (source_mac text, destination_mac text, source_IP text, dest_IP text, source_port real, 
                         dest_port real, protocol text, length real, data text, arrival_time text)''')
             except Exception:
                 pass
@@ -93,7 +93,7 @@ class Sniffer:
         try:
             self.lock.acquire()
             pack = Packet(datetime.now(), pkt)
-            print("go")
+            # print("go")
             self.db_cursor.execute(pack.cast_to_sql_statement())
             
             self.db_cursor.execute("PRAGMA wal_checkpoint(FULL);")
@@ -101,8 +101,8 @@ class Sniffer:
             print("written to DB " + str(self.a))
 
         except Exception as e:
-            #rint(e)
-            pass
+            print(e)
+            # pass
         finally:
             self.lock.release()
 
