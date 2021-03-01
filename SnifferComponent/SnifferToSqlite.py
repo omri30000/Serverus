@@ -5,6 +5,7 @@
 from scapy.all import *
 import socket
 import os
+import sys
 
 import time
 from datetime import datetime
@@ -120,25 +121,13 @@ class Sniffer:
 
 
 def main():
-    print("1. run in real time")
-    print("2. use a premade data set")
-    
-    try:
-        choice = int(input("choose: "))
-    except Exception as e:
-        print(e)
-        choice = 1
-    
     my_sniffer = Sniffer()
-    if choice == 1:
+
+    if sys.argv[0] == "":
         my_sniffer.start_sniffing()
-
-    elif choice == 2:
-        file_path = input("Enter file path: ")
-        my_sniffer.start_reading(file_path)
-
     else:
-        print("have a nice day")
+        file_path = sys.argv[1]  # index 1 is the pcap file path
+        my_sniffer.start_reading(file_path)
 
 
 if __name__ == "__main__":
