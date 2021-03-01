@@ -1,8 +1,8 @@
 #include "../Headers/Packet.h"
 
 
-Packet::Packet(Time arrivalTime, string sourceMAC, string sourceIP, string destIP, int sourcePort,
-            int destPort, float length, bool protocol, string data)
+Packet::Packet(Time arrivalTime, string sourceMAC, string sourceIP, string destIP, string sourcePort,
+            string destPort, float length, bool protocol, string data)
 {
     this->_arrivalTime = arrivalTime;
     this->_sourceMac = sourceMAC;
@@ -22,8 +22,8 @@ Packet::Packet(vector<string> record, int startIndex)
     this->_sourceMac = record[startIndex];
     this->_sourceIP = record[startIndex + 1];
     this->_destIP = record[startIndex + 2];
-    this->_sourcePort = std::stoi(record[startIndex + 3]);
-    this->_destPort = std::stoi(record[startIndex + 4]);
+    this->_sourcePort = record[startIndex + 3];
+    this->_destPort = record[startIndex + 4];
     this->_protocol = (record[startIndex + 5] == "UDP" || record[startIndex + 5] == "TCP");
     this->_length = std::stof(record[startIndex + 6]);
     this->_data = record[startIndex + 7];
@@ -39,8 +39,8 @@ string Packet::toString()
      s += this->_sourceMac + "\n";
      s += this->_sourceIP + "\n";
      s += this->_destIP + "\n"; 
-     s += std::to_string(this->_sourcePort) + "\n";
-     s += std::to_string(this->_destPort) + "\n"; 
+     s += this->_sourcePort + "\n";
+     s += this->_destPort + "\n";
      s += std::to_string(this->_protocol) + "\n";
      s += std::to_string(this->_length) + "\n";
      s += this->_data + "\n";
@@ -59,9 +59,9 @@ void Packet::setSourceIP(string sourceIP) { this->_sourceIP = sourceIP; }
 string Packet::getSourceIP() { return this->_sourceIP; }
 void Packet::setDestIP(string destIP) { this->_destIP = destIP; } 
 string Packet::getDestIP() { return this->_destIP; }
-void Packet::setSourcePort(int sourcePort) { this->_sourcePort = sourcePort; } 
+void Packet::setSourcePort(string sourcePort) { this->_sourcePort = sourcePort; }
 string Packet::getSourcePort() { return this->_sourcePort; }
-void Packet::setDestPort(int destPort) { this->_destPort = destPort; } 
+void Packet::setDestPort(string destPort) { this->_destPort = destPort; }
 string Packet::getDestPort() { return this->_destPort; }
 void Packet::setLength(int length) { this->_length = length; } 
 float Packet::getLength() { return this->_length; }

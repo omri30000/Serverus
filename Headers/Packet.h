@@ -22,8 +22,8 @@ class Packet
         string _data;
 
     public:
-        Packet(Time arrivalTime, string sourceMAC, string sourceIP, string destIP, int sourcePort,
-            int destPort,float length, bool protocol, string data);
+        Packet(Time arrivalTime, string sourceMAC, string sourceIP, string destIP, string sourcePort,
+            string destPort,float length, bool protocol, string data);
         Packet(vector<string> record, int startIndex);//row of data from csv file
         Packet() = default; // remove this after building PacketsReaderSQLITE class
 
@@ -38,9 +38,9 @@ class Packet
         string getSourceIP();
         void setDestIP(string destIP);
         string getDestIP();
-        void setSourcePort(int sourcePort);
+        void setSourcePort(string sourcePort);
         string getSourcePort();
-        void setDestPort(int destPort);
+        void setDestPort(string destPort);
         string getDestPort();
         void setLength(int length);
         float getLength();
