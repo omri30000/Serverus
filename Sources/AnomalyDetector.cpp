@@ -77,7 +77,7 @@ The function will train the model and calc the anomaly score during training (no
 input: the mapped features of a specific packet
 output: anomaly score of the packet (meaningless)
 */
-void AnomalyDetector::train(valarray<valarray<float>> input)
+float AnomalyDetector::train(valarray<valarray<float>> input)
 {
     //create an empty array represents the input to the output layer
     valarray<float> inputOfOutputLayer(this->_ensembleLayer.size());
@@ -86,11 +86,10 @@ void AnomalyDetector::train(valarray<valarray<float>> input)
         inputOfOutputLayer[i] = this->_ensembleLayer[i].train(input[i]);
 
     }
-
-        float v = this->_outputLayer.train(inputOfOutputLayer);
-        //std::cout << "train anomaly: " << v << "  " << _trainedInstancesAmount << std::endl;
-
     this->_trainedInstancesAmount++;
+
+   return this->_outputLayer.train(inputOfOutputLayer);
+
 }
 
 /*
@@ -108,4 +107,21 @@ float AnomalyDetector::calcAnomalyScore(valarray<valarray<float>> input)
     }
 
     return this->_outputLayer.feedForward(inputOfOutputLayer);
+}
+
+std::pair<float, bool> AnomalyDetector::performAD(valarray<valarray<float>> input)
+{
+    float anomalyScore = 0;
+    bool isTrain= this->_trainedInstancesAmount <=  this->_amountToLearn;
+
+    if(isTrain)
+    {
+        anomalyScore = this->train(input);
+    }
+    else
+    {
+        anomalyScore = this->calcAnomalyScore(input);
+    }
+
+    return{anomalyScore,isTrain} ;
 }

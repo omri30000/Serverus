@@ -84,11 +84,6 @@ void Packet::setProtocol(string protocol) { this->_protocol = protocol; }
 string Packet::getProtocol() { return this->_protocol; }
 void Packet::setData(string data) { this->_data = data; } 
 string Packet::getData() { return this->_data; }
-
-void Packet::setDestMac(string destMac) {
-    _destMac = destMac;
-}
-string Packet::getDestMac() {
-    return _destMac;
-}
+void Packet::setDestMac(string destMac) {_destMac = destMac;}
+string Packet::getDestMac() {return _destMac;}
 

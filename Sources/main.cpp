@@ -1,6 +1,7 @@
 #include <iostream>
 #include <string>
 #include <cstdlib>
+#include <algorithm>
 
 #include "../Headers/PacketsReaderSQLITE.h"
 #include "../Headers/FeatureExtractor.h"
@@ -9,6 +10,7 @@
 #include "../Headers/Communicator.h"
 #include "../Headers/AnomalyDetector.h"
 #include "../Headers/utils.h"
+#include "Manipulator.h"
 
 // NOTE: Make sure to run program with sudo in order to be able to delete data from db
 int main()
@@ -25,20 +27,16 @@ int main()
     float min = 5;
     float max = -5;
 
-    vector<double> values;
     bool cond = true;
     Packet pack;
     int a = 0;
+    float maxThreshold=0;
+    Manipulator* manipulator = nullptr;
     while (cond)
     {
         try {
             pack = reader.getNextPacket();
-            /*if (reader.getHostMac() == pack.getSourceMac())
-            {
-                //std::cout << "outgoing" << a << std::endl;
-                continue;
-            }*/
-            //std::cout << "packet number: " << a << std::endl;
+
             a++;
         }
         catch (std::exception &e) {
@@ -47,13 +45,7 @@ int main()
         }
         vector<float> stats = extractor.extractNewFeaturesVector(pack);
 
-        /*
-        std::cout << "#########" << std::endl;
-        for (int i = 0; i < stats.size(); ++i) {
-            std::cout << stats[i] << ',';
-        }
-        */
-        //std::cout << std::endl << "#########" << std::endl;
+
 
         if (p == nullptr) {
             if (!mapper.getState())
@@ -76,29 +68,22 @@ int main()
         else {
             valarray<valarray<float>> featuresMap = p->organizeData(stats);
 
+
             // print the mapped features
 
-            //std::cout << "-----MAP-----" << std::endl;
-            for (int i = 0; i < featuresMap.size(); ++i) {
-                for (int j = 0; j < featuresMap[i].size(); ++j) {
-                    //std::cout << featuresMap[i][j] << ",";
-                }
-                //std::cout << std::endl;
-            }
 
-            //std::cout << "-----END-----" << std::endl;
-
-            float anomalyScore = ad->perform(featuresMap);
-            if (anomalyScore != 0)
+            std::pair<float,bool> result = ad->performAD(featuresMap);
+            if(result.second)
+                maxThreshold = std::max(maxThreshold,result.first);
+            else
             {
-                min = anomalyScore < min ? anomalyScore : min;
-                max = anomalyScore > max ? anomalyScore : max;
-                //std::cout << "Anomaly Score: " << anomalyScore << std::endl << std::endl;
-                //std::cout<<anomalyScore<<"---"<<a<<std::endl;
+                if(manipulator == nullptr)
+                    manipulator = new Manipulator(maxThreshold);
+
+                int val = manipulator->calcLevel(result.first);
+                if(val != 0)
+                    communicator.sendMessage(Event(pack.getSourceIP(),val,pack.getArrivalTime()));
             }
-
-            values.push_back(anomalyScore);
-
         }
     }
     return 0;

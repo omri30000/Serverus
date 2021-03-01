@@ -19,6 +19,7 @@ class AnomalyDetector {
         float _learningRate;
         float _ratioOfHiddenLayer; // the beta
 
+
         int _trainedInstancesAmount; // the amount of instances that has being trained
 
         //vector<vector<float>> _featuresMap;
@@ -26,7 +27,7 @@ class AnomalyDetector {
         vector<AutoEncoder> _ensembleLayer;
         AutoEncoder _outputLayer;
 
-        void train(valarray<valarray<float>> input);
+        float train(valarray<valarray<float>> input);
         float calcAnomalyScore(valarray<valarray<float>> input);
 
         AnomalyDetector(int numOfFeatures, int amountToLearnFrom,
@@ -41,6 +42,7 @@ class AnomalyDetector {
         void operator=(AnomalyDetector const&) = delete;
 
         float perform(valarray<valarray<float>> input);
+        std::pair<float,bool> performAD(valarray<valarray<float>> input);
 
         ~AnomalyDetector() = default;
 
