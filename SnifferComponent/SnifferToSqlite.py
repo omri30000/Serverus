@@ -80,6 +80,18 @@ class Sniffer:
 	    """
         sniff(prn=self.__write_packet)
 
+
+    def start_reading(self, file_path):
+        """
+        The function allow the user to start the sniffer work
+        :param self: the instance of Sniffer
+        :type self: sniffer
+	    :return: no return value
+	    :rtype: None
+	    """
+        sniff(offline=file_path, prn=self.__write_packet, store=0)
+
+
     def __write_packet(self, pkt):
         """
         The callback function will write a single packet to the csv file
@@ -93,7 +105,7 @@ class Sniffer:
         try:
             self.lock.acquire()
             pack = Packet(datetime.now(), pkt)
-            # print("go")
+            
             self.db_cursor.execute(pack.cast_to_sql_statement())
             
             self.db_cursor.execute("PRAGMA wal_checkpoint(FULL);")
@@ -108,9 +120,25 @@ class Sniffer:
 
 
 def main():
-    mySniffer = Sniffer()
+    print("1. run in real time")
+    print("2. use a premade data set")
+    
+    try:
+        choice = int(input("choose: "))
+    except Exception as e:
+        print(e)
+        choice = 1
+    
+    my_sniffer = Sniffer()
+    if choice == 1:
+        my_sniffer.start_sniffing()
 
-    mySniffer.start_sniffing()
+    elif choice == 2:
+        file_path = input("Enter file path: ")
+        my_sniffer.start_reading(file_path)
+
+    else:
+        print("have a nice day")
 
 
 if __name__ == "__main__":
