@@ -13,6 +13,7 @@ class Packet
     private: 
         Time _arrivalTime;
         string _sourceMac;
+        string _destMac;
         string _sourceIP;
         string _destIP;
         string _sourcePort;
@@ -21,8 +22,9 @@ class Packet
         string _protocol;
         string _data;
 
+
     public:
-        Packet(Time arrivalTime, string sourceMAC, string sourceIP, string destIP, string sourcePort,
+        Packet(Time arrivalTime, string sourceMAC, string destMAC,string sourceIP, string destIP, string sourcePort,
             string destPort,float length, string protocol, string data);
         Packet(vector<string> record, int startIndex);//row of data from csv file
         Packet() = default; // remove this after building PacketsReaderSQLITE class

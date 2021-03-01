@@ -1,11 +1,12 @@
 #include "../Headers/Packet.h"
 
 
-Packet::Packet(Time arrivalTime, string sourceMAC, string sourceIP, string destIP, string sourcePort,
+Packet::Packet(Time arrivalTime, string sourceMAC,string destMAC ,string sourceIP, string destIP, string sourcePort,
             string destPort, float length, string protocol, string data)
 {
     this->_arrivalTime = arrivalTime;
     this->_sourceMac = sourceMAC;
+    this->_destMac = destMAC;
     this->_sourceIP = sourceIP;
     this->_destIP = destIP;
     this->_sourcePort = sourcePort;
@@ -20,14 +21,28 @@ Packet::Packet(vector<string> record, int startIndex)
     if (record.size() == 0) throw std::exception();
 
     this->_sourceMac = record[startIndex];
-    this->_sourceIP = record[startIndex + 1];
-    this->_destIP = record[startIndex + 2];
-    this->_sourcePort = record[startIndex + 3];
-    this->_destPort = record[startIndex + 4];
-    this->_protocol = record[startIndex + 5];
-    this->_length = std::stof(record[startIndex + 6]);
-    this->_data = record[startIndex + 7];
-    this->_arrivalTime = Time(record[startIndex + 8]);
+    this->_destMac = record[startIndex+1];
+    this->_sourceIP = record[startIndex + 2];
+    this->_destIP = record[startIndex + 3];
+    this->_sourcePort = record[startIndex + 4];
+    this->_destPort = record[startIndex + 5];
+    this->_protocol = record[startIndex + 6];
+    this->_length = std::stof(record[startIndex + 7]);
+    this->_data = record[startIndex + 8];
+    this->_arrivalTime = Time(record[startIndex + 9]);
+
+
+    if(_sourcePort + _destPort == "") //there is no ports L3 and below
+    {
+        _sourcePort = _protocol;
+        _destPort = _protocol;
+    }
+    if(_sourceIP + _destIP == "") //there is no ip's L2 and below
+    {
+        _sourceIP = _sourceMac;
+        _destIP = _destMac;
+    }
+
 
 
 }

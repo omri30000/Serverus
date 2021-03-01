@@ -47,8 +47,6 @@ int main()
         }
         vector<float> stats = extractor.extractNewFeaturesVector(pack);
 
-
-
         /*
         std::cout << "#########" << std::endl;
         for (int i = 0; i < stats.size(); ++i) {
