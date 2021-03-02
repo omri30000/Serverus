@@ -10,7 +10,7 @@
 #include "../Headers/Communicator.h"
 #include "../Headers/AnomalyDetector.h"
 #include "../Headers/utils.h"
-#include "Manipulator.h"
+#include "../Headers/Manipulator.h"
 
 // NOTE: Make sure to run program with sudo in order to be able to delete data from db
 int main()

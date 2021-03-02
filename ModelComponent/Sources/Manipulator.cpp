@@ -2,7 +2,7 @@
 // Created by ofir on 01/03/2021.
 //
 
-#include "Manipulator.h"
+#include "../Headers/Manipulator.h"
 
 Manipulator::Manipulator(float maxThreshold)
 {
