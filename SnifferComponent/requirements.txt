@@ -1,0 +1,3 @@
+In order to run the sniffer properly:
+* install python3 via pip
+* install scapy via pip (use sudo while installing!)
