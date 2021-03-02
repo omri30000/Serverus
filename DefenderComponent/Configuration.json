@@ -1,0 +1,7 @@
+{
+    "ProductID": "1234",
+    "ServerDomain": "abcdabcd.com",
+    "ServerIP": "127.0.0.1",
+    "ServerPort": 4748,
+    "DefenderListenPort": 4123
+}
