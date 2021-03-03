@@ -1,17 +1,17 @@
 import datetime
-# This is the Rule class, which handles firewall rules
+import Event
+# This is the Rule class, which handles iptables rules
 
 class Rule:
-    def __init__(self,entity,temp):
+    def __init__(self,event):
         """Constructor
 
         Args:
-            entity ({Entity}): Hostile Entity to block
+            entity ({Event}): The Hostile event
             temp ({bool}): Is the rule temporally
         """        
         self.date = datetime.datetime.now()
-        self.ent = entity.get_mac_add()
-        self.temp = temp 
+        self.event = event
 
     """
     This function returns the parameters for the iptables rule
@@ -27,14 +27,14 @@ class Rule:
         """        
 
         #return "-m mac --mac-source "+self.ent.get_mac_add()
-        return " -s " + self.ent.get_ip_add()
+        return " -s " + self.event.get_ip_add()
         
 
 
     """getters functions""" 
 
     def is_temp(self):
-        return self.temp
+        return self.event.get_level() == 2
        
     def get_date(self):
         return self.date
