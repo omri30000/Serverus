@@ -105,7 +105,7 @@ class Sniffer:
 	    """
         try:
             self.lock.acquire()
-            pack = Packet(datetime.now(), pkt)
+            pack = Packet(pkt)
             
             self.db_cursor.execute(pack.cast_to_sql_statement())
             
@@ -122,8 +122,7 @@ class Sniffer:
 
 def main():
     my_sniffer = Sniffer()
-
-    if sys.argv[0] == "":
+    if len(sys.argv) == 1:
         my_sniffer.start_sniffing()
     else:
         file_path = sys.argv[1]  # index 1 is the pcap file path

@@ -1,20 +1,31 @@
 from scapy.all import *
+import datetime
 
 class Packet:
-    def __init__(self, time, pack):
+    def __init__(self, pack):
         """
         The initializer of the Packet object. allow the user to create a Packet and initial it. 
         :param self: the instance of Packet
         :type self: Packet
-        :param time: the time when the packet arrived
-        :type time: datetime.datetime
         :param pack: the packet from scapy in it's basic format
         :type pack: scapy.packet
 	    :return: no return value
 	    :rtype: None
 	    """
-        
-        self.arrival_time = time
+
+        #TODO:this part is stupid because of a problem in fromtimestamp
+        print(pack.time)
+
+        microseconds =int(pack.time*1000000 - int(pack.time) * 1000000 )
+
+        self.arrival_time = datetime.datetime.fromtimestamp(pack.time)
+
+        if(self.arrival_time.microsecond == 0 and self.arrival_time.microsecond !=microseconds):
+            print(microseconds,self.arrival_time.microsecond)
+            self.arrival_time += datetime.timedelta(microseconds=  microseconds) 
+
+        print(str(self.arrival_time))
+        input("")
         self.length = len(pack)  # the packet's size in bytes
 
         if IP in pack:
