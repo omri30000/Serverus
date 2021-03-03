@@ -58,8 +58,8 @@ class Defender:
         Args:
             event ({event}): The hostile event the defend from
         """
-        print(type(event))
-        print("cululululu")
+        # print(type(event))
+        # print("cululululu")
 
         if not local:
             self.events += [event]
