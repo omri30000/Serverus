@@ -13,19 +13,13 @@ class Packet:
 	    :rtype: None
 	    """
 
-        #TODO:this part is stupid because of a problem in fromtimestamp
-        print(pack.time)
-
         microseconds =int(pack.time*1000000 - int(pack.time) * 1000000 )
 
         self.arrival_time = datetime.datetime.fromtimestamp(pack.time)
 
         if(self.arrival_time.microsecond == 0 and self.arrival_time.microsecond !=microseconds):
-            print(microseconds,self.arrival_time.microsecond)
             self.arrival_time += datetime.timedelta(microseconds=  microseconds) 
 
-        print(str(self.arrival_time))
-        input("")
         self.length = len(pack)  # the packet's size in bytes
 
         if IP in pack:
