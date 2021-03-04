@@ -12,6 +12,10 @@ import Rule
 import Event
 import Log
 
+CONFIG_PATH_OUT = "./DefenderComponent/Configuration.json"
+CONFIG_PATH_IN = "Configuration.json"
+
+
 class Defender:
     """
     This is the Defender class, which will execute the defensive actions against hostile entities.
@@ -30,7 +34,11 @@ class Defender:
         else:
             Defender.count += 1
 
-        f = open('Configuration.json', 'r')
+        try:
+            f = open(CONFIG_PATH_IN, 'r')
+        except Exception as e:
+            f = open(CONFIG_PATH_OUT, 'r')
+
         data = json.load(f)
 
         self.computer_id = data['ProductID']
@@ -188,18 +196,22 @@ def main():
     defender = Defender()
     listening_sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     
-    f = open('Configuration.json', 'r')
+    try:
+        f = open(CONFIG_PATH_IN, 'r')
+    except Exception as e:
+        f = open(CONFIG_PATH_OUT, 'r')
+        
     data = json.load(f)
 
     listening_port = data['DefenderListenPort']
 
     f.close()
 
-
     listening_sock.bind(('', listening_port))
     listening_sock.listen(1)  # wait for connection with the model
 
     while True:
+        
         try:
             # Create a new conversation socket
             model_soc, model_address = listening_sock.accept()
