@@ -72,7 +72,7 @@ int main()
             // print the mapped features
 
 
-            std::pair<float,bool> result = ad->performAD(featuresMap);
+cha            std::pair<float,bool> result = ad->perform(featuresMap);
             if(result.second)
                 maxThreshold = std::max(maxThreshold,result.first);
             else
