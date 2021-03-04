@@ -4,8 +4,8 @@ import time
 import DatabaseManager
 import Event
 import datetime
-import Config
 
+LISTENING_PORT = 443
 
 class Server:
     def __init__(self, listening_port):
@@ -94,7 +94,7 @@ class Server:
 
 
 def main():
-    my_server = Server(Config.SERVER_PORT)
+    my_server = Server(LISTENING_PORT)
     my_server.serve()
 
 
