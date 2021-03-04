@@ -1,7 +1,6 @@
 {
     "ProductID": 1234,
-    "ServerDomain": "defence.rock",
-    "ServerIP": "13.79.36.222",
+    "ServerDomain": "defence.rocks",
     "ServerPort": 443,
     "DefenderListenPort": 4123
 }

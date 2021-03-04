@@ -42,7 +42,7 @@ class Defender:
         data = json.load(f)
 
         self.computer_id = data['ProductID']
-        self.server_IP = data['ServerIP']
+        self.server_domain = data['ServerDomain']
         self.server_port = data['ServerPort']
 
         f.close()
@@ -179,7 +179,7 @@ class Defender:
             # get all events to send
             data = bytearray()
             with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
-                s.connect((self.server_IP, self.server_port))
+                s.connect((self.server_domain, self.server_port))
                 # print("message: ", message)
                 s.sendall(message)
                 data = s.recv(1024)
