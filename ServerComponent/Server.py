@@ -5,6 +5,7 @@ import DatabaseManager
 import Event
 import datetime
 
+SERVER_DOMAIN = "defence.rocks"
 LISTENING_PORT = 443
 
 class Server:
@@ -91,6 +92,21 @@ class Server:
 
         time.sleep(2)
         sock.close()
+
+
+    def __make_config_file(self, product_id):
+        """
+        The function will create a string that can be added to a json file.
+        """
+        data = {"ProductID": product_id,
+        "ServerDomain": SERVER_DOMAIN,
+        "ServerPort": LISTENING_PORT,
+        "DefenderListenPort": 4123}
+
+        with open('Configuration.json', 'w') as json_file:
+            json.dump(data, json_file)
+
+
 
 
 def main():
