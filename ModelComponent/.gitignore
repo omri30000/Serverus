@@ -1,0 +1,16 @@
+/.vscode
+/cmake-build-debug
+/.idea
+*.txt
+TestLog.py
+/__pycache__
+/obj
+/src
+Makefile
+*.d
+*.csv
+FeatureExtractor
+CMakeLists.txt
+*.db
+*.sqlite
+*.xml
