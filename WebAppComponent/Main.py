@@ -4,9 +4,17 @@ from flask import request
 from flask import redirect, url_for
 from flask import session
 
+import DatabaseManager
 
 app = Flask(__name__)
 app.secret_key = "secretKey"
+db_manager = DatabaseManager.DatabaseManager(db_file_name="/home/omrizaiman/Documents/MagshimimFinalProject/idps-20"
+                                                          "-21/WebAppComponent/database.sqlite")
+
+
+def main():
+    print(db_manager)
+    app.run(debug=True)
 
 
 @app.route("/")  # if we use the domain only, we'll get here
@@ -32,8 +40,8 @@ def register_page():
         user_name = request.form["username"]
         password = request.form["password"]
         email = request.form["email"]
-
-        # session["userID"] = register_new_user(user_name, password, email)
+        print(user_name, password)
+        session["userID"] = db_manager.insert_user(user_name, password)
         return redirect(url_for("dashboard_page"))
     else:  # GET request
         return render_template("register.html")
@@ -54,4 +62,4 @@ def logout():
 
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    main()
