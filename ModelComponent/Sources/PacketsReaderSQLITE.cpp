@@ -25,7 +25,7 @@ PacketsReaderSQLITE::~PacketsReaderSQLITE()
 
 
 Packet PacketsReaderSQLITE::getNextPacket() {
-    string sqlStatement = "SELECT * FROM packets WHERE substr(arrival_time,0,24) > \"" + this->_lastDate
+    string sqlStatement = "SELECT * FROM packets WHERE arrival_time > \"" + this->_lastDate
             + "\" ORDER BY arrival_time LIMIT 1";
 
     vector<string> record;
@@ -39,8 +39,8 @@ Packet PacketsReaderSQLITE::getNextPacket() {
     Packet p(record,0);
     this->_lastDate = p.getArrivalTime().toString();
 
-    std::thread t =  std::thread(&PacketsReaderSQLITE::removeSeenPackets,this);
-    t.detach();
+    //std::thread t =  std::thread(&PacketsReaderSQLITE::removeSeenPackets,this);
+    //t.detach();
 
     return p;
 }

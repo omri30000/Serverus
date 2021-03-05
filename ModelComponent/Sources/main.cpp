@@ -11,6 +11,7 @@
 #include "../Headers/AnomalyDetector.h"
 #include "../Headers/utils.h"
 #include "../Headers/Manipulator.h"
+#include <fstream>
 
 // NOTE: Make sure to run program with sudo in order to be able to delete data from db
 int main()
@@ -22,6 +23,7 @@ int main()
     FeatureMapper mapper(5000,10,85);
     Parser* p = nullptr;
     AnomalyDetector* ad = nullptr;
+    std::ofstream file("values.txt");
 
     Communicator communicator;
     float min = 5;
@@ -79,10 +81,11 @@ int main()
             {
                 if(manipulator == nullptr)
                     manipulator = new Manipulator(maxThreshold);
-
+                file<<result.first<<"---"<<a<<std::endl;
                 int val = manipulator->calcLevel(result.first);
                 if(val != 0)
-                    communicator.sendMessage(Event(pack.getSourceIP(),val,pack.getArrivalTime()));
+                    std::cout<<"Anomaly: "<<val << " Num: "<<a<<std::endl;
+                    //communicator.sendMessage(Event(pack.getSourceIP(),val,pack.getArrivalTime()));
             }
         }
     }

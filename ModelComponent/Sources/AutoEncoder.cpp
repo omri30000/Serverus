@@ -154,10 +154,7 @@ void AutoEncoder::norm(valarray<float> &vals,bool isLearning)
         }
     }
     vals = (vals-normMin) / (normMax - normMin + 0.00000000001);
-    for (int i = 0; i < vals.size(); ++i) {
-     //std::cout<<vals[i]<<",";
-    }
-    //std::cout<<std::endl;
+
 }
 
 
