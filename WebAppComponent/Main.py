@@ -5,14 +5,14 @@ from flask import redirect, url_for
 from flask import session
 
 import DatabaseManager
-
+import config
 app = Flask(__name__)
 app.secret_key = "secretKey"
-db_manager = DatabaseManager.DatabaseManager(db_file_name="/home/ofir/Music/general_db.sqlite")
+db_manager = DatabaseManager.DatabaseManager(db_file_name=config.DB_FILE_NAME)
 
 
 def main():
-    app.run(debug=True)
+    app.run(debug=True,port=80,host="0.0.0.0")
 
 
 @app.route("/")  # if we use the domain only, we'll get here
