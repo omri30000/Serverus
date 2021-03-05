@@ -13,7 +13,7 @@ def login_page():
 
 @app.route("/register")
 def register_page():
-    return "register page"
+    return render_template("register.html")
 
 
 if __name__ == '__main__':
