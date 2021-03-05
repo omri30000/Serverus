@@ -1,8 +1,26 @@
 {% extends "base.html" %}
 
-{% block css %}
-<link href="../assets/dist/css/bootstrap.min.css" rel="stylesheet">
+{% block css %} 
+<link href="{{url_for('static', filename='css/signin.css')}}" rel="stylesheet">
+<link rel="canonical" href="https://getbootstrap.com/docs/5.0/examples/sign-in/">
+
+<style>
+  .bd-placeholder-img {
+    font-size: 1.125rem;
+    text-anchor: middle;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    user-select: none;
+  }
+
+  @media (min-width: 768px) {
+    .bd-placeholder-img-lg {
+      font-size: 3.5rem;
+    }
+  }
+</style>
 {% endblock %}
+
 
 
 {% block content %}
@@ -14,6 +32,8 @@
   
     
 <main class="form-signin">
+  <center> 
+    <img class="mb-4" src="{{url_for('static', filename='assets/lock.png')}}" alt="" width="70" height="57"> 
   <form method="post" action="#">
     <h1 class="h3 mb-3 fw-normal">Please sign in</h1>
 
@@ -21,7 +41,7 @@
     <input type="email" id="inputEmail" class="form-control" placeholder="Email address" required autofocus>-->
     <label for="username" class="visually-hidden">Username</label>
     <input type="text" name="usernameName" id="username" class="form-control" placeholder="Username" required>
-
+    <br>
     <label for="password" class="visually-hidden">Password</label>
     <input type="password" name="passwordName" id = "password" class="form-control" placeholder="Password" required>
     <div class="checkbox mb-3">
@@ -31,5 +51,7 @@
     </div>
     <button class="w-100 btn btn-lg btn-primary" type="submit">Sign in</button>
     </form>
+  </center>
+
 </main>
 {% endblock %}
