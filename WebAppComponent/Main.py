@@ -8,8 +8,7 @@ import DatabaseManager
 
 app = Flask(__name__)
 app.secret_key = "secretKey"
-db_manager = DatabaseManager.DatabaseManager(db_file_name="/home/omrizaiman/Documents/MagshimimFinalProject/idps-20"
-                                                          "-21/WebAppComponent/database.sqlite")
+db_manager = DatabaseManager.DatabaseManager(db_file_name="/home/ofir/Music/general_db.sqlite")
 
 
 def main():

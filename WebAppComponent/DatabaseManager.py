@@ -1,6 +1,6 @@
 import sqlite3
 import datetime
-
+import hashlib
 
 class DatabaseManager:
     def __init__(self, db_file_name):
@@ -22,16 +22,19 @@ class DatabaseManager:
     def insert_user(self, username, password):
         product_time = self.__insert_product()
 
+        enc_password = hashlib.md5(password.encode()).hexdigest()
         sql_statement = "SELECT * FROM Products WHERE joinDate=\'" + product_time + "\'"
         self.db_cursor.execute(sql_statement)
         rows = self.db_cursor.fetchall()
 
         sql_statement = "INSERT INTO Users (username, password, productId) VALUES (\'" + username + "\', \'" + \
-                        password + "\', " + str(rows[0][0]) + ")"
+                        enc_password + "\', " + str(rows[0][0]) + ")"
+    
+        print(sql_statement)
 
         self.db_cursor.execute(sql_statement)
 
-        sql_statement = "SELECT * FROM Users WHERE id = (SELECT MAX(id) FROM Users)"
+        sql_statement = "SELECT * FROM Users WHERE username = \'" + username + "\';"
         self.db_cursor.execute(sql_statement)
         rows = self.db_cursor.fetchall()
 
