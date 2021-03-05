@@ -17,7 +17,7 @@ def home_page():
 @app.route("/login", methods=["POST", "GET"])
 def login_page():
     if "userID" in session:  # the user is connected
-        return render_template("dashboard.html")
+        return redirect(url_for("dashboard_page"))
     else:
         if request.method == "POST":
             # todo: find user in data base and add to session
@@ -54,4 +54,5 @@ def logout():
 
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run(debug=True,port=80,host="0.0.0.0")
+
