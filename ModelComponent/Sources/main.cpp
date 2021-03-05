@@ -17,7 +17,7 @@ int main()
 {
     srand (time(NULL));
     std::cout << "Hello, World!" << std::endl;
-    PacketsReaderSQLITE reader = PacketsReaderSQLITE("../../db_file.sqlite");
+    PacketsReaderSQLITE reader = PacketsReaderSQLITE("../../../db_file.sqlite");
     FeatureExtractor extractor;
     FeatureMapper mapper(5000,10,85);
     Parser* p = nullptr;
@@ -72,7 +72,7 @@ int main()
             // print the mapped features
 
 
-cha            std::pair<float,bool> result = ad->perform(featuresMap);
+            std::pair<float,bool> result = ad->perform(featuresMap);
             if(result.second)
                 maxThreshold = std::max(maxThreshold,result.first);
             else

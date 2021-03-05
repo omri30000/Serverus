@@ -4,7 +4,7 @@
 PacketsReaderSQLITE::PacketsReaderSQLITE(string filePath) :PacketsReader(filePath)
 {
     int status = 0;
-    this->_lastDate = "0000-00-00 00:00:00.000";
+    this->_lastDate = "0000-00-00 00:00:00.000000";
     status = sqlite3_open(filePath.c_str(), &this->_dbFile);
     sqlite3_exec(this->_dbFile, "pragma journal_mode = WAL", NULL, NULL, NULL);
     if (status) { 
@@ -107,7 +107,7 @@ void PacketsReaderSQLITE::removeOutgoingPackets()
 
 void PacketsReaderSQLITE::removeSeenPackets()
 {
-    string sql = "DELETE FROM packets WHERE substr(arrival_time,0,24) <= \"" + this->_lastDate + "\"";
+    string sql = "DELETE FROM packets WHERE arrival_time <= \"" + this->_lastDate + "\"";
     try
     {
         executeCommand(sql.c_str(), nullptr, nullptr);

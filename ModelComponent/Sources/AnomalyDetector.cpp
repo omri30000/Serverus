@@ -96,7 +96,7 @@ input: the mapped features of a specific packet
 output: std::pair- {anomaly score of the packet (meaningless), is the train finished}
 */
 
-}
+
 std::pair<float, bool> AnomalyDetector::perform(valarray<valarray<float>> input)
 {
     float anomalyScore = 0;

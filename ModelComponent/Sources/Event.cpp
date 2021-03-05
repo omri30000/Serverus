@@ -46,7 +46,7 @@ int Event::calcDateMilliseconds() const
     return this->_date.getHour() * 60 * 60 * 1000 +
     this->_date.getMinute() * 60 * 1000 +
     this->_date.getSecond() * 1000 +
-    this->_date.getMiliSec();
+    this->_date.getMicroSec()/1000;
 }
 
 /*
