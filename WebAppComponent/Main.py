@@ -12,7 +12,6 @@ db_manager = DatabaseManager.DatabaseManager(db_file_name="/home/ofir/Music/gene
 
 
 def main():
-    print(db_manager)
     app.run(debug=True)
 
 
@@ -24,17 +23,30 @@ def home_page():
 @app.route("/login", methods=["POST", "GET"])
 def login_page():
     if "userID" in session:  # the user is connected
-        return render_template("dashboard.html")
+        return redirect(url_for("dashboard_page"))
     else:
         if request.method == "POST":
             # todo: find user in data base and add to session
-            return redirect(url_for("dashboard_page"))
-        else:  # GET request
+            user_name = request.form["usernameName"]
+            password = request.form["passwordName"]
+            if(db_manager.check_login(user_name,password)):
+            
+                session["userID"] = db_manager.get_user_id(user_name)
+                return redirect(url_for("dashboard_page"))
+            else:  
+                #throw exception and raise message
+                return render_template("login.html")
+
+        else:  
+            # GET request
             return render_template("login.html")
 
 
 @app.route("/register", methods=["POST", "GET"])
 def register_page():
+    if "userID" in session:  # the user is connected
+        return redirect(url_for("dashboard_page"))
+
     if request.method == "POST":
         user_name = request.form["username"]
         password = request.form["password"]

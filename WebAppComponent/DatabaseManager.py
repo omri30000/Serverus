@@ -33,13 +33,28 @@ class DatabaseManager:
         print(sql_statement)
 
         self.db_cursor.execute(sql_statement)
+        self.db.commit()
 
-        sql_statement = "SELECT * FROM Users WHERE username = \'" + username + "\';"
+        return self.get_user_id(username)
+
+    def check_login(self,username,password):
+        enc_password = hashlib.md5(password.encode()).hexdigest()
+        sql_statement = "SELECT * from Users WHERE username = '{}' AND password = '{}'".format(username, enc_password)
         self.db_cursor.execute(sql_statement)
+
         rows = self.db_cursor.fetchall()
 
-        self.db.commit()
-        return rows[0][0]
+        return len(rows) == 1
+            
+        
+        
+    
+    def get_user_id(self,username):
+        #should add try-except
+        sql_statement = "SELECT id FROM Users WHERE username = \'" + username + "\';"
+        self.db_cursor.execute(sql_statement)
+        rows = self.db_cursor.fetchall()
+        return rows[0]
 
     def __insert_product(self):
         d = str(datetime.datetime.now())
