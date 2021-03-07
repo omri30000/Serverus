@@ -70,7 +70,8 @@ def dashboard_page():
 @app.route("/rules")
 def rule_management_page():
     if "userID" in session:  # the user is connected
-        return render_template("rules.html")
+        data = db_manager.get_all_rules()
+        return render_template("rules.html", content=data, user_id=session["userID"])
     else:
         return redirect(url_for("login_page"))
 
