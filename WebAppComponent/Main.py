@@ -14,7 +14,7 @@ db_manager = DatabaseManager.DatabaseManager(db_file_name=config.DB_FILE_NAME)
 
 
 def main():
-    app.run(debug=True, port=80, host="0.0.0.0")
+    app.run(debug=True)  # , port=80, host="0.0.0.0")
 
 
 @app.route("/")  # if we use the domain only, we'll get here
@@ -69,7 +69,10 @@ def dashboard_page():
 
 @app.route("/rules")
 def rule_management_page():
-    return render_template("rules.html")
+    if "userID" in session:  # the user is connected
+        return render_template("rules.html")
+    else:
+        return redirect(url_for("login_page"))
 
 
 @app.route("/logout")
