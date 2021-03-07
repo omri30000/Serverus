@@ -67,6 +67,11 @@ def dashboard_page():
         return redirect(url_for("login_page"))
 
 
+@app.route("/rules")
+def rule_management_page():
+    return render_template("rules.html")
+
+
 @app.route("/logout")
 def logout():
     session.pop("userID", None)
