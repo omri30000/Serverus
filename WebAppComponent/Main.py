@@ -6,13 +6,15 @@ from flask import session
 
 import DatabaseManager
 import config
+
+
 app = Flask(__name__)
 app.secret_key = "secretKey"
 db_manager = DatabaseManager.DatabaseManager(db_file_name=config.DB_FILE_NAME)
 
 
 def main():
-    app.run(debug=True,port=80,host="0.0.0.0")
+    app.run(debug=True, port=80, host="0.0.0.0")
 
 
 @app.route("/")  # if we use the domain only, we'll get here
@@ -26,15 +28,14 @@ def login_page():
         return redirect(url_for("dashboard_page"))
     else:
         if request.method == "POST":
-            # todo: find user in data base and add to session
+            # find user in data base and add to session:
             user_name = request.form["usernameName"]
             password = request.form["passwordName"]
-            if(db_manager.check_login(user_name,password)):
-            
+            if db_manager.check_login(user_name, password):
                 session["userID"] = db_manager.get_user_id(user_name)
                 return redirect(url_for("dashboard_page"))
             else:  
-                #throw exception and raise message
+                # todo: throw exception and raise message
                 return render_template("login.html")
 
         else:  
@@ -48,9 +49,9 @@ def register_page():
         return redirect(url_for("dashboard_page"))
 
     if request.method == "POST":
-        user_name = request.form["username"]
-        password = request.form["password"]
-        email = request.form["email"]
+        user_name = request.form["usernameName"]
+        password = request.form["passwordName"]
+        email = request.form["emailName"]
         print(user_name, password)
         session["userID"] = db_manager.insert_user(user_name, password)
         return redirect(url_for("dashboard_page"))
