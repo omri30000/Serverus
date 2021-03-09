@@ -22,6 +22,22 @@
 {% endblock %}
 
 {% block content %}
+    <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+    <script>
+    function addRuleClicked(){
+        swal("Add new rule: ", {
+          content: "input",
+        })
+        .then((value) => {
+            fetch('/rules')
+              .then(function () {
+                  return value;
+              });
+        });
+    }
+    </script>
+
+    <button class="w-100 btn btn-lg btn-primary" type="submit" onclick="addRuleClicked()">Add rule</button>
 
     <div class="row">
         {% for id, data, creator in content %}

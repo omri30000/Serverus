@@ -3,6 +3,7 @@ from flask import render_template
 from flask import request
 from flask import redirect, url_for
 from flask import session
+from flask import flash
 
 import DatabaseManager
 import config
@@ -32,9 +33,11 @@ def login_page():
             user_name = request.form["usernameName"]
             password = request.form["passwordName"]
             if db_manager.check_login(user_name, password):
+
                 session["userID"] = db_manager.get_user_id(user_name)
                 return redirect(url_for("dashboard_page"))
-            else:  
+            else:
+                flash('You were successfully logged in')
                 # todo: throw exception and raise message
                 return render_template("login.html")
 
@@ -72,6 +75,16 @@ def rule_management_page():
     if "userID" in session:  # the user is connected
         data = db_manager.get_all_rules()
         return render_template("rules.html", content=data, user_id=session["userID"])
+    else:
+        return redirect(url_for("login_page"))
+
+
+@app.route("/addRule")
+def add_rule():
+    if "userID" in session:  # the user is connected
+        rule = request.get_string()
+        db_manager.add_rule(session["userID"], rule)
+        return render_template("rules.html", content=db_manager.get_all_rules(), user_id=session["userID"])
     else:
         return redirect(url_for("login_page"))
 

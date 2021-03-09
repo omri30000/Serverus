@@ -70,6 +70,10 @@ class DatabaseManager:
 
         return rows
 
+    def add_rule(self, user_identifier, rule):
+        # todo: rearrange Rules in data base and add rule
+        pass
+
     def __insert_product(self):
         d = str(datetime.datetime.now())
         sql_statement = "INSERT INTO Products (joinDate, lastSeenDate) VALUES (\'" + d + \
