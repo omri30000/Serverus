@@ -46,7 +46,7 @@ AutoEncoder::AutoEncoder(int inputSize,float learningRate =0.1)
  */
 float AutoEncoder::feedForward(valarray<float> input)
 {
-    norm(input,false);
+    //norm(input,false);
     std::valarray<float> res(_inputSize);
     std::valarray<float> hidden(_weights.size());
 
@@ -109,7 +109,7 @@ void AutoEncoder::getVisibleLayer(valarray<float> vals, valarray<float> &res) co
  */
 float AutoEncoder::train(valarray<float> input)
 {
-    norm(input,true);
+    //norm(input,true);
     std::valarray<float> res(_inputSize);
     std::valarray<float> hidden(_weights.size());
 
@@ -154,10 +154,7 @@ void AutoEncoder::norm(valarray<float> &vals,bool isLearning)
         }
     }
     vals = (vals-normMin) / (normMax - normMin + 0.00000000001);
-    for (int i = 0; i < vals.size(); ++i) {
-     //std::cout<<vals[i]<<",";
-    }
-    //std::cout<<std::endl;
+
 }
 
 

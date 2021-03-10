@@ -11,17 +11,31 @@
 #include "../Headers/AnomalyDetector.h"
 #include "../Headers/utils.h"
 #include "../Headers/Manipulator.h"
+#include <fstream>
+#include "../Headers/TimeManager.h"
 
 // NOTE: Make sure to run program with sudo in order to be able to delete data from db
-int main()
+int main(int argc, char **argv)
 {
     srand (time(NULL));
     std::cout << "Hello, World!" << std::endl;
-    PacketsReaderSQLITE reader = PacketsReaderSQLITE("../../db_file.sqlite");
-    FeatureExtractor extractor;
+
+    string filePath = "../../db_file.sqlite";
+    TimeManager timeManager(false);
+    if(argc>1)
+    {
+        timeManager = TimeManager(true);
+        filePath = argv[1];
+    }
+    PacketsReaderSQLITE reader = PacketsReaderSQLITE(filePath);
+
+    FeatureExtractor extractor(&timeManager);
+
     FeatureMapper mapper(5000,10,85);
     Parser* p = nullptr;
     AnomalyDetector* ad = nullptr;
+
+    std::ofstream file("values.txt");
 
     Communicator communicator;
     float min = 5;
@@ -32,20 +46,18 @@ int main()
     int a = 0;
     float maxThreshold=0;
     Manipulator* manipulator = nullptr;
-    while (cond)
-    {
+
+    while (cond) {
+        vector<float> stats;
         try {
-            pack = reader.getNextPacket();
-
-            a++;
-        }
-        catch (std::exception &e) {
-            //std::cout<<"been here"<<std::endl;
-            continue;
-        }
-        vector<float> stats = extractor.extractNewFeaturesVector(pack);
-
-
+                pack = reader.getNextPacket();
+                a++;
+            }
+            catch (std::exception &e) {
+                //std::cout<<"been here"<<std::endl;
+                continue;
+            }
+           stats = extractor.extractNewFeaturesVector(pack);
 
         if (p == nullptr) {
             if (!mapper.getState())
@@ -72,16 +84,18 @@ int main()
             // print the mapped features
 
 
-            std::pair<float,bool> result = ad->performAD(featuresMap);
+            std::pair<float,bool> result = ad->perform(featuresMap);
             if(result.second)
                 maxThreshold = std::max(maxThreshold,result.first);
+
             else
             {
                 if(manipulator == nullptr)
                     manipulator = new Manipulator(maxThreshold);
-
+                file<<result.first<<"---"<<a<<std::endl;
                 int val = manipulator->calcLevel(result.first);
                 if(val != 0)
+                    std::cout<<"Anomaly: "<<val << " Num: "<<a<<std::endl;
                     communicator.sendMessage(Event(pack.getSourceIP(),val,pack.getArrivalTime()));
             }
         }

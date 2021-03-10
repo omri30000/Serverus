@@ -52,25 +52,7 @@ AnomalyDetector& AnomalyDetector::getInstance(int numOfFeatures, int amountToLea
     return instance;
 }
 
-/*
-The function will check weather the AD should perform training or execution and perform the action
-input: the mapped features of a specific packet
-output: anomaly score of the packet (meaningless)
-*/
-float AnomalyDetector::perform(valarray<valarray<float>> input)
-{
-    float anomalyScore = 0;
-    static float max = 0;
 
-    if (this->_trainedInstancesAmount > this->_amountToLearn) {
-        anomalyScore = this->calcAnomalyScore(input);
-    }
-    else {
-        this->train(input);
-    }
-
-    return anomalyScore;
-}
 
 /*
 The function will train the model and calc the anomaly score during training (not for use)
@@ -108,8 +90,14 @@ float AnomalyDetector::calcAnomalyScore(valarray<valarray<float>> input)
 
     return this->_outputLayer.feedForward(inputOfOutputLayer);
 }
+/*
+The function will check weather the AD should perform training or execution and perform the action
+input: the mapped features of a specific packet
+output: std::pair- {anomaly score of the packet (meaningless), is the train finished}
+*/
 
-std::pair<float, bool> AnomalyDetector::performAD(valarray<valarray<float>> input)
+
+std::pair<float, bool> AnomalyDetector::perform(valarray<valarray<float>> input)
 {
     float anomalyScore = 0;
     bool isTrain= this->_trainedInstancesAmount <=  this->_amountToLearn;
@@ -117,6 +105,9 @@ std::pair<float, bool> AnomalyDetector::performAD(valarray<valarray<float>> inpu
     if(isTrain)
     {
         anomalyScore = this->train(input);
+        //no score before 100 batches
+        anomalyScore = this->_trainedInstancesAmount > 100 ? anomalyScore : 0;
+        std::cout<<"train: "<<anomalyScore<<std::endl;
     }
     else
     {

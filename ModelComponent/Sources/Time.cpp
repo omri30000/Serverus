@@ -17,7 +17,7 @@ Time::Time()
     this->_hour = 0;
     this->_minute = 0;
     this->_second = 0;
-    this->_miliSec = 0;
+    this->_microSec = 0;
 }
 Time::Time(int i)
 {
@@ -30,7 +30,7 @@ Time::Time(int i)
     this->_hour = now->tm_hour;
     this->_minute = now->tm_min;
     this->_second = now->tm_sec;
-    this->_miliSec = 0; // unnecessary
+    this->_microSec = 0; // unnecessary
     this->_isFirst = false;
 
 }
@@ -44,10 +44,10 @@ Time::Time(const Time& other)
     this->_hour = other.getHour();
     this->_minute = other.getMinute();
     this->_second = other.getSecond();
-    this->_miliSec = other.getMiliSec();
+    this->_microSec = other.getMicroSec();
 }
 
-Time::Time(int year, int month, int day, int hour, int minute, int second, int miliSec)
+Time::Time(int year, int month, int day, int hour, int minute, int second, int microSec)
 {
     this->_isFirst = false;
     this->_year = year;
@@ -56,14 +56,14 @@ Time::Time(int year, int month, int day, int hour, int minute, int second, int m
     this->_hour = hour;
     this->_minute = minute;
     this->_second = second;
-    this->_miliSec = miliSec;
+    this->_microSec = microSec;
 }
 
 
 Time::Time(string time)
 {
     //string argument example: "2020-12-28 13:49:10.987621"
-    string t = time.substr(0, time.length() - 3); // "2020-12-28 13:49:10.987"
+    string t = time.substr(0, time.length() ); // "2020-12-28 13:49:10.987621"
 
     this->_year = std::stoi(t.substr(0, t.find('-'))); // 2020
     t = t.substr(t.find('-') + 1); // "12-28 13:49:10.987"
@@ -81,9 +81,9 @@ Time::Time(string time)
     t = t.substr(t.find(':') + 1); // "10.987"
 
     this->_second = std::stoi(t.substr(0, t.find('.'))); // 10
-    t = t.substr(t.find('.') + 1); // "987"
+    t = t.substr(t.find('.') + 1); // "987621"
 
-    this->_miliSec = std::stoi(t); // 987
+    this->_microSec = std::stoi(t); // 987621
 
     this->_isFirst = false;
 }
@@ -98,7 +98,7 @@ long Time::operator-(const Time other) const
         return 0;
 
     long diff = 0;
-    diff += this->_miliSec - other._miliSec;
+    diff += (this->_microSec - other._microSec)/1000;
     diff += (this->_second - other._second)*1000;
     diff += (this->_minute - other._minute) * 1000 * 60;
     diff += (this->_hour - other._hour) * 1000 * 60 * 60;
@@ -118,7 +118,7 @@ Time& Time::operator= (const Time& other)
     this->_hour = other._hour;
     this->_minute = other._minute;
     this->_second = other._second;
-    this->_miliSec = other._miliSec;
+    this->_microSec = other._microSec;
     this->_isFirst = other._isFirst;
 
     return *this;
@@ -149,7 +149,7 @@ string Time::toString()
                 padNumber(this->_hour,2) + ":" +
                 padNumber(this->_minute,2) + ":" +
                 padNumber(this->_second,2) + "." +
-                padNumber(this->_miliSec,3);
+                padNumber(this->_microSec,6);
     
     return s;
 }
@@ -173,5 +173,5 @@ void Time::setMinute(int minute) { this->_minute = minute; }
 int Time::getMinute() const{ return this->_minute; }
 void Time::setSecond(int second) { this->_second = second; } 
 int Time::getSecond() const { return this->_second; }
-void Time::setMiliSec(int miliSec) { this->_miliSec = miliSec; } 
-int Time::getMiliSec() const{ return this->_miliSec; }
+void Time::setMicroSec(int microSec) { this->_microSec = microSec; }
+int Time::getMicroSec() const{ return this->_microSec; }

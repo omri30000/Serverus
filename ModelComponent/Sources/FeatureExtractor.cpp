@@ -6,9 +6,12 @@
 
 const vector<float> FeatureExtractor::DEFAULT_LAMBDAS= {0.01,0.1,1,3,5};
 //constructors
-FeatureExtractor::FeatureExtractor() : FeatureExtractor(FeatureExtractor::DEFAULT_LAMBDAS) {}
 
-FeatureExtractor::FeatureExtractor(vector<float> lambdas)
+FeatureExtractor::FeatureExtractor(TimeManager *timeManager) : FeatureExtractor(FeatureExtractor::DEFAULT_LAMBDAS,timeManager)
+{
+
+}
+FeatureExtractor::FeatureExtractor(vector<float> lambdas,TimeManager* timeManager):_channelJitter(timeManager),_socketSize(timeManager),_channelSize(timeManager)
 {
     this->_lambdas = lambdas;
 }

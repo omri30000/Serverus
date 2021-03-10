@@ -14,7 +14,7 @@ private:
     int _hour;
     int _minute;
     int _second;
-    int _miliSec;
+    int _microSec;
 
     bool _isFirst;
 
@@ -22,7 +22,7 @@ private:
 
 public:
     Time();
-    Time(int year, int month, int day, int hour, int minute, int second, int miliSec);
+    Time(int year, int month, int day, int hour, int minute, int second, int microSec);
     Time(string time);
     Time(const Time& other); // copy constructor
 
@@ -44,8 +44,8 @@ public:
     int getMinute() const;
     void setSecond(int second);
     int getSecond() const;
-    void setMiliSec(int miliSec);
-    int getMiliSec() const;
+    void setMicroSec(int miliSec);
+    int getMicroSec() const;
 
     static const int DAY;
 
