@@ -22,3 +22,8 @@ string IncStatsDataSocket::getForeignKey(Packet pack)
 {
     return  pack.getDestIP() + ':' + pack.getDestPort() +'+'+ pack.getSourceIP() + ":"+pack.getSourcePort();
 }
+
+IncStatsDataSocket::IncStatsDataSocket(TimeManager *timeManager) : IncStatsData(timeManager)
+{
+
+}

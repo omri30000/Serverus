@@ -12,17 +12,29 @@
 #include "../Headers/utils.h"
 #include "../Headers/Manipulator.h"
 #include <fstream>
+#include "../Headers/TimeManager.h"
 
 // NOTE: Make sure to run program with sudo in order to be able to delete data from db
-int main()
+int main(int argc, char **argv)
 {
     srand (time(NULL));
     std::cout << "Hello, World!" << std::endl;
-    PacketsReaderSQLITE reader = PacketsReaderSQLITE("../../../db_mirai.sqlite");
-    FeatureExtractor extractor;
+
+    string filePath = "../../db_file.sqlite";
+    TimeManager timeManager(false);
+    if(argc>1)
+    {
+        timeManager = TimeManager(true);
+        filePath = argv[1];
+    }
+    PacketsReaderSQLITE reader = PacketsReaderSQLITE(filePath);
+
+    FeatureExtractor extractor(&timeManager);
+
     FeatureMapper mapper(5000,10,85);
     Parser* p = nullptr;
     AnomalyDetector* ad = nullptr;
+
     std::ofstream file("values.txt");
 
     Communicator communicator;

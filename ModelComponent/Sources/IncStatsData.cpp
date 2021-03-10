@@ -2,10 +2,12 @@
 #include <algorithm>
 
 //constructor
-IncStatsData::IncStatsData()
+IncStatsData::IncStatsData(TimeManager* timeManager)
 {
+
     _cleaningThread =  std::thread(&IncStatsData::cleanInactiveStats,this,10);
     _isRunning = true;
+    _timeManager = timeManager;
 }
 
 IncStatsData::~IncStatsData()
@@ -296,7 +298,7 @@ void IncStatsData::cleanInactiveStats(float limit)
         {
             for (int i = 0; i < stream.second.size(); ++i)
             {
-                float diff = (Time(1) - stream.second[i]->getLastTime() );
+                float diff = (_timeManager->getLastTime() - stream.second[i]->getLastTime() );
                 if(stream.second[i]->getWeight() < limit && diff > Time::DAY)
                 {
                     // last time > day

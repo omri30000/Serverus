@@ -23,3 +23,8 @@ string IncStatsDataChannel::getForeignKey(Packet pack)
 {
     return pack.getDestIP()  + '+' + pack.getSourceIP();
 }
+
+IncStatsDataChannel::IncStatsDataChannel(TimeManager *timeManager) : IncStatsData(timeManager) {
+
+}
+

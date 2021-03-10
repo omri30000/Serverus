@@ -3,6 +3,7 @@
 #include "../Headers/IncStats.h"
 #include "../Headers/RelativeIncStats.h"
 #include "../Headers/Time.h"
+#include "../Headers/TimeManager.h"
 
 #include <map>
 #include <string>
@@ -29,6 +30,7 @@ protected:
     bool _isRunning;
     std::thread _cleaningThread;
 
+    TimeManager* _timeManager;
     bool isStreamExists(string key) const;
     bool isRelStreamExists(string key) const;
     void cleanInactiveStats(float limit);
@@ -36,7 +38,7 @@ protected:
     void deleteStream(string key);
 
 public:
-    IncStatsData();
+    IncStatsData(TimeManager* timeManager);
     ~IncStatsData();
     vector<IncStats*> registerStream(string uniqueKey) throw();
     vector<RelativeIncStats*> registerRelatedStreams(string key, Time timestamp) throw();
