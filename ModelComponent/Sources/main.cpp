@@ -18,7 +18,7 @@ int main()
 {
     srand (time(NULL));
     std::cout << "Hello, World!" << std::endl;
-    PacketsReaderSQLITE reader = PacketsReaderSQLITE("../../../db_file.sqlite");
+    PacketsReaderSQLITE reader = PacketsReaderSQLITE("../../../db_mirai.sqlite");
     FeatureExtractor extractor;
     FeatureMapper mapper(5000,10,85);
     Parser* p = nullptr;
@@ -34,19 +34,30 @@ int main()
     int a = 0;
     float maxThreshold=0;
     Manipulator* manipulator = nullptr;
-    while (cond)
-    {
-        try {
-            pack = reader.getNextPacket();
+    vector<vector<float>> _learningValues;
+    while (cond) {
+        vector<float> stats;
+        if (a <= 55000 || _learningValues.size() == 0) {
+            try {
+                pack = reader.getNextPacket();
 
+                a++;
+
+            }
+            catch (std::exception &e) {
+                //std::cout<<"been here"<<std::endl;
+                continue;
+            }
+           stats = extractor.extractNewFeaturesVector(pack);
+            if(a > 5000 &&  a<=55000)
+                _learningValues.push_back(stats);
+        }
+        else
+        {
+            stats = _learningValues[0];
+            _learningValues.erase(_learningValues.begin());
             a++;
         }
-        catch (std::exception &e) {
-            //std::cout<<"been here"<<std::endl;
-            continue;
-        }
-        vector<float> stats = extractor.extractNewFeaturesVector(pack);
-
 
 
         if (p == nullptr) {
