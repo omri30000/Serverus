@@ -1,3 +1,5 @@
+import time
+
 from flask import Flask
 from flask import render_template
 from flask import request
@@ -15,7 +17,7 @@ db_manager = DatabaseManager.DatabaseManager(db_file_name=config.DB_FILE_NAME)
 
 
 def main():
-    app.run(debug=True, port=80, host="0.0.0.0")
+    app.run(debug=True)  # , port=80, host="0.0.0.0")
 
 
 @app.route("/")  # if we use the domain only, we'll get here
@@ -70,21 +72,20 @@ def dashboard_page():
         return redirect(url_for("login_page"))
 
 
-@app.route("/rules")
+@app.route("/rule")
 def rule_management_page():
     if "userID" in session:  # the user is connected
-        data = db_manager.get_all_rules()
-        return render_template("rules.html", content=data, user_id=session["userID"])
+        return render_template("rules.html", content=db_manager.get_all_rules(session["userID"]))
     else:
         return redirect(url_for("login_page"))
 
 
-@app.route("/addRule")
-def add_rule():
+@app.route("/addRule/<value>")
+def add_rule(value):
     if "userID" in session:  # the user is connected
-        rule = request.get_string()
+        rule = value
         db_manager.add_rule(session["userID"], rule)
-        return render_template("rules.html", content=db_manager.get_all_rules(), user_id=session["userID"])
+        return redirect(url_for("rule_management_page"))
     else:
         return redirect(url_for("login_page"))
 

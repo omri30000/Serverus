@@ -29,10 +29,7 @@
           content: "input",
         })
         .then((value) => {
-            fetch('/rules')
-              .then(function () {
-                  return value;
-              });
+            fetch('/addRule/' + value)
         });
     }
     </script>
@@ -40,13 +37,11 @@
     <button class="w-100 btn btn-lg btn-primary" type="submit" onclick="addRuleClicked()">Add rule</button>
 
     <div class="row">
-        {% for id, data, creator in content %}
-            {% if creator == user_id %}
-                <div class="column" style="background-color:#aaa;">
-                    <h2>Rule No.{{ id }}</h2>
-                    <p>{{ data }}</p>
-                </div>
-            {% endif %}
+        {% for id, data in content %}
+            <div class="column" style="background-color:#aaa;">
+                <h2>Rule No.{{ id }}</h2>
+                <p>{{ data }}</p>
+            </div>
         {% endfor %}
     </div>
 
