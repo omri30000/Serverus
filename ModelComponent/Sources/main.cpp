@@ -46,31 +46,18 @@ int main(int argc, char **argv)
     int a = 0;
     float maxThreshold=0;
     Manipulator* manipulator = nullptr;
-    vector<vector<float>> _learningValues;
+
     while (cond) {
         vector<float> stats;
-        if (a <= 55000 || _learningValues.size() == 0) {
-            try {
+        try {
                 pack = reader.getNextPacket();
-
                 a++;
-
             }
             catch (std::exception &e) {
                 //std::cout<<"been here"<<std::endl;
                 continue;
             }
            stats = extractor.extractNewFeaturesVector(pack);
-            if(a > 5000 &&  a<=55000)
-                _learningValues.push_back(stats);
-        }
-        else
-        {
-            stats = _learningValues[0];
-            _learningValues.erase(_learningValues.begin());
-            a++;
-        }
-
 
         if (p == nullptr) {
             if (!mapper.getState())
@@ -100,6 +87,7 @@ int main(int argc, char **argv)
             std::pair<float,bool> result = ad->perform(featuresMap);
             if(result.second)
                 maxThreshold = std::max(maxThreshold,result.first);
+
             else
             {
                 if(manipulator == nullptr)
@@ -108,7 +96,7 @@ int main(int argc, char **argv)
                 int val = manipulator->calcLevel(result.first);
                 if(val != 0)
                     std::cout<<"Anomaly: "<<val << " Num: "<<a<<std::endl;
-                    //communicator.sendMessage(Event(pack.getSourceIP(),val,pack.getArrivalTime()));
+                    communicator.sendMessage(Event(pack.getSourceIP(),val,pack.getArrivalTime()));
             }
         }
     }
