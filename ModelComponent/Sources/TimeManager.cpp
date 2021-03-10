@@ -12,7 +12,7 @@ TimeManager::TimeManager(bool state)
 
 void TimeManager::updateTime(Time newTime)
 {
-    _lastSeen = newDate;
+    _lastSeen = newTime;
 }
 /*
  This function returns the last seen time, if forensics
