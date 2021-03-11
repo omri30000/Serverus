@@ -22,7 +22,11 @@ def main():
 
 @app.route("/")  # if we use the domain only, we'll get here
 def home_page():
-    return render_template("index.html")
+    if "userID" in session:
+        base_page = "userBase.html"
+    else:
+        base_page = "guestBase.html"
+    return render_template("index.html", base=base_page)
 
 
 @app.route("/login", methods=["POST", "GET"])
