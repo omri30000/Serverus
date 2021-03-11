@@ -72,20 +72,26 @@ def dashboard_page():
         return redirect(url_for("login_page"))
 
 
-@app.route("/rule")
+@app.route("/rule", methods=["POST", "GET"])
 def rule_management_page():
     if "userID" in session:  # the user is connected
-        return render_template("rules.html", content=db_manager.get_all_rules(session["userID"]))
+        if request.method == "POST":
+            return redirect(url_for("add_rule_page"))
+        else:
+            return render_template("rules.html", content=db_manager.get_all_rules(session["userID"]))
     else:
         return redirect(url_for("login_page"))
 
 
-@app.route("/addRule/<value>")
-def add_rule(value):
+@app.route("/addRule", methods=["POST", "GET"])
+def add_rule_page():
     if "userID" in session:  # the user is connected
-        rule = value
-        db_manager.add_rule(session["userID"], rule)
-        return redirect(url_for("rule_management_page"))
+        if request.method == "POST":
+            rule = request.form["rule data"]
+            db_manager.add_rule(session["userID"], rule)
+            return redirect(url_for("rule_management_page"))
+        else:  # GET request
+            return render_template("addRule.html")
     else:
         return redirect(url_for("login_page"))
 

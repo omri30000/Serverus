@@ -22,24 +22,18 @@
 {% endblock %}
 
 {% block content %}
-    <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
-    <script>
-        function addRuleClicked(){
-            fetch('/addRule');
-        }
-    </script>
 
-    <form method="post" action="#">
-        <button class="w-100 btn btn-lg btn-primary" type="submit">Add Rule</button>
-    </form>
+<main class="form-signin">
+    <center>
+        <form method="post" action="#">
+            <h1 class="h3 mb-3 fw-normal">Enter new rule</h1>
+            <label for="ruleData" class="visually-hidden">Rule</label>
+            <input type="text" name="rule data" id="ruleData" class="form-control" placeholder="" required>
+            <br>
 
-    <div class="row">
-        {% for id, data in content %}
-            <div class="column" style="background-color:#aaa;">
-                <h2>Rule No.{{ id }}</h2>
-                <p>{{ data }}</p>
-            </div>
-        {% endfor %}
-    </div>
+            <button class="w-100 btn btn-lg btn-primary" type="submit">Add Rule</button>
+        </form>
+    </center>
+</main>
 
 {% endblock %}
