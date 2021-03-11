@@ -87,6 +87,14 @@ class DatabaseManager:
         self.db_cursor.execute(sql_statement)
         self.db.commit()
 
+    def remove_rule(self, user_identifier, rule_identifier):
+        product_id = self.get_product_id(user_identifier)
+        sql_statement = "DELETE FROM Events WHERE id = " + str(rule_identifier) + \
+                        " AND productId = " + str(product_id)
+
+        self.db_cursor.execute(sql_statement)
+        self.db.commit()
+
     def __insert_product(self):
         d = str(datetime.datetime.now())
         sql_statement = "INSERT INTO Products (joinDate, lastSeenDate) VALUES (\'" + d + \

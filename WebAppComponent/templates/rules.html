@@ -29,8 +29,12 @@
         }
     </script>
 
-    <form method="post" action="#">
+    <form method="get" action="/addRule">
         <button class="w-100 btn btn-lg btn-primary" type="submit">Add Rule</button>
+    </form>
+
+    <form method="get" action="/removeRule">
+        <button class="w-100 btn btn-lg btn-primary" type="submit">Remove Rule</button>
     </form>
 
     <div class="row">
@@ -38,6 +42,12 @@
             <div class="column" style="background-color:#aaa;">
                 <h2>Rule No.{{ id }}</h2>
                 <p>{{ data }}</p>
+                <!--<form method="post" action="/removeRule">
+                    <label for="trash" name="trash" class="visually-hidden">{{ id }}</label>
+                    <button name="trash{{ id }}" type="submit">
+                        <img class="mb-4" src="{{url_for('static', filename='assets/garbage.png')}}" alt="" width="70" height="57">
+                    </button>
+                </form>-->
             </div>
         {% endfor %}
     </div>
