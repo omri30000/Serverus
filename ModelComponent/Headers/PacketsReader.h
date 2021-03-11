@@ -23,7 +23,7 @@ class PacketsReader
         int _cursor;
         string _dbFilePath;
 
-        virtual void removeOutgoingPackets() = 0;
+        virtual void removeOutgoingPackets(){};
         
         static string execTerminalCommand(const char* cmd);
 

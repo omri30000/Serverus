@@ -1,5 +1,6 @@
 from scapy.all import *
 import datetime
+import json
 
 class Packet:
     def __init__(self, pack):
@@ -114,3 +115,18 @@ class Packet:
         ",\'" + self.data + "\',\'" + str(self.arrival_time) + "\')"
         
         return statement
+
+    def cast_to_json(self):
+        res = {
+            "source_mac" : self.source_mac,
+            "destination_mac" : self.dest_mac,
+            "source_IP" : self.source_IP,
+            "dest_IP" : self.dest_IP,
+            "source_port" : self.source_port,
+            "dest_port" : self.dest_port,
+            "protocol" : self.protocol,
+            "length" : str(self.length),
+            "arrival_time" : str(self.arrival_time)
+
+        }
+        return str(list(res.values()))[1:-1].replace("'","")

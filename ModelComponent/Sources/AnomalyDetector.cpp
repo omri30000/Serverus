@@ -107,7 +107,7 @@ std::pair<float, bool> AnomalyDetector::perform(valarray<valarray<float>> input)
         anomalyScore = this->train(input);
         //no score before 100 batches
         anomalyScore = this->_trainedInstancesAmount > 100 ? anomalyScore : 0;
-        std::cout<<"train: "<<anomalyScore<<std::endl;
+        //std::cout<<"train: "<<anomalyScore<<std::endl;
     }
     else
     {
