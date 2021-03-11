@@ -4,6 +4,7 @@
 PacketsReaderSQLITE::PacketsReaderSQLITE(string filePath) :PacketsReader(filePath)
 {
     int status = 0;
+    _next = 1;
     this->_lastDate = "0000-00-00 00:00:00.000000";
     status = sqlite3_open(filePath.c_str(), &this->_dbFile);
     sqlite3_exec(this->_dbFile, "pragma journal_mode = WAL", NULL, NULL, NULL);
@@ -25,8 +26,10 @@ PacketsReaderSQLITE::~PacketsReaderSQLITE()
 
 
 Packet PacketsReaderSQLITE::getNextPacket() {
-    string sqlStatement = "SELECT * FROM packets WHERE arrival_time > \"" + this->_lastDate
+    string sqlStatement2 = "SELECT * FROM packets WHERE arrival_time > \"" + this->_lastDate
             + "\" ORDER BY arrival_time LIMIT 1";
+
+    string sqlStatement = "SELECT * FROM packets WHERE id =  " + std::to_string(_next);
 
     vector<string> record;
 
@@ -38,6 +41,7 @@ Packet PacketsReaderSQLITE::getNextPacket() {
     }
     Packet p(record,0);
     this->_lastDate = p.getArrivalTime().toString();
+    _next++;
 
     //std::thread t =  std::thread(&PacketsReaderSQLITE::removeSeenPackets,this);
     //t.detach();

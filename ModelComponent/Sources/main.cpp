@@ -13,6 +13,8 @@
 #include "../Headers/Manipulator.h"
 #include <fstream>
 #include "../Headers/TimeManager.h"
+#include "../Headers/PacketsReaderMQ.h"
+
 
 // NOTE: Make sure to run program with sudo in order to be able to delete data from db
 int main(int argc, char **argv)
@@ -22,16 +24,18 @@ int main(int argc, char **argv)
 
     string filePath = "../../db_file.sqlite";
     TimeManager timeManager(false);
+
     if(argc>1)
     {
         timeManager = TimeManager(true);
         filePath = argv[1];
     }
-    PacketsReaderSQLITE reader = PacketsReaderSQLITE(filePath);
 
+    //PacketsReaderSQLITE reader = PacketsReaderSQLITE(filePath);
+    PacketsReaderMQ reader = PacketsReaderMQ();
     FeatureExtractor extractor(&timeManager);
 
-    FeatureMapper mapper(5000,10,85);
+    FeatureMapper mapper(500,10,85);
     Parser* p = nullptr;
     AnomalyDetector* ad = nullptr;
 
@@ -46,12 +50,23 @@ int main(int argc, char **argv)
     int a = 0;
     float maxThreshold=0;
     Manipulator* manipulator = nullptr;
+    int t0 = time(NULL);
+
+
+
 
     while (cond) {
         vector<float> stats;
         try {
                 pack = reader.getNextPacket();
                 a++;
+                if(a%1000 ==0)
+                {
+                    std::cout << a <<" ";
+                    int t1 = time(NULL);
+                    std::cout<<t1-t0<<std::endl;
+                    t0 = t1;
+                }
             }
             catch (std::exception &e) {
                 //std::cout<<"been here"<<std::endl;
@@ -72,7 +87,7 @@ int main(int argc, char **argv)
                 {
                     size.push_back(vec[i].size());
                 }
-                ad = &AnomalyDetector::getInstance(85, 50000, 0.05, 0.75, size);
+                ad = &AnomalyDetector::getInstance(85, 5000, 0.05, 0.75, size);
 
                 //exit(1);
             }
@@ -94,9 +109,9 @@ int main(int argc, char **argv)
                     manipulator = new Manipulator(maxThreshold);
                 file<<result.first<<"---"<<a<<std::endl;
                 int val = manipulator->calcLevel(result.first);
-                if(val != 0)
+                /*if(val != 0)
                     std::cout<<"Anomaly: "<<val << " Num: "<<a<<std::endl;
-                    communicator.sendMessage(Event(pack.getSourceIP(),val,pack.getArrivalTime()));
+                    communicator.sendMessage(Event(pack.getSourceIP(),val,pack.getArrivalTime()));*/
             }
         }
     }
