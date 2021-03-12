@@ -22,12 +22,6 @@
 {% endblock %}
 
 {% block content %}
-    <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
-    <script>
-        function addRuleClicked(){
-            fetch('/addRule');
-        }
-    </script>
 
     <form method="get" action="/addRule">
         <button class="w-100 btn btn-lg btn-primary" type="submit">Add Rule</button>

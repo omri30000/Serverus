@@ -71,7 +71,8 @@ def register_page():
 @app.route("/dashboard")
 def dashboard_page():
     if "userID" in session:  # the user is connected
-        return render_template("dashboard.html")
+        # request method is always GET
+        return render_template("dashboard.html", content=db_manager.get_all_events(session["userID"]))
     else:
         return redirect(url_for("login_page"))
 

@@ -71,6 +71,23 @@ class DatabaseManager:
 
         return rows
 
+    def get_all_events(self, user_id):
+        """
+        The function will provide all the Events of a specific product in the db
+        :param user_id: the identifier of a user
+        :type user_id: int
+        :return: all the events of the product of the given user
+        :rtype: list(list(event_id, attacker ip, block level))
+        """
+        sql_statement = "SELECT id, attackerIP, blockLevel FROM Events WHERE productId = " + str(self.get_product_id(user_id))
+        self.db_cursor.execute(sql_statement)
+        rows = self.db_cursor.fetchall()
+
+        for i in range(len(rows)):
+            rows[i] = list(rows[i])
+
+        return rows
+
     def get_product_id(self, user_id):
         sql_statement = "SELECT productId FROM Users WHERE id = " + str(user_id) + ";"
         self.db_cursor.execute(sql_statement)
