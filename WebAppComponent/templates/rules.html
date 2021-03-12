@@ -22,6 +22,30 @@
 {% endblock %}
 
 {% block content %}
+    <center>
+        <h1>Rule Management</h1>
+        <br><br>
+    </center>
+
+    <div class="row">
+        {% for id, data in content %}
+            <div class="column" style="background-color:#aaa;">
+                <h2>Rule No.{{ id }}</h2>
+                <!--<form method="post" action="/removeRule">
+                    <label for="trash" name="trash" class="visually-hidden">{{ id }}</label>
+                    <button name="trash{{ id }}" type="submit">
+                        <img class="mb-4" src="{{url_for('static', filename='assets/garbage.png')}}" alt="" width="70" height="57">
+                    </button>
+                </form>-->
+            </div>
+            <div class="column" style="background-color:#aab;">
+                <p>{{ data }}</p>
+            </div>
+            <div class="column">
+                <br>
+            </div>
+        {% endfor %}
+    </div>
 
     <form method="get" action="/addRule">
         <button class="w-100 btn btn-lg btn-primary" type="submit">Add Rule</button>
@@ -30,20 +54,4 @@
     <form method="get" action="/removeRule">
         <button class="w-100 btn btn-lg btn-primary" type="submit">Remove Rule</button>
     </form>
-
-    <div class="row">
-        {% for id, data in content %}
-            <div class="column" style="background-color:#aaa;">
-                <h2>Rule No.{{ id }}</h2>
-                <p>{{ data }}</p>
-                <!--<form method="post" action="/removeRule">
-                    <label for="trash" name="trash" class="visually-hidden">{{ id }}</label>
-                    <button name="trash{{ id }}" type="submit">
-                        <img class="mb-4" src="{{url_for('static', filename='assets/garbage.png')}}" alt="" width="70" height="57">
-                    </button>
-                </form>-->
-            </div>
-        {% endfor %}
-    </div>
-
 {% endblock %}
