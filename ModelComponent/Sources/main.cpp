@@ -25,7 +25,7 @@ int main(int argc, char **argv)
     string filePath = "../../db_file.sqlite";
     TimeManager timeManager(false);
 
-    if(argc>1)
+    if(argc>=1)
     {
         timeManager = TimeManager(true);
     }

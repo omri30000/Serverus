@@ -4,6 +4,7 @@
 #include <iomanip>
 
 const int Time::DAY =24*60*60*1000;
+const int Time::HOUR =60*60*1000;
 
 
 Time::Time()

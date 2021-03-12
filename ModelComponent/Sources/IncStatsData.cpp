@@ -299,7 +299,7 @@ void IncStatsData::cleanInactiveStats(float limit)
             for (int i = 0; i < stream.second.size(); ++i)
             {
                 float diff = (_timeManager->getLastTime() - stream.second[i]->getLastTime() );
-                if(stream.second[i]->getWeight() < limit && diff > Time::DAY)
+                if(stream.second[i]->getWeight() < limit && diff > Time::HOUR)
                 {
                     // last time > day
                     toRemove.push_back(stream.first);
@@ -312,7 +312,8 @@ void IncStatsData::cleanInactiveStats(float limit)
 
         vector<string> toRemoveRelative;
 
-        for(string remove : toRemove) {
+        for(string remove : toRemove)
+        {
 
             this->deleteStream(remove);
 

@@ -48,6 +48,7 @@ public:
     int getMicroSec() const;
 
     static const int DAY;
+    static const int HOUR;
 
     Time(int i);
 };
