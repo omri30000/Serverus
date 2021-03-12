@@ -1,0 +1,1 @@
+DB_FILE_NAME="/home/ofir/Music/general_db.sqlite"
