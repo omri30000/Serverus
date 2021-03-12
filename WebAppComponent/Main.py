@@ -17,7 +17,7 @@ db_manager = DatabaseManager.DatabaseManager(db_file_name=config.DB_FILE_NAME)
 
 
 def main():
-    app.run(debug=True)  # , port=80, host="0.0.0.0")
+    app.run(debug=True, port=config.WEB_LISTEN_PORT, host=config.HOST)
 
 
 @app.route("/")  # if we use the domain only, we'll get here
