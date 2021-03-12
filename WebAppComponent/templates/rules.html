@@ -1,0 +1,55 @@
+{% extends "userBase.html" %}
+
+{% block css %}
+    <link href="{{url_for('static', filename='css/rules.css')}}" rel="stylesheet">
+    <link rel="canonical" href="https://getbootstrap.com/docs/5.0/examples/sign-in/">
+
+    <style>
+      .bd-placeholder-img {
+        font-size: 1.125rem;
+        text-anchor: middle;
+        -webkit-user-select: none;
+        -moz-user-select: none;
+        user-select: none;
+      }
+
+      @media (min-width: 768px) {
+        .bd-placeholder-img-lg {
+          font-size: 3.5rem;
+        }
+      }
+    </style>
+{% endblock %}
+
+{% block content %}
+    <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+    <script>
+        function addRuleClicked(){
+            fetch('/addRule');
+        }
+    </script>
+
+    <form method="get" action="/addRule">
+        <button class="w-100 btn btn-lg btn-primary" type="submit">Add Rule</button>
+    </form>
+
+    <form method="get" action="/removeRule">
+        <button class="w-100 btn btn-lg btn-primary" type="submit">Remove Rule</button>
+    </form>
+
+    <div class="row">
+        {% for id, data in content %}
+            <div class="column" style="background-color:#aaa;">
+                <h2>Rule No.{{ id }}</h2>
+                <p>{{ data }}</p>
+                <!--<form method="post" action="/removeRule">
+                    <label for="trash" name="trash" class="visually-hidden">{{ id }}</label>
+                    <button name="trash{{ id }}" type="submit">
+                        <img class="mb-4" src="{{url_for('static', filename='assets/garbage.png')}}" alt="" width="70" height="57">
+                    </button>
+                </form>-->
+            </div>
+        {% endfor %}
+    </div>
+
+{% endblock %}
