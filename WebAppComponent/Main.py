@@ -39,13 +39,16 @@ def login_page():
             # find user in data base and add to session:
             user_name = request.form["usernameName"]
             password = request.form["passwordName"]
-            if db_manager.check_login(user_name, password):
 
-                session["userID"] = db_manager.get_user_id(user_name)
-                return redirect(url_for("dashboard_page"))
+            if Utils.validate_input(user_name, password):
+                if db_manager.check_login(user_name, password):
+                    session["userID"] = db_manager.get_user_id(user_name)
+                    return redirect(url_for("dashboard_page"))
+                else:
+                    # todo: raise message
+                    return render_template("login.html")
             else:
-                flash('You were successfully logged in')
-                # todo: throw exception and raise message
+                # todo: raise message
                 return render_template("login.html")
 
         else:  
