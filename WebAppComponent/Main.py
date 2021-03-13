@@ -9,6 +9,7 @@ from flask import flash
 
 import DatabaseManager
 import config
+import Utils
 
 
 app = Flask(__name__)
@@ -61,9 +62,13 @@ def register_page():
         user_name = request.form["usernameName"]
         password = request.form["passwordName"]
         email = request.form["emailName"]
-        print(user_name, password)
-        session["userID"] = db_manager.insert_user(user_name, password)
-        return redirect(url_for("dashboard_page"))
+
+        if Utils.validate_input(user_name, password, email):
+            session["userID"] = db_manager.insert_user(user_name, password)
+            return redirect(url_for("dashboard_page"))
+        else:
+            return render_template("register.html")
+
     else:  # GET request
         return render_template("register.html")
 
