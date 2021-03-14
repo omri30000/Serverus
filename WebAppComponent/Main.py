@@ -86,7 +86,7 @@ def dashboard_page():
         return redirect(url_for("login_page"))
 
 
-@app.route("/rule", methods=["POST", "GET"])
+@app.route("/rule")
 def rule_management_page():
     if "userID" in session:  # the user is connected
         return render_template("rules.html", content=db_manager.get_all_rules(session["userID"]))
@@ -107,17 +107,13 @@ def add_rule_page():
         return redirect(url_for("login_page"))
 
 
-@app.route("/removeRule", methods=["POST", "GET"])
-def remove_rule():
-    if "userID" in session:  # the user is connected
-        if request.method == "POST":
-            rule_id = request.form["rule identifier"]
-            db_manager.remove_rule(session["userID"], rule_id)
-            return redirect(url_for("rule_management_page"))
-        else:
-            return render_template("removeRule.html")
-    else:
+@app.route("/removeRule/<identifier>")
+def remove_rule(identifier):
+    if "userID" not in session:  # user is not connected
         return redirect(url_for("login_page"))
+
+    db_manager.remove_rule(session["userID"], identifier)
+    return redirect(url_for("rule_management_page"))
 
 
 @app.route("/logout")

@@ -18,9 +18,10 @@
                 </div>
             </div>
             <br>
-            <div class="row">
+
+            {% for id, attacker_ip, block_level in content %}
                 <!--eventID, attackerIP, blockLevel-->
-                {% for id, attacker_ip, block_level in content %}
+                <div class="row">
                     <div class="col-sm">
                         <h5>{{ id }}</h5>
                     </div>
@@ -33,8 +34,9 @@
                     <div class="column">
                         <br>
                     </div>
-                {% endfor %}
-            </div>
+                </div>
+            {% endfor %}
+
         </div>
     </center>
 {% endblock %}
