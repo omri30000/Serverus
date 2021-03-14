@@ -67,6 +67,7 @@ def register_page():
         email = request.form["emailName"]
 
         if Utils.validate_input(user_name, password, email):
+            print("arg")
             session["userID"] = db_manager.insert_user(user_name, password)
             return redirect(url_for("dashboard_page"))
         else:
