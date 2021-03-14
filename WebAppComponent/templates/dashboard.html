@@ -3,27 +3,38 @@
 {% block content %}
     <center>
         <h1>Dashboard Page</h1>
-        <br>
-        <br>
+        <br><br>
+
+        <div class="container">
+            <div class="row">
+                <div class="col-sm">
+                    <h2>Date</h2>
+                </div>
+                <div class="col-sm">
+                    <h2>Attacker IP Address</h2>
+                </div>
+                <div class="col-sm">
+                    <h2>Block Level</h2>
+                </div>
+            </div>
+            <br>
+            <div class="row">
+                <!--eventID, attackerIP, blockLevel-->
+                {% for id, attacker_ip, block_level in content %}
+                    <div class="col-sm">
+                        <h5>{{ id }}</h5>
+                    </div>
+                    <div class="col-sm">
+                        <h5>{{ attacker_ip }}</h5>
+                    </div>
+                    <div class="col-sm">
+                        <h5>{{ block_level }}</h5>
+                    </div>
+                    <div class="column">
+                        <br>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
     </center>
-
-    <div class="row">
-        <!--eventID, attackerIP, blockLevel-->
-        {% for id, attacker_ip, block_level in content %}
-            <div class="column" style="background-color:#aaa;">
-                <h2>Date: {{ id }}</h2>
-            </div>
-            <div class="column" style="background-color:#aab;">
-                <h3>Attacker IP: {{ attacker_ip }}</h3>
-            </div>
-            <div class="column" style="background-color:#aac;">
-                <h3>Block level: {{ block_level }}</h3>
-            </div>
-            <div class="column">
-                <br>
-            </div>
-
-        {% endfor %}
-    </div>
-
 {% endblock %}
