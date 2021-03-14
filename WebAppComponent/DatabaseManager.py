@@ -77,9 +77,9 @@ class DatabaseManager:
         :param user_id: the identifier of a user
         :type user_id: int
         :return: all the events of the product of the given user
-        :rtype: list(list(event_id, attacker ip, block level))
+        :rtype: list(list(event date, attacker ip, block level))
         """
-        sql_statement = "SELECT id, attackerIP, blockLevel FROM Events WHERE productId = " + str(self.get_product_id(user_id))
+        sql_statement = "SELECT date, attackerIP, blockLevel FROM Events WHERE productId = " + str(self.get_product_id(user_id))
         self.db_cursor.execute(sql_statement)
         rows = self.db_cursor.fetchall()
 

@@ -6,8 +6,11 @@ PASSWORD_TEMPLATE = "^(?=.*[^a-zA-Z]).{8,40}$"
 
 
 def validate_input(username, password, email="valid@gmail.com"):
-    valid_email = re.search(EMAIL_TEMPLATE, email)
-    valid_username = re.search(USERNAME_TEMPLATE, username)
-    valid_password = re.search(PASSWORD_TEMPLATE, password)
+    try:
+        valid_email = re.search(EMAIL_TEMPLATE, email)
+        valid_username = re.search(USERNAME_TEMPLATE, username)
+        valid_password = re.search(PASSWORD_TEMPLATE, password)
+    except Exception as e:
+        return False
 
     return valid_email and valid_password and valid_username
