@@ -33,6 +33,7 @@ Packet PacketsReaderMQ::getNextPacket() {
         if(data[i] == ',')
         {
             parts.push_back("");
+            ++i;//there is a space after ','
             index++;
         }
         else

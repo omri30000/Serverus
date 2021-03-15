@@ -7,10 +7,10 @@
 Manipulator::Manipulator(float maxThreshold)
 {
     //levels[0] = maxThreshold;
-    levels[0] = maxThreshold*1.5;
-    levels[1] = maxThreshold*4;
-    levels[2] = maxThreshold*10;
-    levels[3] = maxThreshold*20;
+    levels[0] = maxThreshold*1.15;
+    levels[1] = maxThreshold*1.5;
+    levels[2] = maxThreshold*2;
+    levels[3] = maxThreshold*3;
 }
 
 int Manipulator::calcLevel(float anomalyScore)
