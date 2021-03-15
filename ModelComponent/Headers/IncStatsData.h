@@ -53,4 +53,6 @@ public:
     vector<float> getStatsTwoDimensions(string key) throw();
     void updateStatsTwoDimensions(string firstKey, Time timestamp, float value) const throw(); // TODO:not found
     string getCombinedKey(string key) const;
+
+    void deleteStream2D(string key);
 };

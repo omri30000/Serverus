@@ -53,8 +53,6 @@ int main(int argc, char **argv)
     int t0 = time(NULL);
 
 
-
-
     while (cond) {
         vector<float> stats;
         try {
@@ -66,14 +64,15 @@ int main(int argc, char **argv)
                     int t1 = time(NULL);
                     std::cout<<t1-t0<<std::endl;
                     t0 = t1;
-
                 }
             }
             catch (std::exception &e) {
                 //std::cout<<"been here"<<std::endl;
                 continue;
             }
-           stats = extractor.extractNewFeaturesVector(pack);
+
+            timeManager.updateTime(pack.getArrivalTime());
+            stats = extractor.extractNewFeaturesVector(pack);
 
         if (p == nullptr) {
             if (!mapper.getState())
@@ -105,15 +104,17 @@ int main(int argc, char **argv)
             if(result.second)
                 maxThreshold = std::max(maxThreshold,result.first);
 
-            else
-            {
-                if(manipulator == nullptr)
+            else {
+                if (manipulator == nullptr)
                     manipulator = new Manipulator(maxThreshold);
-                file<<result.first<<"---"<<a<<std::endl;
+
+                file << result.first << "---" << a << std::endl;
                 int val = manipulator->calcLevel(result.first);
-                if(val != 0)
-                    fileAnom<<"Anomaly: "<<val << " Num: "<<a<<std::endl;
+                if (val != 0) {
+                    fileAnom << "Anomaly: " << val << " Num: " << a << std::endl;
+                    extractor.deleteFromIncStats(pack);
                     //communicator.sendMessage(Event(pack.getSourceIP(),val,pack.getArrivalTime()));*/
+                }
             }
         }
     }

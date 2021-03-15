@@ -56,3 +56,17 @@ vector<float> FeatureExtractor::extractNewFeaturesVector(Packet pack) {
     return res;
 
 }
+/*
+ This function deletes all the streams a packets is belong
+ Input: pack - the packet to remove : Packet
+ Output: None
+ */
+void FeatureExtractor::deleteFromIncStats(Packet pack) {
+    string channelKey = this->_channelJitter.getStreamKey(pack);
+    string socketKey = this->_socketSize.getStreamKey(pack);
+
+    this->_channelSize.deleteStream2D(channelKey);
+    this->_channelJitter.deleteStream2D(channelKey);
+    this->_socketSize.deleteStream2D(socketKey);
+}
+

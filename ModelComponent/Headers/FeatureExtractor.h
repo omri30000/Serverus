@@ -29,6 +29,7 @@ public:
     ~FeatureExtractor() = default;
     FeatureExtractor(vector<float> lambdas,TimeManager* timeManager);
 
+    void deleteFromIncStats(Packet p);
     vector<float> extractNewFeaturesVector(Packet pack);
 };
 

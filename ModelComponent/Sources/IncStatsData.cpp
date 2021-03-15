@@ -250,7 +250,18 @@ bool IncStatsData::isRelStreamExists(string key) const
 	return true;
 }
 
-string IncStatsData::getCombinedKey(string key) const {
+string IncStatsData::getCombinedKey(string first, string second) const
+{
+
+    if(first.compare(second) <0)
+        return first +"+" + second;
+    return second + "+" + first;
+
+
+}
+
+string IncStatsData::getCombinedKey(string key) const
+{
     string parts[2];
     int place = 0;
 
@@ -261,16 +272,6 @@ string IncStatsData::getCombinedKey(string key) const {
             parts[place] += key[i];
     }
     return std::min(parts[0], parts[1]) +'+'+ std::max(parts[0], parts[1]);
-}
-
-string IncStatsData::getCombinedKey(string first, string second) const
-{
-
-    if(first.compare(second) <0)
-        return first +"+" + second;
-    return second + "+" + first;
-
-
 }
 
 
@@ -289,8 +290,6 @@ void IncStatsData::cleanInactiveStats(float limit)
         std::this_thread::sleep_for(std::chrono::milliseconds (4000));
         const lock_guard<mutex> collectionLock(this->_incStatsCollectionLock);
 
-        //std::cout<<"thread start" <<std::endl;
-
         i++;
         vector<string> toRemove;
         //find
@@ -308,39 +307,20 @@ void IncStatsData::cleanInactiveStats(float limit)
            }
         }
 
-        // std::cout<<"thread part1" <<std::endl;
-
         vector<string> toRemoveRelative;
 
         for(string remove : toRemove)
         {
-
-            this->deleteStream(remove);
-
-            string relativeKey = this->getCombinedKey(remove);
-
-            if (!isRelStreamExists(relativeKey))
-                continue;
-
-            auto rel = _relIncStatsCollection.at(relativeKey);
-
-            for (int i = 0; i < rel.size(); ++i) {
-                delete rel[i];
-                rel[i] = nullptr;
-            }
-
-            this->_relIncStatsCollection.erase(relativeKey);
-            int plus = remove.find('+');
-            string second = remove.substr(plus + 1, remove.size() - (plus + 1)) + '+' + remove.substr(0,plus);
-
-            this->deleteStream(second);
-
+            this->deleteStream2D(remove);
         }
-        // std::cout<<"finish thread" <<i<<std::endl;
     }
 
 }
-
+/*
+The function will remove a stream just 1d
+input: the stream key : string
+output: none
+*/
 void IncStatsData::deleteStream(string key)
 {
     if(!this->isStreamExists(key))
@@ -353,4 +333,32 @@ void IncStatsData::deleteStream(string key)
         it->second[i] = nullptr;
     }
     _incStatsCollection.erase(it);
+}
+
+/*
+The function will remove a stream, and his relatives
+input: the stream key : string
+output: none
+*/
+void IncStatsData::deleteStream2D(string key)
+{
+    this->deleteStream(key);
+
+    string relativeKey = this->getCombinedKey(key);
+    if (!isRelStreamExists(relativeKey))
+        return;
+
+    auto rel = _relIncStatsCollection.at(relativeKey);
+
+    for (int i = 0; i < rel.size(); ++i) {
+        delete rel[i];
+        rel[i] = nullptr;
+    }
+
+    this->_relIncStatsCollection.erase(relativeKey);
+
+    int plus = key.find('+');
+    string second = key.substr(plus + 1, key.size() - (plus + 1)) + '+' + key.substr(0,plus);
+
+    this->deleteStream(second);
 }
