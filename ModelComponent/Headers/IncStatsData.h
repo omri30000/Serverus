@@ -36,6 +36,7 @@ protected:
     void cleanInactiveStats(float limit);
     string getCombinedKey(string first, string second) const;
     void deleteStream(string key);
+    void deleteStream2D(string key);
 
 public:
     IncStatsData(TimeManager* timeManager);
@@ -51,8 +52,8 @@ public:
 
     vector<float> getStatsOneDimension(string key) throw();
     vector<float> getStatsTwoDimensions(string key) throw();
-    void updateStatsTwoDimensions(string firstKey, Time timestamp, float value) const throw(); // TODO:not found
     string getCombinedKey(string key) const;
 
-    void deleteStream2D(string key);
+    void removeStream(string pack); //for outer use only
+
 };

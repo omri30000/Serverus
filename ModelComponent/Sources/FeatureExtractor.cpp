@@ -65,8 +65,8 @@ void FeatureExtractor::deleteFromIncStats(Packet pack) {
     string channelKey = this->_channelJitter.getStreamKey(pack);
     string socketKey = this->_socketSize.getStreamKey(pack);
 
-    this->_channelSize.deleteStream2D(channelKey);
-    this->_channelJitter.deleteStream2D(channelKey);
-    this->_socketSize.deleteStream2D(socketKey);
+    this->_channelSize.removeStream(channelKey);
+    this->_channelJitter.removeStream(channelKey);
+    this->_socketSize.removeStream(socketKey);
 }
 

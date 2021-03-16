@@ -87,7 +87,7 @@ int main(int argc, char **argv)
                 {
                     size.push_back(vec[i].size());
                 }
-                ad = &AnomalyDetector::getInstance(85, 75000, 0.05, 0.75, size);
+                ad = &AnomalyDetector::getInstance(85, 50000, 0.1, 0.75, size);
 
                 //exit(1);
             }

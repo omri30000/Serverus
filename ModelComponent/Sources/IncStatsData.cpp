@@ -311,7 +311,7 @@ void IncStatsData::cleanInactiveStats(float limit)
 
         for(string remove : toRemove)
         {
-            this->deleteStream2D(remove);
+            //this->deleteStream2D(remove);
         }
     }
 
@@ -362,3 +362,15 @@ void IncStatsData::deleteStream2D(string key)
 
     this->deleteStream(second);
 }
+/*
+ This function will remove a stream from incStats - for outer use only
+ Input:stream key
+ Output:None
+*/
+void IncStatsData::removeStream(string key)
+{
+    const lock_guard<mutex> collectionLock(this->_incStatsCollectionLock);
+    this->deleteStream2D(key);
+}
+
+
