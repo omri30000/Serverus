@@ -2,6 +2,8 @@ import sqlite3
 import datetime
 import hashlib
 
+import config
+
 BLOCK_LEVEL = 5
 
 
@@ -88,6 +90,29 @@ class DatabaseManager:
 
         return rows
 
+    def get_anomalies(self, user_id):
+        """
+        The function will provide all the Events of a specific product in the db
+        :param user_id: the identifier of a user
+        :type user_id: int
+        :return: all the events of the product of the given user
+        :rtype: list(list(event date, attacker ip, block level))
+        """
+        sql_statement = "SELECT date FROM Events WHERE productId = " + str(self.get_product_id(user_id))
+        self.db_cursor.execute(sql_statement)
+        rows = self.db_cursor.fetchall()
+        for i in range(len(rows)):
+            rows[i] = rows[i][0]
+
+        count = {}
+        for j in rows:
+            if j in count.keys():
+                count[j] += 1
+            else:
+                count[j] = 1
+
+        return count
+
     def get_product_id(self, user_id):
         sql_statement = "SELECT productId FROM Users WHERE id = " + str(user_id) + ";"
         self.db_cursor.execute(sql_statement)
@@ -122,9 +147,9 @@ class DatabaseManager:
 
 
 def main():
-    a = DatabaseManager(db_file_name="database.sqlite")
+    a = DatabaseManager(db_file_name=config.DB_FILE_NAME)
     # a.insert_user("dghjg", "12341")
-    print(a.get_product_id(7))
+    print(a.get_anomalies(8))
 
 
 if __name__ == '__main__':

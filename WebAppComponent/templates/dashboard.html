@@ -1,6 +1,8 @@
 {% extends "userBase.html" %}
 
 {% block content %}
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.min.js"></script>
+
     <center>
         <h1>Dashboard Page</h1>
         <br><br>
@@ -19,11 +21,11 @@
             </div>
             <br>
 
-            {% for id, attacker_ip, block_level in content %}
+            {% for date, attacker_ip, block_level in content %}
                 <!--eventID, attackerIP, blockLevel-->
                 <div class="row">
                     <div class="col-sm">
-                        <h5>{{ id }}</h5>
+                        <h5>{{ date }}</h5>
                     </div>
                     <div class="col-sm">
                         <h5>{{ attacker_ip }}</h5>
@@ -38,5 +40,61 @@
             {% endfor %}
 
         </div>
+        <br>
+        <div class="container" style="height:40vh; width:60vw">
+            <canvas id="myChart"></canvas>
+        </div>
     </center>
+
+    <script>
+        let myChart = document.getElementById('myChart').getContext('2d');
+
+        // Global Options
+        Chart.defaults.global.defaultFontFamily = 'Lato';
+        Chart.defaults.global.defaultFontSize = 18;
+        Chart.defaults.global.defaultFontColor = 'black';
+
+        let massPopChart = new Chart(myChart, {
+            type: 'bar', // bar, horizontalBar, pie, line, doughnut, radar, polarArea
+            data:{
+                labels: [{% for date in anomalies_amount.keys() %}
+                            "{{date}}",
+                        {% endfor %}
+                        ],
+                datasets: [{
+                    label:'Population',
+                    data: [{% for date in anomalies_amount.keys() %}
+                                {{ anomalies_amount[date] }},
+                            {% endfor %}],
+                    //backgroundColor:'green',
+                    borderWidth:1,
+                    borderColor: 'black',
+                    hoverBorderWidth:3,
+                    HoverBorderColor: 'blue'
+                }]
+            },
+            options:{
+                title:{
+                    display:true,
+                    text: 'Number of anomalies per date',
+                    fontSize: 25
+                },
+                legend:{
+                    display:false,
+                    position:'right'
+                },
+                layout: {
+                    padding: {
+                        left: 0,
+                        right: 0,
+                        bottom: 0,
+                        top: 0
+                    }
+                },
+                tooltips:{
+                    enabled: true
+                }
+            }
+        });
+    </script>
 {% endblock %}

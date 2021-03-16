@@ -78,7 +78,8 @@ def register_page():
 def dashboard_page():
     if "userID" in session:  # the user is connected
         # request method is always GET
-        return render_template("dashboard.html", content=db_manager.get_all_events(session["userID"]))
+        return render_template("dashboard.html", content=db_manager.get_all_events(session["userID"]),
+                               anomalies_amount=db_manager.get_anomalies(session["userID"]))
     else:
         return redirect(url_for("login_page"))
 
