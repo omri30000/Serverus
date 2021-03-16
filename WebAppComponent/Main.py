@@ -66,12 +66,9 @@ def register_page():
         password = request.form["passwordName"]
         email = request.form["emailName"]
 
-        if Utils.validate_input(user_name, password, email):
-            print("arg")
-            session["userID"] = db_manager.insert_user(user_name, password)
-            return redirect(url_for("dashboard_page"))
-        else:
-            return render_template("register.html")
+        # Utils.validate_input(user_name, password, email):
+        session["userID"] = db_manager.insert_user(user_name, password)
+        return redirect(url_for("dashboard_page"))
 
     else:  # GET request
         return render_template("register.html")

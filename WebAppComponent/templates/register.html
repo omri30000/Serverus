@@ -23,78 +23,56 @@
 
 {% block content %}
 
-<!--<form class="row g-3 needs-validation" action="/register" method="POST" novalidate>
-    <div class="col-md-4">
-        <label for="username" class="form-label">Username</label>
-        <input type="text" class="form-control" name="username" id="username" value="" required>
-        
-        <div class="valid-feedback">
-            Looks good!
-        </div>
-    </div>
+    <script>
+        function validateForm() {
+            var name = document.forms["registerForm"]["usernameName"].value;
+            var password = document.forms["registerForm"]["passwordName"].value;
+            var email = document.forms["registerForm"]["emailName"].value;
+            if (name.length < 5 || password.length < 5) {
+                alert("Name and Password must contain 5 characters at least");
+                return false;
+            }
 
-    <div class="col-md-4">
-        <label for="password" class="form-label">Password</label>
-        <input type="text" class="form-control" name="password" id="password" value="" required>
-        
-        <div class="valid-feedback">
-            Looks good! 
-        </div>
-    </div>
+            var pattern = new RegExp(/[~`!#$%\^&*+=\-\[\]\\';,/{}|\\":<>\?]/); //unacceptable chars
+            if (pattern.test(name) || pattern.test(password)) {
+                alert("Please only use standard alphanumerics for username and password");
+                return false;
+            }
 
-    <div class="col-md-4">
-        <label for="email" class="form-label">Email</label>
-        <input type="text" class="form-control" name="email" id="email" aria-describedby="inputGroupPrepend" required>
+            var emailPattern = new RegExp(/[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+/);
+            if (!emailPattern.test(email))
+            {
+                alert("Email is invalid, please check your input");
+                return false;
+            }
 
-        <div class="invalid-feedback">
-            Invalid Email.
-        </div>
-    </div>
+            return true; // form is valid
+        }
+    </script>
 
-    <div class="col-12">
-        <div class="form-check">
-            <input class="form-check-input" type="checkbox" value="" id="invalidCheck" required>
-            <label class="form-check-label" for="invalidCheck">
-                Agree to terms and conditions
-            </label>
-            <div class="invalid-feedback">
-                You must agree before submitting.
-            </div>
-        </div>
-    </div>
+    <main class="form-signin">
+        <center>
+            <img class="mb-4" src="{{url_for('static', filename='assets/logo.png')}}" alt="" width="140" height="114">
+            <form name="registerForm" method="post" action="#" onsubmit="return validateForm()">
+                <h1 class="h3 mb-3 fw-normal">Enter your details</h1>
 
-    <div class="col-12">
-        <button class="btn btn-primary" type="submit">Submit form</button>
-    </div>
-</form>-->
+                <label for="username" class="visually-hidden">Username</label>
+                <input type="text" name="usernameName" id="username" class="form-control" placeholder="Username" required>
+                <br>
 
-<main class="form-signin">
-<center>
-    <img class="mb-4" src="{{url_for('static', filename='assets/logo.png')}}" alt="" width="140" height="114">
-    <form method="post" action="#">
-        <h1 class="h3 mb-3 fw-normal">Enter your details</h1>
+                <label for="email" class="visually-hidden">Email</label>
+                <input type="text" name="emailName" id="email" class="form-control" placeholder="Email" required>
+                <br>
 
-        <!--<label for="inputEmail" class="visually-hidden">Email address</label>
-        <input type="email" id="inputEmail" class="form-control" placeholder="Email address" required autofocus>-->
+                <label for="password" class="visually-hidden">Password</label>
+                <input type="password" name="passwordName" id = "password" class="form-control" placeholder="Password" required>
 
-        <label for="username" class="visually-hidden">Username</label>
-        <input type="text" name="usernameName" id="username" class="form-control" placeholder="Username" required>
-        <br>
-
-        <label for="email" class="visually-hidden">Email</label>
-        <input type="text" name="emailName" id="email" class="form-control" placeholder="Email" required>
-        <br>
-
-        <label for="password" class="visually-hidden">Password</label>
-        <input type="password" name="passwordName" id = "password" class="form-control" placeholder="Password" required>
-
-        <div class="checkbox mb-3">
-            <label>
-            <input type="checkbox" value="conditions"> Agree to terms and conditions </label>
-        </div>
-        <button class="w-100 btn btn-lg btn-primary" type="submit">Sign in</button>
-    </form>
-</center>
-
-</main>
+                <div class="checkbox mb-3">
+                    <label>
+                    <input type="checkbox" value="conditions" required> Agree to terms and conditions </label>
+                </div>
+                <button class="w-100 btn btn-lg btn-primary" type="submit">Sign in</button>
+            </form>
+        </center>
+    </main>
 {% endblock %}
