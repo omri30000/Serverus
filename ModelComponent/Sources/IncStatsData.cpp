@@ -311,7 +311,7 @@ void IncStatsData::cleanInactiveStats(float limit)
 
         for(string remove : toRemove)
         {
-            //this->deleteStream2D(remove);
+            this->deleteStream2D(remove);
         }
     }
 
