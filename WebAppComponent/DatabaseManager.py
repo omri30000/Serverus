@@ -92,24 +92,28 @@ class DatabaseManager:
 
     def get_anomalies(self, user_id):
         """
-        The function will provide all the Events of a specific product in the db
+        The function will provide all the amount of anomalies per day
         :param user_id: the identifier of a user
         :type user_id: int
-        :return: all the events of the product of the given user
-        :rtype: list(list(event date, attacker ip, block level))
+        :return: the amount of anomalies per day
+        :rtype: Dict(date: amount of anomalies)
         """
         sql_statement = "SELECT date FROM Events WHERE productId = " + str(self.get_product_id(user_id))
         self.db_cursor.execute(sql_statement)
         rows = self.db_cursor.fetchall()
         for i in range(len(rows)):
-            rows[i] = rows[i][0]
+            if rows[i][0] is not None:
+                rows[i] = rows[i][0].split(' ')[0]  # take only the day as key (21-03-13)
+            else:
+                rows[i] = rows[i][0]
 
         count = {}
         for j in rows:
-            if j in count.keys():
-                count[j] += 1
-            else:
-                count[j] = 1
+            if j != "None":
+                if j in count.keys():
+                    count[j] += 1
+                else:
+                    count[j] = 1
 
         return count
 
