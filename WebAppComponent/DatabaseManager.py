@@ -105,11 +105,11 @@ class DatabaseManager:
             if rows[i][0] is not None:
                 rows[i] = rows[i][0].split(' ')[0]  # take only the day as key (21-03-13)
             else:
-                rows[i] = rows[i][0]
+                rows[i] = None
 
         count = {}
         for j in rows:
-            if j != "None":
+            if j is not None:
                 if j in count.keys():
                     count[j] += 1
                 else:
