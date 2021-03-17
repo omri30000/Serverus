@@ -34,8 +34,10 @@ def home_page():
 def login_page():
     if "userID" in session:  # the user is connected
         return redirect(url_for("dashboard_page"))
+
     else:
         if request.method == "POST":
+            print("aaa")
             # find user in data base and add to session:
             user_name = request.form["usernameName"]
             password = request.form["passwordName"]

@@ -23,37 +23,12 @@
 
 {% block content %}
 
-    <script>
-        function validateForm() {
-            var name = document.forms["registerForm"]["usernameName"].value;
-            var password = document.forms["registerForm"]["passwordName"].value;
-            var email = document.forms["registerForm"]["emailName"].value;
-            if (name.length < 5 || password.length < 5) {
-                alert("Name and Password must contain 5 characters at least");
-                return false;
-            }
-
-            var pattern = new RegExp(/[~`!#$%\^&*+=\-\[\]\\';,/{}|\\":<>\?]/); //unacceptable chars
-            if (pattern.test(name) || pattern.test(password)) {
-                alert("Please only use standard alphanumerics for username and password");
-                return false;
-            }
-
-            var emailPattern = new RegExp(/[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+/);
-            if (!emailPattern.test(email))
-            {
-                alert("Email is invalid, please check your input");
-                return false;
-            }
-
-            return true; // form is valid
-        }
-    </script>
+    <script src="{{url_for('static', filename='scripts/registerValidation.js')}}"></script>
 
     <main class="form-signin">
         <center>
             <img class="mb-4" src="{{url_for('static', filename='assets/logo.png')}}" alt="" width="140" height="114">
-            <form name="registerForm" method="post" action="#" onsubmit="return validateForm()">
+            <form name="registerForm" method="post" action="#" onsubmit="return registerValidateForm()">
                 <h1 class="h3 mb-3 fw-normal">Enter your details</h1>
 
                 <label for="username" class="visually-hidden">Username</label>
@@ -65,13 +40,13 @@
                 <br>
 
                 <label for="password" class="visually-hidden">Password</label>
-                <input type="password" name="passwordName" id = "password" class="form-control" placeholder="Password" required>
+                <input type="password" name="passwordName" id="password" class="form-control" placeholder="Password" required>
 
                 <div class="checkbox mb-3">
                     <label>
                     <input type="checkbox" value="conditions" required> Agree to terms and conditions </label>
                 </div>
-                <button class="w-100 btn btn-lg btn-primary" type="submit">Sign in</button>
+                <button class="w-100 btn btn-lg btn-primary" type="submit">Sign up</button>
             </form>
         </center>
     </main>
