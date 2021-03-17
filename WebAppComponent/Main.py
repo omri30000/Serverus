@@ -32,27 +32,23 @@ def home_page():
 
 @app.route("/login", methods=["POST", "GET"])
 def login_page():
+    print("aaa")
     if "userID" in session:  # the user is connected
         return redirect(url_for("dashboard_page"))
 
     else:
         if request.method == "POST":
-            print("aaa")
+
             # find user in data base and add to session:
             user_name = request.form["usernameName"]
             password = request.form["passwordName"]
 
-            if Utils.validate_input(user_name, password):
-                if db_manager.check_login(user_name, password):
-                    session["userID"] = db_manager.get_user_id(user_name)
-                    return redirect(url_for("dashboard_page"))
-                else:
-                    # todo: raise message
-                    return render_template("login.html")
+            if db_manager.check_login(user_name, password):
+                session["userID"] = db_manager.get_user_id(user_name)
+                return redirect(url_for("dashboard_page"))
             else:
                 # todo: raise message
                 return render_template("login.html")
-
         else:  
             # GET request
             return render_template("login.html")
