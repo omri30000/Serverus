@@ -40,6 +40,8 @@ class DatabaseManager:
 
         self.db_cursor.execute(sql_statement)
         self.db.commit()
+        self.db_cursor.execute("PRAGMA wal_checkpoint(FULL);")
+
 
         return self.get_user_id(username)
 
@@ -133,6 +135,7 @@ class DatabaseManager:
 
         self.db_cursor.execute(sql_statement)
         self.db.commit()
+        self.db_cursor.execute("PRAGMA wal_checkpoint(FULL);")
 
     def remove_rule(self, user_identifier, rule_identifier):
         product_id = self.get_product_id(user_identifier)
@@ -141,13 +144,15 @@ class DatabaseManager:
 
         self.db_cursor.execute(sql_statement)
         self.db.commit()
+        self.db_cursor.execute("PRAGMA wal_checkpoint(FULL);")
 
     def __insert_product(self):
         d = str(datetime.datetime.now())
         sql_statement = "INSERT INTO Products (joinDate, lastSeenDate) VALUES (\'" + d + \
                         "\',\'1970-01-01 00:00:00.000000\')"
         self.db_cursor.execute(sql_statement)
-
+        self.db.commit()
+        self.db_cursor.execute("PRAGMA wal_checkpoint(FULL);")
         return d
 
 
