@@ -17,22 +17,65 @@
 
 
 // NOTE: Make sure to run program with sudo in order to be able to delete data from db
-int main(int argc, char **argv)
-{
-    srand (time(NULL));
+int main(int argc, char **argv) {
+    srand(time(NULL));
     std::cout << "Hello, World!" << std::endl;
 
-    string filePath = "../../db_file.sqlite";
+    string filePath = "";
     TimeManager timeManager(false);
 
-    if(argc>=1)
-    {
-        timeManager = TimeManager(true);
+    bool forensics = false;
+    bool disableOutgoing = true;
+    bool threadExist = true;
+
+    //parse commandline
+    for (int i = 1; i < argc; ++i) {
+        if (argv[i] == "-h" || argv[i] == "--help")
+        {
+            std::cout << "Help" << std::endl;
+            return 0;
+        }
+        else if (argv[i] == "-f")
+        {
+            //
+            if (i + 1 >= argc || argv[i + 1][0] == '-')
+            {
+                std::cout << "Help" << std::endl;
+                return 0;
+            }
+            filePath = argv[i + 1];
+            //forensics = true;
+            disableOutgoing = false;
+            timeManager= TimeManager(true);
+            i++;
+        }
+        else if(argv[i] == "-o")
+        {
+            //enbale outgoing packets
+            disableOutgoing = false;
+        }
+        else if (argv[i] == "-d")
+        {
+            //cancel thread
+            threadExist = false;
+        }
     }
 
-    //PacketsReaderSQLITE reader = PacketsReaderSQLITE(filePath);
+    //todo: if forensics dont run defender and don't run communicator - > how to block it
+    //todo: close other process
+    TimeManager* pTimeManager;
+    if(threadExist)
+        pTimeManager = nullptr;
+    else
+        pTimeManager = &timeManager;
+
+    if(filePath != "")
+        system(("cd .. && sudo python3 ../SnifferComponent/SnifferToMQ.py "+ filePath+" > /dev/null &").c_str());
+
+    system("cd .. && sudo python3 ../../DefenderComponent/Defender.py > /dev/null &");
     PacketsReaderMQ reader = PacketsReaderMQ();
-    FeatureExtractor extractor(&timeManager);
+
+    FeatureExtractor extractor(pTimeManager);
 
     FeatureMapper mapper(5000,7,85);
     Parser* p = nullptr;
@@ -42,16 +85,15 @@ int main(int argc, char **argv)
     std::ofstream fileAnom("Anom.txt");
 
     Communicator communicator;
-    float min = 5;
-    float max = -5;
+
 
     bool cond = true;
+
     Packet pack;
     int a = 0;
     float maxThreshold=0;
     Manipulator* manipulator = nullptr;
     int t0 = time(NULL);
-
 
     while (cond) {
         vector<float> stats;
@@ -67,14 +109,18 @@ int main(int argc, char **argv)
                 }
             }
             catch (std::exception &e) {
-                //std::cout<<"been here"<<std::endl;
                 continue;
             }
 
             timeManager.updateTime(pack.getArrivalTime());
             stats = extractor.extractNewFeaturesVector(pack);
 
-        if (p == nullptr) {
+            //remove outgoing packets - if needed
+            if(disableOutgoing && pack.getSourceMac() == PacketsReader::getHostMac())
+                continue;
+
+        if (p == nullptr)
+        {
             if (!mapper.getState())
                 mapper.update(stats);
             else {
@@ -89,15 +135,12 @@ int main(int argc, char **argv)
                 }
                 ad = &AnomalyDetector::getInstance(85, 50000, 0.1, 0.75, size);
 
-                //exit(1);
+
             }
         }
         else
         {
             valarray<valarray<float>> featuresMap = p->organizeData(stats);
-
-
-            // print the mapped features
 
 
             std::pair<float,bool> result = ad->perform(featuresMap);

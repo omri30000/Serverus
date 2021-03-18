@@ -2,11 +2,12 @@
 #include <algorithm>
 
 //constructor
-IncStatsData::IncStatsData(TimeManager* timeManager)
-{
-
-    _cleaningThread =  std::thread(&IncStatsData::cleanInactiveStats,this,10);
-    _isRunning = true;
+IncStatsData::IncStatsData(TimeManager* timeManager) {
+    if (timeManager != nullptr)
+    {
+        _cleaningThread = std::thread(&IncStatsData::cleanInactiveStats, this, 10);
+        _isRunning = true;
+    }
     _timeManager = timeManager;
 }
 
