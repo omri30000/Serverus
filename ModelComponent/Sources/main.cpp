@@ -15,6 +15,7 @@
 #include "../Headers/TimeManager.h"
 #include "../Headers/PacketsReaderMQ.h"
 
+void killProcesses(const vector<string>& pNames);
 
 // NOTE: Make sure to run program with sudo in order to be able to delete data from db
 int main(int argc, char **argv) {
@@ -69,8 +70,9 @@ int main(int argc, char **argv) {
     else
         pTimeManager = &timeManager;
 
-    if(filePath != "")
-        system(("cd .. && sudo python3 ../SnifferComponent/SnifferToMQ.py "+ filePath+" > /dev/null &").c_str());
+    killProcesses({"sniffer","defender"});
+
+    system(("cd .. && sudo python3 ../SnifferComponent/SnifferToMQ.py "+ filePath+" > /dev/null &").c_str());
 
     system("cd .. && sudo python3 ../../DefenderComponent/Defender.py > /dev/null &");
     PacketsReaderMQ reader = PacketsReaderMQ();
@@ -162,4 +164,13 @@ int main(int argc, char **argv) {
         }
     }
     return 0;
+}
+
+void killProcesses(const vector<string>& pNames)
+{
+    for(string name : pNames)
+    {
+        system(("pkill -9 " +name).c_str());
+    }
+
 }
