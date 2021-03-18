@@ -9,6 +9,7 @@ from flask import flash
 
 import DatabaseManager
 import config
+import Utils
 
 
 app = Flask(__name__)
@@ -17,7 +18,7 @@ db_manager = DatabaseManager.DatabaseManager(db_file_name=config.DB_FILE_NAME)
 
 
 def main():
-    app.run(debug=True)  # , port=80, host="0.0.0.0")
+    app.run(debug=True, port=config.WEB_LISTEN_PORT, host=config.HOST)
 
 
 @app.route("/")  # if we use the domain only, we'll get here
@@ -31,22 +32,23 @@ def home_page():
 
 @app.route("/login", methods=["POST", "GET"])
 def login_page():
+    print("aaa")
     if "userID" in session:  # the user is connected
         return redirect(url_for("dashboard_page"))
+
     else:
         if request.method == "POST":
+
             # find user in data base and add to session:
             user_name = request.form["usernameName"]
             password = request.form["passwordName"]
-            if db_manager.check_login(user_name, password):
 
+            if db_manager.check_login(user_name, password):
                 session["userID"] = db_manager.get_user_id(user_name)
                 return redirect(url_for("dashboard_page"))
             else:
-                flash('You were successfully logged in')
-                # todo: throw exception and raise message
+                # todo: raise message
                 return render_template("login.html")
-
         else:  
             # GET request
             return render_template("login.html")
@@ -61,9 +63,11 @@ def register_page():
         user_name = request.form["usernameName"]
         password = request.form["passwordName"]
         email = request.form["emailName"]
-        print(user_name, password)
+
+        # Utils.validate_input(user_name, password, email):
         session["userID"] = db_manager.insert_user(user_name, password)
         return redirect(url_for("dashboard_page"))
+
     else:  # GET request
         return render_template("register.html")
 
@@ -71,12 +75,15 @@ def register_page():
 @app.route("/dashboard")
 def dashboard_page():
     if "userID" in session:  # the user is connected
-        return render_template("dashboard.html")
+        # request method is always GET
+        return render_template("dashboard.html", content=db_manager.get_all_events(session["userID"]),
+                               anomalies_amount=db_manager.get_anomalies(session["userID"]),
+                               sort=order_by_third)
     else:
         return redirect(url_for("login_page"))
 
 
-@app.route("/rule", methods=["POST", "GET"])
+@app.route("/rule")
 def rule_management_page():
     if "userID" in session:  # the user is connected
         return render_template("rules.html", content=db_manager.get_all_rules(session["userID"]))
@@ -97,17 +104,13 @@ def add_rule_page():
         return redirect(url_for("login_page"))
 
 
-@app.route("/removeRule", methods=["POST", "GET"])
-def remove_rule():
-    if "userID" in session:  # the user is connected
-        if request.method == "POST":
-            rule_id = request.form["rule identifier"]
-            db_manager.remove_rule(session["userID"], rule_id)
-            return redirect(url_for("rule_management_page"))
-        else:
-            return render_template("removeRule.html")
-    else:
+@app.route("/removeRule/<identifier>")
+def remove_rule(identifier):
+    if "userID" not in session:  # user is not connected
         return redirect(url_for("login_page"))
+
+    db_manager.remove_rule(session["userID"], identifier)
+    return redirect(url_for("rule_management_page"))
 
 
 @app.route("/logout")
@@ -115,6 +118,16 @@ def logout():
     session.pop("userID", None)
     return redirect(url_for("login_page"))
 
+
+def order_by_third(arr):
+    """
+    The function will sort a list of lists by the inner list's third element
+    :param arr: the list to be sorted
+    :type arr: list(list())
+    :return: a new sorted list
+    :rtype: list(list())
+    """
+    return sorted(arr, key=lambda arr:arr[2])
 
 if __name__ == '__main__':
     main()

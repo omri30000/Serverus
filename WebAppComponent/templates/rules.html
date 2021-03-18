@@ -1,11 +1,8 @@
 {% extends "userBase.html" %}
 
-{% block css %}
-    <link href="{{url_for('static', filename='css/rules.css')}}" rel="stylesheet">
-    <link rel="canonical" href="https://getbootstrap.com/docs/5.0/examples/sign-in/">
 
-    <style>
-      .bd-placeholder-img {
+{% block style %}
+    .bd-placeholder-img {
         font-size: 1.125rem;
         text-anchor: middle;
         -webkit-user-select: none;
@@ -18,38 +15,60 @@
           font-size: 3.5rem;
         }
       }
-    </style>
+{% endblock %}
+{% block css %}
+    <link href="{{url_for('static', filename='css/rules.css')}}" rel="stylesheet">
+    <link rel="canonical" href="https://getbootstrap.com/docs/5.0/examples/sign-in/">
 {% endblock %}
 
 {% block content %}
-    <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
     <script>
-        function addRuleClicked(){
-            fetch('/addRule');
-        }
+    function onClick(identifier){
+        fetch("/removeRule/" + identifier);
+        location.reload();
+    }
     </script>
 
-    <form method="get" action="/addRule">
-        <button class="w-100 btn btn-lg btn-primary" type="submit">Add Rule</button>
-    </form>
+    <center>
+        <h1>Rule Management</h1>
+        <br><br>
 
-    <form method="get" action="/removeRule">
-        <button class="w-100 btn btn-lg btn-primary" type="submit">Remove Rule</button>
-    </form>
-
-    <div class="row">
-        {% for id, data in content %}
-            <div class="column" style="background-color:#aaa;">
-                <h2>Rule No.{{ id }}</h2>
-                <p>{{ data }}</p>
-                <!--<form method="post" action="/removeRule">
-                    <label for="trash" name="trash" class="visually-hidden">{{ id }}</label>
-                    <button name="trash{{ id }}" type="submit">
-                        <img class="mb-4" src="{{url_for('static', filename='assets/garbage.png')}}" alt="" width="70" height="57">
-                    </button>
-                </form>-->
+        <div class="container">
+            <div class="row">
+                <div class="col-sm">
+                    <h2>Rule's Number</h2>
+                </div>
+                <div class="col-sm">
+                    <h2>Rule's Data</h2>
+                </div>
+                <div class="col-sm">
+                </div>
             </div>
-        {% endfor %}
-    </div>
 
+            <br>
+
+            {% for id, data in content %}
+                <div class="row">
+                    <div class="col-sm">
+                        <h5>{{ id }}</h5>
+                    </div>
+                    <div class="col-sm" >
+                        <h5>{{ data }}</h5>
+                    </div>
+                    <div class="col-sm" >
+                        <button id="{{ id }}" class="btn btn-outline-dark" onClick="onClick(this.id)">Remove</button>
+                    </div>
+                    <div class="column">
+                        <br>
+                    </div>
+                </div>
+            {% endfor %}
+
+        </div>
+
+        <form method="get" action="/addRule">
+            <button class="w-100 btn btn-lg btn-primary" type="submit">Add Rule</button>
+        </form>
+
+    </center>
 {% endblock %}

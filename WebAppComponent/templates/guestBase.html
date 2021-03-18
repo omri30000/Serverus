@@ -5,11 +5,22 @@
         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/css/bootstrap.min.css" 
         rel="stylesheet" integrity="sh
         a384-BmbxuPwQa2lc/FVzBcNJ7UAyJxM6wuqIj61tLrc4wSX0szH/Ev+nYRRuWlolflfl" 
-        crossorigin="anonymous"> 
+        crossorigin="anonymous">
+        <style>
+            body {
+                background-image: url("{{url_for('static', filename='assets/background.jpg')}}");
+                background-repeat: no-repeat;
+                background-attachment: fixed;
+                background-size: cover;
+            }
+            {% block style %}
+
+            {% endblock %}
+        </style>
+
         {% block css %}
 
         {% endblock %}
-
 
     </head>
     <body>

@@ -89,14 +89,13 @@ class DatabaseManager:
         :return: nothing
         :rtype: None
         """
-        sql_statement = "INSERT INTO Events (productId, attackerIp, blockLevel, date) VALUES (" + str(
+        sql_statement = "INSERT INTO Events (productId, attackerIp, blockLevel, date, data) VALUES (" + str(
             product_id) + ", \'" + event.get_ip_add() + "\', " + str(event.get_level()) + ", \'" + str(
-            event.get_date()) + "\')"
+            event.get_date()) + "\', \'" + event.get_ip_add() + "\')"
+        
         self.db_cursor.execute(sql_statement)
 
         if event.get_level() > 1:
-            self.__insert_rule(self.db_cursor.lastrowid, event.get_ip_add())
-
             if event.get_level() < 4:  # 2 or 3
                 rule_id = self.db_cursor.lastrowid
                 self.__insert_block(product_id, rule_id)
@@ -113,20 +112,6 @@ class DatabaseManager:
                 for single_id in all_products_ids:
                     self.__insert_block(single_id, rule_id)
 
-    def __insert_rule(self, event_id, data):
-        """
-        The method will insert a new rule to the database
-        :param self: the instance of manager
-        :type self: DatabaseManager
-        :param event_id: the identifier of the event that caused the rule to be inserted
-        :type event_id: int
-        :param data: the ip that is blocked by the specific rule
-        :type data: str
-        :return: nothing
-        :rtype: None
-        """
-        sql_statement = "INSERT INTO Rules (data, eventId) VALUES (\'" + data + "\', " + str(event_id) + ")"
-        self.db_cursor.execute(sql_statement)
 
     def __insert_block(self, product_id, rule_id):
         """
@@ -155,24 +140,23 @@ class DatabaseManager:
         :return: list of the relevant events
         :rtype: list[Event]
         """
-        sql_statement = "SELECT * FROM Events WHERE productId != " + str(product_id) + " AND blockLevel = 4"
+        sql_statement = "SELECT attackerIP, blockLevel, date FROM Events WHERE productId != " + str(product_id) + " AND blockLevel = 4"
         self.db_cursor.execute(sql_statement)
 
         rows = self.db_cursor.fetchall()
+
         events = []
         for i in range(0, len(rows)):
             rows[i] = list(rows[i])
-            rows[i].pop(0)
-            rows[i].pop(0)
             single_event = Event.Event.create_from_list(rows[i])
             if time is None or time < single_event.get_date():
                 events += [single_event]
 
         return events
 
-"""
+
 def main():
-    a = DatabaseManager("general_db.sqlite")
+    a = DatabaseManager("../database.sqlite")
 
     
     a.insert_event(Event.Event("5.5.5.5", 4, datetime.datetime.now()), 3)
@@ -181,7 +165,7 @@ def main():
     a.insert_event(Event.Event("101.101.101.101", 4, datetime.datetime.now()), 11)
     
     print(a.get_dangerous_events(5, datetime.datetime.now()))
-"""
+
 
 if __name__ == '__main__':
     main()

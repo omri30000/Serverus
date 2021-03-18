@@ -6,6 +6,18 @@
         rel="stylesheet" integrity="sh
         a384-BmbxuPwQa2lc/FVzBcNJ7UAyJxM6wuqIj61tLrc4wSX0szH/Ev+nYRRuWlolflfl" 
         crossorigin="anonymous"> 
+        <style>
+            body {
+                background-image: url("{{url_for('static', filename='assets/background.jpg')}}");
+                background-repeat: no-repeat;
+                background-attachment: fixed;
+                background-size: cover;
+            }
+            {% block style %}
+
+            {% endblock %}
+        </style>
+
         {% block css %}
 
         {% endblock %}
