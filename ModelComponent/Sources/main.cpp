@@ -16,6 +16,7 @@
 #include "../Headers/PacketsReaderMQ.h"
 
 void killProcesses(const vector<string>& pNames);
+void printUsage();
 
 // NOTE: Make sure to run program with sudo in order to be able to delete data from db
 int main(int argc, char **argv) {
@@ -29,19 +30,22 @@ int main(int argc, char **argv) {
     bool disableOutgoing = true;
     bool threadExist = true;
 
+    for (int i = 0; i < argc; ++i) {
+        std::cout<<i<<". "<<argv[i]<<std::endl;
+    }
     //parse commandline
     for (int i = 1; i < argc; ++i) {
-        if (argv[i] == "-h" || argv[i] == "--help")
+        if (!strcmp(argv[i],"-h") || !strcmp(argv[i], "--help"))
         {
-            std::cout << "Help" << std::endl;
+            printUsage();
             return 0;
         }
-        else if (argv[i] == "-f")
+        else if (!strcmp(argv[i] , "-f"))
         {
-            //
+
             if (i + 1 >= argc || argv[i + 1][0] == '-')
             {
-                std::cout << "Help" << std::endl;
+                printUsage();
                 return 0;
             }
             filePath = argv[i + 1];
@@ -50,20 +54,24 @@ int main(int argc, char **argv) {
             timeManager= TimeManager(true);
             i++;
         }
-        else if(argv[i] == "-o")
+        else if(!strcmp(argv[i], "-o"))
         {
             //enbale outgoing packets
             disableOutgoing = false;
         }
-        else if (argv[i] == "-d")
+        else if (!strcmp(argv[i],"-d"))
         {
             //cancel thread
             threadExist = false;
         }
+        else
+        {
+            printUsage();
+            return 0;
+        }
     }
 
     //todo: if forensics dont run defender and don't run communicator - > how to block it
-    //todo: close other process
     TimeManager* pTimeManager;
     if(threadExist)
         pTimeManager = nullptr;
@@ -72,9 +80,9 @@ int main(int argc, char **argv) {
 
     killProcesses({"sniffer","defender"});
 
-    system(("cd .. && sudo python3 ../SnifferComponent/SnifferToMQ.py "+ filePath+" > /dev/null &").c_str());
+    system(("cd ../.. && sudo python3 SnifferComponent/SnifferToMQ.py "+ filePath+" > /dev/null &").c_str());
 
-    system("cd .. && sudo python3 ../../DefenderComponent/Defender.py > /dev/null &");
+    system("cd ../.. && sudo python3 DefenderComponent/Defender.py > /dev/null &");
     PacketsReaderMQ reader = PacketsReaderMQ();
 
     FeatureExtractor extractor(pTimeManager);
@@ -165,7 +173,14 @@ int main(int argc, char **argv) {
     }
     return 0;
 }
-
+void printUsage()
+{
+    std::cout << "usage: model.exe [options]\n"
+                <<"options:\n"
+                <<" -f, for forenics - add file path after\n"
+                <<"-d. cancel defence thread\n"
+                <<"-o = enable outgoing packet\n";
+}
 void killProcesses(const vector<string>& pNames)
 {
     for(string name : pNames)
