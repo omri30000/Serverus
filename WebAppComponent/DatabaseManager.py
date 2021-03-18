@@ -9,6 +9,7 @@ class DatabaseManager:
     def __init__(self, db_file_name):
         self.db = sqlite3.connect(db_file_name, check_same_thread=False)
         self.db_cursor = self.db.cursor()
+        self.db_cursor.execute('pragma journal_mode=wal;')
 
         print("Opened DB successfully")
 
