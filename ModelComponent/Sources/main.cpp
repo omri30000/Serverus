@@ -49,7 +49,7 @@ int main(int argc, char **argv) {
                 return 0;
             }
             filePath = argv[i + 1];
-            //forensics = true;
+            forensics = true;
             disableOutgoing = false;
             timeManager= TimeManager(true);
             i++;
@@ -81,8 +81,9 @@ int main(int argc, char **argv) {
     killProcesses({"sniffer","defender"});
 
     system(("cd ../.. && sudo python3 SnifferComponent/SnifferToMQ.py "+ filePath+" > /dev/null &").c_str());
+    if(!forensics)
+        system("cd ../.. && sudo python3 DefenderComponent/Defender.py > /dev/null &");
 
-    system("cd ../.. && sudo python3 DefenderComponent/Defender.py > /dev/null &");
     PacketsReaderMQ reader = PacketsReaderMQ();
 
     FeatureExtractor extractor(pTimeManager);
@@ -165,8 +166,11 @@ int main(int argc, char **argv) {
                 int val = manipulator->calcLevel(result.first);
                 if (val != 0) {
                     fileAnom << "Anomaly: " << val << " Num: " << a << std::endl;
-                    extractor.deleteFromIncStats(pack);
-                    //communicator.sendMessage(Event(pack.getSourceIP(),val,pack.getArrivalTime()));*/
+                    if (!forensics) {
+                        extractor.deleteFromIncStats(pack);
+                        communicator.sendMessage(Event(pack.getSourceIP(), val, pack.getArrivalTime()));
+
+                    }
                 }
             }
         }
