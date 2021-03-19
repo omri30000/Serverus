@@ -7,6 +7,7 @@ class DatabaseManager:
     def __init__(self, db_file_name):
         self.db = sqlite3.connect(db_file_name, check_same_thread=False)
         self.db_cursor = self.db.cursor()
+        self.db_cursor.execute('pragma journal_mode=wal;')
         print("Opened DB successfully")
 
     def __del__(self):
@@ -93,17 +94,20 @@ class DatabaseManager:
             product_id) + ", \'" + event.get_ip_add() + "\', " + str(event.get_level()) + ", \'" + str(
             event.get_date()) + "\')"
         self.db_cursor.execute(sql_statement)
+        self.db.commit()
+        self.db_cursor.execute("PRAGMA wal_checkpoint(FULL)")
+
+        sql_statement = "SELECT id FROM Events WHERE date = '{}'".format(str(event.get_date()))
+        rows = self.db_cursor.fetchall()
+        print(rows)
+        event_id = rows[0][0]
 
         if event.get_level() > 1:
-            self.__insert_rule(self.db_cursor.lastrowid, event.get_ip_add())
 
             if event.get_level() < 4:  # 2 or 3
-                rule_id = self.db_cursor.lastrowid
-                self.__insert_block(product_id, rule_id)
+                self.__insert_block(product_id, event_id)
 
             elif event.get_level() == 4:
-                rule_id = self.db_cursor.lastrowid
-
                 sql_statement = "SELECT id FROM Products"
                 self.db_cursor.execute(sql_statement)
 
@@ -111,36 +115,22 @@ class DatabaseManager:
                 all_products_ids = [temp[i][0] for i in range(0, len(temp))]
 
                 for single_id in all_products_ids:
-                    self.__insert_block(single_id, rule_id)
+                    self.__insert_block(single_id, event_id)
 
-    def __insert_rule(self, event_id, data):
-        """
-        The method will insert a new rule to the database
-        :param self: the instance of manager
-        :type self: DatabaseManager
-        :param event_id: the identifier of the event that caused the rule to be inserted
-        :type event_id: int
-        :param data: the ip that is blocked by the specific rule
-        :type data: str
-        :return: nothing
-        :rtype: None
-        """
-        sql_statement = "INSERT INTO Rules (data, eventId) VALUES (\'" + data + "\', " + str(event_id) + ")"
-        self.db_cursor.execute(sql_statement)
 
-    def __insert_block(self, product_id, rule_id):
+    def __insert_block(self, product_id, event_id):
         """
         The method will insert a new block to the database
         :param self: the instance of manager
         :type self: DatabaseManager
         :param product_id: the identifier of the product that the block should relate to
         :type product_id: int
-        :param rule_id: the identifier of the rule that the block should relate to
-        :type rule_id: int
+        :param event_id: the identifier of the event that the block should relate to
+        :type event_id: int
         :return: nothing
         :rtype: None
         """
-        sql_statement = "INSERT INTO Blocks (productId, ruleId) VALUES (" + str(product_id) + ", " + str(rule_id) + ")"
+        sql_statement = "INSERT INTO Blocks (productId, eventId) VALUES (" + str(product_id) + ", " + str(event_id) + ")"
         self.db_cursor.execute(sql_statement)
 
     def get_dangerous_events(self, product_id, time=None):
@@ -151,7 +141,7 @@ class DatabaseManager:
         :param time: the minimum approved date of an event
         :type time: Datetime
         :param product_id: the id of the product that needs the data
-        :type product_id: intעןא
+        :type product_id: int
         :return: list of the relevant events
         :rtype: list[Event]
         """
