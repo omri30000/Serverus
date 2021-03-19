@@ -30,7 +30,7 @@ class Event:
         
         level = msg[0]
         ip_add = ".".join([str(i) for i in msg[1:5]])
-        
+        print(len(msg))
         temp = sum([pow(256, 3-i) * int(msg[5+i]) for i in range(4)])
         today = datetime.datetime.now()
 
@@ -42,7 +42,7 @@ class Event:
             today -= datetime.timedelta(days=1)
         
         date = today + datetime.timedelta(milliseconds=temp)
-
+        print([ip_add, level, date])
         a = cls(ip_add, level, date)
         return a
 

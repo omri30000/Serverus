@@ -81,8 +81,8 @@ int main(int argc, char **argv) {
     killProcesses({"sniffer","defender"});
 
     system(("cd ../.. && sudo python3 SnifferComponent/SnifferToMQ.py "+ filePath+" > /dev/null &").c_str());
-    if(!forensics)
-        system("cd ../.. && sudo python3 DefenderComponent/Defender.py > /dev/null &");
+    //if(!forensics)
+    system("cd ../.. && sudo python3 DefenderComponent/Defender.py &");
 
     PacketsReaderMQ reader = PacketsReaderMQ();
 
@@ -144,7 +144,7 @@ int main(int argc, char **argv) {
                 {
                     size.push_back(vec[i].size());
                 }
-                ad = &AnomalyDetector::getInstance(85, 50000, 0.1, 0.75, size);
+                ad = &AnomalyDetector::getInstance(85, 40000, 0.1, 0.75, size);
 
 
             }
@@ -166,11 +166,11 @@ int main(int argc, char **argv) {
                 int val = manipulator->calcLevel(result.first);
                 if (val != 0) {
                     fileAnom << "Anomaly: " << val << " Num: " << a << std::endl;
-                    if (!forensics) {
+                    //if (!forensics) {
                         extractor.deleteFromIncStats(pack);
                         communicator.sendMessage(Event(pack.getSourceIP(), val, pack.getArrivalTime()));
 
-                    }
+                    //}
                 }
             }
         }
