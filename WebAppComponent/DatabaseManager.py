@@ -26,21 +26,34 @@ class DatabaseManager:
         self.db.close()
 
     def insert_user(self, username, password):
+
+        #does username exist
+
+        exist = True
+        try:
+            a = self.get_user_id(username)
+        except Exception as e:
+            exist = False
+        
+        if exist:
+            raise Exception("user exists")
+
+        
         product_time = self.__insert_product()
 
         enc_password = hashlib.md5(password.encode()).hexdigest()
-        sql_statement = "SELECT * FROM Products WHERE joinDate=\'" + product_time + "\'"
+        sql_statement = "SELECT id FROM Products WHERE joinDate=\'" + product_time + "\'"
         self.db_cursor.execute(sql_statement)
         rows = self.db_cursor.fetchall()
 
         sql_statement = "INSERT INTO Users (username, password, productId) VALUES (\'" + username + "\', \'" + \
                         enc_password + "\', " + str(rows[0][0]) + ")"
     
-        print(sql_statement)
 
         self.db_cursor.execute(sql_statement)
         self.db.commit()
         self.db_cursor.execute("PRAGMA wal_checkpoint(FULL);")
+        print("ok")
 
 
         return self.get_user_id(username)

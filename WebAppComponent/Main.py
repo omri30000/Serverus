@@ -32,7 +32,6 @@ def home_page():
 
 @app.route("/login", methods=["POST", "GET"])
 def login_page():
-    print("aaa")
     if "userID" in session:  # the user is connected
         return redirect(url_for("dashboard_page"))
 
@@ -63,9 +62,12 @@ def register_page():
         user_name = request.form["usernameName"]
         password = request.form["passwordName"]
         email = request.form["emailName"]
+        try:
+            session["userID"] = db_manager.insert_user(user_name, password)
+        except Exception as e:
+            flash('Invalid Register')
+            return render_template("register.html")
 
-        # Utils.validate_input(user_name, password, email):
-        session["userID"] = db_manager.insert_user(user_name, password)
         return redirect(url_for("dashboard_page"))
 
     else:  # GET request

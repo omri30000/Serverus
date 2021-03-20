@@ -106,7 +106,6 @@ class DatabaseManager:
 
         sql_statement = "SELECT id FROM Events WHERE date = '{}'".format(str(event.get_date()))
         rows = self.db_cursor.fetchall()
-        print(rows)
         event_id = rows[0][0]
 
         if event.get_level() > 1:
