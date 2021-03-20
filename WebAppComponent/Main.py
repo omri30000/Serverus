@@ -46,7 +46,7 @@ def login_page():
                 session["userID"] = db_manager.get_user_id(user_name)
                 return redirect(url_for("dashboard_page"))
             else:
-                # todo: raise message
+                flash("Invalid Credentials")
                 return render_template("login.html")
         else:  
             # GET request
