@@ -1,4 +1,4 @@
-import sqlite3
+הmport sqlite3
 import Event
 import datetime
 
@@ -57,7 +57,7 @@ class DatabaseManager:
         """
         
         now = datetime.datetime.now()
-        now_date = today.strftime("%%Y-%m-%d %H:%M:%S.%f")
+        now_date = now.strftime("%%Y-%m-%d %H:%M:%S.%f")
 
         sql_statement = "Update Products set lastSeenDate = " + now_date +  "WHERE computerId = " + str(computer_id)
         self.db_cursor.execute(sql_statement)
@@ -154,7 +154,7 @@ class DatabaseManager:
         :return: list of the relevant events
         :rtype: list[Event]
         """
-        sql_statement = "SELECT attackerIp,blockLevel,date FROM Events WHERE productId != " + str(product_id) + " AND blockLevel = 4"
+        sql_statement = "SELECT attackerIp, blockLevel, date FROM Events WHERE productId != " + str(product_id) + " AND blockLevel = 4"
         self.db_cursor.execute(sql_statement)
 
         rows = self.db_cursor.fetchall()
