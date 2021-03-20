@@ -26,12 +26,26 @@
 <main class="form-signin">
     <center>
         <form method="post" action="#">
-            <h1 class="h3 mb-3 fw-normal">Enter new rule</h1>
-            <label for="ruleData" class="visually-hidden">Rule</label>
-            <input type="text" name="rule data" id="ruleData" class="form-control" placeholder="" required>
-            <br>
+            <h1 class="h3 mb-3 fw-normal">Enter IP Address to block</h1>
+            <div class="input-group mb-3" style="width:200px;">
+                <label for="byte1" class="visually-hidden">First</label>
+                <input class="form-control" type="text" name="rule data1" id="byte1" placeholder="" required>
+                <label>.</label>
 
-            <button class="w-100 btn btn-lg btn-primary" type="submit">Add Rule</button>
+                <label for="byte2" class="visually-hidden">Second</label>
+                <input class="form-control" type="text" name="rule data2" id="byte2" placeholder="" required>
+                <label>.</label>
+
+                <label for="byte3" class="visually-hidden">Third</label>
+                <input class="form-control" type="text" name="rule data3" id="byte3" placeholder="" required>
+                <label>.</label>
+
+                <label for="byte4" class="visually-hidden">Fourth</label>
+                <input class="form-control" type="text" name="rule data4" id="byte4" placeholder="" required>
+
+                <button class="w-100 btn btn-lg btn-primary" type="submit">Add Rule</button>
+            </div>
+
         </form>
     </center>
 </main>
