@@ -1,0 +1,53 @@
+{% extends "guestBase.html" %}
+
+{% block style %}
+    .bd-placeholder-img {
+        font-size: 1.125rem;
+        text-anchor: middle;
+        -webkit-user-select: none;
+        -moz-user-select: none;
+        user-select: none;
+      }
+
+      @media (min-width: 768px) {
+        .bd-placeholder-img-lg {
+          font-size: 3.5rem;
+        }
+      }
+{% endblock %}
+
+{% block css %}
+    <link href="{{url_for('static', filename='css/signin.css')}}" rel="stylesheet">
+    <link rel="canonical" href="https://getbootstrap.com/docs/5.0/examples/sign-in/">
+{% endblock %}
+
+{% block content %}
+
+    <script src="{{url_for('static', filename='scripts/registerValidation.js')}}"></script>
+
+    <main class="form-signin">
+        <center>
+            <img class="mb-4" src="{{url_for('static', filename='assets/logo.png')}}" alt="" width="140" height="114">
+            <form name="registerForm" method="post" action="#" onsubmit="return registerValidateForm()">
+                <h1 class="h3 mb-3 fw-normal">Enter your details</h1>
+
+                <label for="username" class="visually-hidden">Username</label>
+                <input type="text" name="usernameName" id="username" class="form-control" placeholder="Username" required>
+                <br>
+
+                <label for="email" class="visually-hidden">Email</label>
+                <input type="text" name="emailName" id="email" class="form-control" placeholder="Email" required>
+                <br>
+
+                <label for="password" class="visually-hidden">Password</label>
+                <input type="password" name="passwordName" id="password" class="form-control" placeholder="Password" required>
+
+                <div class="checkbox mb-3">
+                    <label>
+                    <input type="checkbox" value="conditions" required> Agree to terms and conditions </label>
+                </div>
+                <button class="w-100 btn btn-lg btn-primary" type="submit">Sign up</button>
+            </form>
+        </center>
+    </main>
+{% endblock %}
