@@ -59,7 +59,7 @@ class DatabaseManager:
         now = datetime.datetime.now()
         now_date = now.strftime("%Y-%m-%d %H:%M:%S.%f")
 
-        sql_statement = "Update Products set lastSeenDate = '{}' +  WHERE computerId = {}".format(now_date,computer_id)
+        sql_statement = "Update Products set lastSeenDate = '{}' WHERE computerId = {}".format(now_date,computer_id)
         self.db_cursor.execute(sql_statement)
 
 
