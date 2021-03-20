@@ -4,33 +4,62 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.min.js"></script>
 
     <script>
+    let order="date";
+
     function orderByDate(){
-        document.getElementById("recordsID").innerHTML =
-            `{% for date, attacker_ip, block_level in content %}
-                <!--eventID, attackerIP, blockLevel-->
-                {% if block_level != 5 %}
-                    <div class="row">
-                        <div class="col-sm">
-                            <h5>{{ date }}</h5>
+        order="date";
+
+        if (document.getElementById("orderButton").innerHTML==="Descending"){
+            document.getElementById("recordsID").innerHTML =
+                `{% for date, attacker_ip, block_level in content %}
+                    <!--eventID, attackerIP, blockLevel-->
+                    {% if block_level != 5 %}
+                        <div class="row">
+                            <div class="col-sm">
+                                <h5>{{ date }}</h5>
+                            </div>
+                            <div class="col-sm">
+                                <h5>{{ attacker_ip }}</h5>
+                            </div>
+                            <div class="col-sm">
+                                <h5>{{ block_level }}</h5>
+                            </div>
+                            <div class="column">
+                                <br>
+                            </div>
                         </div>
-                        <div class="col-sm">
-                            <h5>{{ attacker_ip }}</h5>
+                    {% endif %}
+                {% endfor %}`;
+        }
+        else{
+            document.getElementById("recordsID").innerHTML =
+                `{% for date, attacker_ip, block_level in content[::-1] %}
+                    <!--eventID, attackerIP, blockLevel-->
+                    {% if block_level != 5 %}
+                        <div class="row">
+                            <div class="col-sm">
+                                <h5>{{ date }}</h5>
+                            </div>
+                            <div class="col-sm">
+                                <h5>{{ attacker_ip }}</h5>
+                            </div>
+                            <div class="col-sm">
+                                <h5>{{ block_level }}</h5>
+                            </div>
+                            <div class="column">
+                                <br>
+                            </div>
                         </div>
-                        <div class="col-sm">
-                            <h5>{{ block_level }}</h5>
-                        </div>
-                        <div class="column">
-                            <br>
-                        </div>
-                    </div>
-                {% endif %}
-            {% endfor %}`;
+                    {% endif %}
+                {% endfor %}`;
+        }
     }
 
     function orderByLevel(){
-
-        document.getElementById("recordsID").innerHTML =
-            `{% with sorted_by_level = sort(content) %}
+        order="level";
+        if (document.getElementById("orderButton").innerHTML==="Descending"){
+           document.getElementById("recordsID").innerHTML =
+            `{% with sorted_by_level = sort_by_level(content) %}
                 {% for date, attacker_ip, block_level in sorted_by_level %}
                     <!--eventID, attackerIP, blockLevel-->
                     {% if block_level != 5 %}
@@ -51,6 +80,45 @@
                     {% endif %}
                 {% endfor %}
             {% endwith %}`;
+        }
+        else {
+            document.getElementById("recordsID").innerHTML =
+            `{% with sorted_by_level = sort_by_level(content)[::-1] %}
+                {% for date, attacker_ip, block_level in sorted_by_level %}
+                    <!--eventID, attackerIP, blockLevel-->
+                    {% if block_level != 5 %}
+                        <div class="row">
+                            <div class="col-sm">
+                                <h5>{{ date }}</h5>
+                            </div>
+                            <div class="col-sm">
+                                <h5>{{ attacker_ip }}</h5>
+                            </div>
+                            <div class="col-sm">
+                                <h5>{{ block_level }}</h5>
+                            </div>
+                            <div class="column">
+                                <br>
+                            </div>
+                        </div>
+                    {% endif %}
+                {% endfor %}
+            {% endwith %}`;
+        }
+    }
+
+    function changeOrder(){
+        let elem = document.getElementById("orderButton");
+        if (elem.innerHTML==="Ascending")
+            elem.innerHTML = "Descending";
+        else elem.innerHTML = "Ascending";
+
+        if(order==="date"){
+            orderByDate();
+        }
+        else if(order==="level"){
+            orderByLevel();
+        }
     }
     </script>
     <center>
@@ -61,10 +129,13 @@
                 <div class="container">
                     <div class="row">
                         <div class="col-sm">
-                            <button class="btn btn-outline-dark" onClick="orderByDate()">By Date</button>
+                            <button id="byDateBtn" class="btn btn-outline-dark" onClick="orderByDate()">By Date</button>
                         </div>
                         <div class="col-sm">
-                            <button class="btn btn-outline-dark" onClick="orderByLevel()">By Level</button>
+                            <button id="byLevelBtn" class="btn btn-outline-dark" onClick="orderByLevel()">By Level</button>
+                        </div>
+                        <div class="col-sm">
+                            <button id="orderButton" class="btn btn-outline-dark" onClick="changeOrder()">Descending</button>
                         </div>
                     </div>
                 </div>
@@ -84,7 +155,7 @@
                     </div>
                     <br>
                 </div>
-                <div id="recordsID" class="container">
+                <div id="recordsID" class="container" style="overflow-y:auto;height:250px;">
                     {% for date, attacker_ip, block_level in content %}
                         <!--eventID, attackerIP, blockLevel-->
                         {% if block_level != 5 %}
@@ -104,7 +175,6 @@
                             </div>
                         {% endif %}
                     {% endfor %}
-
                 </div>
             </div>
 

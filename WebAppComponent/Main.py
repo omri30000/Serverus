@@ -78,7 +78,7 @@ def dashboard_page():
         # request method is always GET
         return render_template("dashboard.html", content=db_manager.get_all_events(session["userID"]),
                                anomalies_amount=db_manager.get_anomalies(session["userID"]),
-                               sort=order_by_third)
+                               sort_by_level=order_by_third)
     else:
         return redirect(url_for("login_page"))
 
@@ -119,15 +119,24 @@ def logout():
     return redirect(url_for("login_page"))
 
 
-def order_by_third(arr):
+def order_by_third(arr, rev=False):
     """
     The function will sort a list of lists by the inner list's third element
     :param arr: the list to be sorted
     :type arr: list(list())
+    :param rev: indicates if the list should be reversed
+    :type rev: bool
     :return: a new sorted list
     :rtype: list(list())
     """
-    return sorted(arr, key=lambda arr:arr[2])
+    temp = list(arr)
+    if rev:
+        a = sorted(temp, key=lambda temp:temp[2])
+        a.reverse()
+        return a
+    else:
+        return sorted(temp, key=lambda temp: temp[2])
+
 
 if __name__ == '__main__':
     main()
