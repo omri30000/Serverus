@@ -26,10 +26,16 @@ class DatabaseManager:
         sql_statement = "INSERT INTO Users (username, password, computerId) VALUES (\'" + username + "\', \'" + \
                         password + "\', " + str(product_id) + ")"
         self.db_cursor.execute(sql_statement)
+        self.db.commit()
+        self.db_cursor.execute("PRAGMA wal_checkpoint(FULL)")
+
 
     def insert_product(self):
         sql_statement = "INSERT INTO Products (joinDate) VALUES (\'" + str(datetime.datetime.now()) + "\')"
         self.db_cursor.execute(sql_statement)
+        self.db.commit()
+        self.db_cursor.execute("PRAGMA wal_checkpoint(FULL)")
+
 
         sql_statement = "SELECT * FROM Products"  # WHERE joinDate=\'" + str(datetime.datetime.now()) + "\'"
         self.db_cursor.execute(sql_statement)
@@ -132,6 +138,9 @@ class DatabaseManager:
         """
         sql_statement = "INSERT INTO Blocks (productId, eventId) VALUES (" + str(product_id) + ", " + str(event_id) + ")"
         self.db_cursor.execute(sql_statement)
+        self.db.commit()
+        self.db_cursor.execute("PRAGMA wal_checkpoint(FULL)")
+
 
     def get_dangerous_events(self, product_id, time=None):
         """
@@ -145,16 +154,13 @@ class DatabaseManager:
         :return: list of the relevant events
         :rtype: list[Event]
         """
-        sql_statement = "SELECT * FROM Events WHERE productId != " + str(product_id) + " AND blockLevel = 4"
+        sql_statement = "SELECT attackerIp,blockLevel,date FROM Events WHERE productId != " + str(product_id) + " AND blockLevel = 4"
         self.db_cursor.execute(sql_statement)
 
         rows = self.db_cursor.fetchall()
         events = []
         for i in range(0, len(rows)):
-            rows[i] = list(rows[i])
-            rows[i].pop(0)
-            rows[i].pop(0)
-            single_event = Event.Event.create_from_list(rows[i])
+            single_event = Event.Event.create_from_list(list(rows[i]))
             if time is None or time < single_event.get_date():
                 events += [single_event]
 
@@ -165,12 +171,6 @@ def main():
     a = DatabaseManager("general_db.sqlite")
 
     
-    a.insert_event(Event.Event("5.5.5.5", 4, datetime.datetime.now()), 3)
-    a.insert_event(Event.Event("5.5.5.5", 4, datetime.datetime.now()), 3)
-    a.insert_event(Event.Event("100.100.100.100", 3, datetime.datetime.now()), 11)
-    a.insert_event(Event.Event("101.101.101.101", 4, datetime.datetime.now()), 11)
-    
-    print(a.get_dangerous_events(5, datetime.datetime.now()))
 """
 
 if __name__ == '__main__':
