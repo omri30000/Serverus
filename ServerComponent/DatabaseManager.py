@@ -1,4 +1,4 @@
-הmport sqlite3
+import sqlite3
 import Event
 import datetime
 
@@ -57,9 +57,9 @@ class DatabaseManager:
         """
         
         now = datetime.datetime.now()
-        now_date = now.strftime("%%Y-%m-%d %H:%M:%S.%f")
+        now_date = now.strftime("%Y-%m-%d %H:%M:%S.%f")
 
-        sql_statement = "Update Products set lastSeenDate = " + now_date +  "WHERE computerId = " + str(computer_id)
+        sql_statement = "Update Products set lastSeenDate = '{}' WHERE id = {}".format(now_date,computer_id)
         self.db_cursor.execute(sql_statement)
 
 
