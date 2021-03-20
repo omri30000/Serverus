@@ -95,7 +95,12 @@ def rule_management_page():
 def add_rule_page():
     if "userID" in session:  # the user is connected
         if request.method == "POST":
-            rule = request.form["rule data"]
+            first = request.form["rule data1"]
+            second = request.form["rule data2"]
+            third = request.form["rule data3"]
+            fourth = request.form["rule data4"]
+
+            rule = first + '.' + second + '.' + third + '.' + fourth
             db_manager.add_rule(session["userID"], rule)
             return redirect(url_for("rule_management_page"))
         else:  # GET request
