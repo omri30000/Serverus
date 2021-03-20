@@ -1,0 +1,74 @@
+{% extends "userBase.html" %}
+
+
+{% block style %}
+    .bd-placeholder-img {
+        font-size: 1.125rem;
+        text-anchor: middle;
+        -webkit-user-select: none;
+        -moz-user-select: none;
+        user-select: none;
+      }
+
+      @media (min-width: 768px) {
+        .bd-placeholder-img-lg {
+          font-size: 3.5rem;
+        }
+      }
+{% endblock %}
+{% block css %}
+    <link href="{{url_for('static', filename='css/rules.css')}}" rel="stylesheet">
+    <link rel="canonical" href="https://getbootstrap.com/docs/5.0/examples/sign-in/">
+{% endblock %}
+
+{% block content %}
+    <script>
+    function onClick(identifier){
+        fetch("/removeRule/" + identifier);
+        location.reload();
+    }
+    </script>
+
+    <center>
+        <h1>Rule Management</h1>
+        <br><br>
+
+        <div class="container">
+            <div class="row">
+                <div class="col-sm">
+                    <h2>Rule's Number</h2>
+                </div>
+                <div class="col-sm">
+                    <h2>Rule's Data</h2>
+                </div>
+                <div class="col-sm">
+                </div>
+            </div>
+
+            <br>
+
+            {% for id, data in content %}
+                <div class="row">
+                    <div class="col-sm">
+                        <h5>{{ id }}</h5>
+                    </div>
+                    <div class="col-sm" >
+                        <h5>{{ data }}</h5>
+                    </div>
+                    <div class="col-sm" >
+                        <button id="{{ id }}" class="btn btn-outline-dark" onClick="onClick(this.id)">Remove</button>
+                    </div>
+                    <div class="column">
+                        <br>
+                    </div>
+                </div>
+            {% endfor %}
+
+        </div>
+
+        <form method="get" action="/addRule">
+            <button class="w-100 btn btn-lg btn-primary" type="submit">Add Rule</button>
+        </form>
+
+    </center>
+{% endblock %}
