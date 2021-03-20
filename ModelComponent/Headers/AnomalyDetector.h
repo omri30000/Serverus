@@ -41,8 +41,7 @@ class AnomalyDetector {
         AnomalyDetector(AnomalyDetector const&) = delete;
         void operator=(AnomalyDetector const&) = delete;
 
-        float perform(valarray<valarray<float>> input);
-        std::pair<float,bool> performAD(valarray<valarray<float>> input);
+        std::pair<float,bool> perform(valarray<valarray<float>> input);
 
         ~AnomalyDetector() = default;
 

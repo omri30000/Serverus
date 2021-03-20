@@ -31,7 +31,7 @@ vector<byte> Event::castToBinMessage() const throw()
     data.insert(data.end(), ipVec.begin(), ipVec.end());
     //insert the date to the next 4 bytes
     data.insert(data.end(), dateVec.begin(), dateVec.end());
-
+    std::cout<<"size:::: "<<data.size()<<std::endl;
     return data;
 }
 
@@ -46,7 +46,7 @@ int Event::calcDateMilliseconds() const
     return this->_date.getHour() * 60 * 60 * 1000 +
     this->_date.getMinute() * 60 * 1000 +
     this->_date.getSecond() * 1000 +
-    this->_date.getMiliSec();
+    this->_date.getMicroSec()/1000;
 }
 
 /*
@@ -62,12 +62,18 @@ vector<byte> Event::castIpToBin() const
     size_t pos = 0;
     string temp;
 
-    while ((pos = ip.find(delimiter)) != string::npos) {
-        temp = ip.substr(0, pos);
+    for (int i = 0; i < 4; ++i)
+    {
+        pos = ip.find(delimiter);
+        if(pos == string::npos) // last
+            temp = ip;
+        else {
+            temp = ip.substr(0, pos);
+            ip.erase(0, pos + delimiter.length());
+        }
         ipVec.push_back(std::stoi(temp));
-        ip.erase(0, pos + delimiter.length());
-    }
 
+    }
     return ipVec;
 }
 

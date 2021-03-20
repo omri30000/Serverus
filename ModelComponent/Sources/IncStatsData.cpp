@@ -2,10 +2,13 @@
 #include <algorithm>
 
 //constructor
-IncStatsData::IncStatsData()
-{
-    _cleaningThread =  std::thread(&IncStatsData::cleanInactiveStats,this,10);
-    _isRunning = true;
+IncStatsData::IncStatsData(TimeManager* timeManager) {
+    if (timeManager != nullptr)
+    {
+        _cleaningThread = std::thread(&IncStatsData::cleanInactiveStats, this, 10);
+        _isRunning = true;
+    }
+    _timeManager = timeManager;
 }
 
 IncStatsData::~IncStatsData()
@@ -248,7 +251,18 @@ bool IncStatsData::isRelStreamExists(string key) const
 	return true;
 }
 
-string IncStatsData::getCombinedKey(string key) const {
+string IncStatsData::getCombinedKey(string first, string second) const
+{
+
+    if(first.compare(second) <0)
+        return first +"+" + second;
+    return second + "+" + first;
+
+
+}
+
+string IncStatsData::getCombinedKey(string key) const
+{
     string parts[2];
     int place = 0;
 
@@ -259,16 +273,6 @@ string IncStatsData::getCombinedKey(string key) const {
             parts[place] += key[i];
     }
     return std::min(parts[0], parts[1]) +'+'+ std::max(parts[0], parts[1]);
-}
-
-string IncStatsData::getCombinedKey(string first, string second) const
-{
-
-    if(first.compare(second) <0)
-        return first +"+" + second;
-    return second + "+" + first;
-
-
 }
 
 
@@ -287,8 +291,6 @@ void IncStatsData::cleanInactiveStats(float limit)
         std::this_thread::sleep_for(std::chrono::milliseconds (4000));
         const lock_guard<mutex> collectionLock(this->_incStatsCollectionLock);
 
-        //std::cout<<"thread start" <<std::endl;
-
         i++;
         vector<string> toRemove;
         //find
@@ -296,8 +298,8 @@ void IncStatsData::cleanInactiveStats(float limit)
         {
             for (int i = 0; i < stream.second.size(); ++i)
             {
-                float diff = (Time(1) - stream.second[i]->getLastTime() );
-                if(stream.second[i]->getWeight() < limit && diff > Time::DAY)
+                float diff = (_timeManager->getLastTime() - stream.second[i]->getLastTime() );
+                if(stream.second[i]->getWeight() < limit && diff > Time::HOUR)
                 {
                     // last time > day
                     toRemove.push_back(stream.first);
@@ -306,38 +308,20 @@ void IncStatsData::cleanInactiveStats(float limit)
            }
         }
 
-        // std::cout<<"thread part1" <<std::endl;
-
         vector<string> toRemoveRelative;
 
-        for(string remove : toRemove) {
-
-            this->deleteStream(remove);
-
-            string relativeKey = this->getCombinedKey(remove);
-
-            if (!isRelStreamExists(relativeKey))
-                continue;
-
-            auto rel = _relIncStatsCollection.at(relativeKey);
-
-            for (int i = 0; i < rel.size(); ++i) {
-                delete rel[i];
-                rel[i] = nullptr;
-            }
-
-            this->_relIncStatsCollection.erase(relativeKey);
-            int plus = remove.find('+');
-            string second = remove.substr(plus + 1, remove.size() - (plus + 1)) + '+' + remove.substr(0,plus);
-
-            this->deleteStream(second);
-
+        for(string remove : toRemove)
+        {
+            this->deleteStream2D(remove);
         }
-        // std::cout<<"finish thread" <<i<<std::endl;
     }
 
 }
-
+/*
+The function will remove a stream just 1d
+input: the stream key : string
+output: none
+*/
 void IncStatsData::deleteStream(string key)
 {
     if(!this->isStreamExists(key))
@@ -351,3 +335,43 @@ void IncStatsData::deleteStream(string key)
     }
     _incStatsCollection.erase(it);
 }
+
+/*
+The function will remove a stream, and his relatives
+input: the stream key : string
+output: none
+*/
+void IncStatsData::deleteStream2D(string key)
+{
+    this->deleteStream(key);
+
+    string relativeKey = this->getCombinedKey(key);
+    if (!isRelStreamExists(relativeKey))
+        return;
+
+    auto rel = _relIncStatsCollection.at(relativeKey);
+
+    for (int i = 0; i < rel.size(); ++i) {
+        delete rel[i];
+        rel[i] = nullptr;
+    }
+
+    this->_relIncStatsCollection.erase(relativeKey);
+
+    int plus = key.find('+');
+    string second = key.substr(plus + 1, key.size() - (plus + 1)) + '+' + key.substr(0,plus);
+
+    this->deleteStream(second);
+}
+/*
+ This function will remove a stream from incStats - for outer use only
+ Input:stream key
+ Output:None
+*/
+void IncStatsData::removeStream(string key)
+{
+    const lock_guard<mutex> collectionLock(this->_incStatsCollectionLock);
+    this->deleteStream2D(key);
+}
+
+

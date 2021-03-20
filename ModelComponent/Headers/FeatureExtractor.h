@@ -4,6 +4,7 @@
 #include "Packet.h"
 #include "IncStatsDataChannel.h"
 #include "IncStatsDataSocket.h"
+#include "TimeManager.h"
 
 
 #include <vector>
@@ -18,15 +19,17 @@ protected:
     
    IncStatsDataChannel _channelJitter;
    IncStatsDataChannel _channelSize;
-    IncStatsDataSocket _socketSize;
+   IncStatsDataSocket _socketSize;
 
 
 public:
     //option for deafult values
-    FeatureExtractor();
-    ~FeatureExtractor() = default;
-    FeatureExtractor(vector<float> lambdas);
+    FeatureExtractor(TimeManager* timeManager);
 
+    ~FeatureExtractor() = default;
+    FeatureExtractor(vector<float> lambdas,TimeManager* timeManager);
+
+    void deleteFromIncStats(Packet p);
     vector<float> extractNewFeaturesVector(Packet pack);
 };
 

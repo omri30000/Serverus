@@ -8,7 +8,7 @@
 #include "../ClientSocket.h"
 #include "../SocketException.h"
 
-class Communicator {
+class Communicator{
     protected:
         ClientSocket openSocket(int port); // open with local host
         ClientSocket openSocket(string host, int port);

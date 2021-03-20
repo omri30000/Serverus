@@ -65,14 +65,12 @@ class Server:
             self.db_manager_lock.release()
 
         # save to sql - events
-        self.products_lock.acquire()
 
         try:
             last_date = db_manager.get_last_date(computer_id)
         except Exception as e:
             last_date = None
 
-        self.products_lock.release()
         # read from sql
         
         self.db_manager_lock.acquire()
@@ -86,9 +84,7 @@ class Server:
         
         sock.sendall(msg)
 
-        self.products_lock.acquire()
-        self.products[computer_id] = datetime.datetime.now() 
-        self.products_lock.release()
+        self.db_manager.set_last_date(computer_id)
 
         time.sleep(2)
         sock.close()

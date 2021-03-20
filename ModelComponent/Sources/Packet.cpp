@@ -28,8 +28,8 @@ Packet::Packet(vector<string> record, int startIndex)
     this->_destPort = record[startIndex + 5];
     this->_protocol = record[startIndex + 6];
     this->_length = std::stof(record[startIndex + 7]);
-    this->_data = record[startIndex + 8];
-    this->_arrivalTime = Time(record[startIndex + 9]);
+    //this->_data = record[startIndex + 8];
+    this->_arrivalTime = Time(record[startIndex + 8]);
 
     if(_sourcePort =="NONE" || _destPort == "NONE") //there is no ports L3 and below
     {

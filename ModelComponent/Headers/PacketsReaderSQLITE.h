@@ -13,7 +13,7 @@ class PacketsReaderSQLITE : public PacketsReader
     protected:
         sqlite3* _dbFile;
         string _lastDate;
-
+        int _next;
         static int callbackGetData(void* data, int argc, char** argv, char** azColName);
         static int callbackGetInt(void *data, int argc, char **argv, char **azColName);
 

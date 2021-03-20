@@ -212,14 +212,12 @@ def main():
 
     while True:
         
-        try:
             # Create a new conversation socket
-            model_soc, model_address = listening_sock.accept()
-            
-            msg_answer = model_soc.recv(1024)
-            defender.defend(Event.Event.create_from_msg(bytearray(msg_answer)))
-        except Exception:
-            listening_sock.close()
+        model_soc, model_address = listening_sock.accept()
+        
+        msg_answer = model_soc.recv(1024)
+        defender.defend(Event.Event.create_from_msg(bytearray(msg_answer)))
+
 
     
 if __name__ == '__main__':

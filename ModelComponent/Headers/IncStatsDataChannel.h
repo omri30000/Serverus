@@ -8,7 +8,9 @@
 
 class IncStatsDataChannel : public IncStatsData
 {
+
 public:
+    IncStatsDataChannel(TimeManager* timeManager);
     string getStreamKey(Packet pack);
     string getForeignKey(Packet pack);
 };
