@@ -99,13 +99,15 @@ class DatabaseManager:
         sql_statement = "INSERT INTO Events (productId, attackerIp, blockLevel, date, data) VALUES (" + str(
             product_id) + ", \'" + event.get_ip_add() + "\', " + str(event.get_level()) + ", \'" + str(
             event.get_date()) + "\', \'" + event.get_ip_add() + "\')"
-        
         self.db_cursor.execute(sql_statement)
         self.db.commit()
         self.db_cursor.execute("PRAGMA wal_checkpoint(FULL)")
 
+        
         sql_statement = "SELECT id FROM Events WHERE date = '{}'".format(str(event.get_date()))
+        self.db_cursor.execute(sql_statement)
         rows = self.db_cursor.fetchall()
+        #todo cancel action
         event_id = rows[0][0]
 
         if event.get_level() > 1:
@@ -120,8 +122,8 @@ class DatabaseManager:
                 all_products_ids = [temp[i][0] for i in range(0, len(temp))]
 
                 for single_id in all_products_ids:
-                    self.__insert_block(single_id, event_id)
-
+                    if not self.__is_block_exists(single_id,event.get_ip_add()):
+                        self.__insert_block(single_id, event_id)
 
     def __insert_block(self, product_id, event_id):
         """
@@ -166,6 +168,23 @@ class DatabaseManager:
                 events += [single_event]
 
         return events
+
+    def __is_block_exists(self,product_id,ip_to_block):
+        """
+        This function checks if a block to an ip is already exists to this product in the database.
+        Args:
+            product_id (int): id of the product
+            ip_to_block (str): The ip of the hostile entity 
+
+        Returns:
+            if the block exists: bool
+        """
+        sql_statement = "SELECT * from Blocks INNER JOIN Events ON Blocks.eventId = Events.id WHERE attackerIP = '{}'".format(ip_to_block)
+        self.db_cursor.execute(sql_statement)
+        rows = self.db_cursor.fetchall()
+        return len(rows) >0
+
+
 
 
 def main():
