@@ -80,7 +80,7 @@ class DatabaseManager:
         :return: all the data of Rule table
         :rtype: list(list(rule_id, rule_data))
         """
-        sql_statement = "SELECT id, data FROM Events WHERE productId = " + str(self.get_product_id(user_id))
+        sql_statement = "SELECT id, attackerIP FROM Events WHERE productId = " + str(self.get_product_id(user_id))
         self.db_cursor.execute(sql_statement)
         rows = self.db_cursor.fetchall()
 
@@ -139,12 +139,14 @@ class DatabaseManager:
         return self.db_cursor.fetchall()[0][0]
 
     def add_rule(self, user_identifier, rule):
-        attacker_ip = "x.x.x.x"  # get from the rule's data
+        print(user_identifier, rule)
+        if self.__is_rule_exist(user_identifier, rule):
+            return None
 
         product_id = self.get_product_id(user_identifier)
 
-        sql_statement = "INSERT INTO Events (productId, attackerIP, blockLevel, data) VALUES (" + str(product_id) + \
-                        ", \'" + attacker_ip + "\', " + str(BLOCK_LEVEL) + ", \'" + rule + "\')"
+        sql_statement = "INSERT INTO Events (productId, attackerIP, blockLevel) VALUES (" + str(product_id) + \
+                        ", \'" + rule + "\', " + str(BLOCK_LEVEL) + ")"
 
         self.db_cursor.execute(sql_statement)
         self.db.commit()
@@ -168,14 +170,28 @@ class DatabaseManager:
         self.db_cursor.execute("PRAGMA wal_checkpoint(FULL);")
         return d
 
-    def __is_rule_exist(self):
-        pass
+    def __is_rule_exist(self, user_identifier, ip_address):
+        """
+        The function will check if a user already holds a rule with a specific data
+        :param user_identifier: the id of the user in the database
+        :type user_identifier: int
+        :param ip_address: the data of a rule
+        :type ip_address: str
+        :return: True or False if the rule exists
+        :rtype: bool
+        """
+        sql_statement = "SELECT * FROM Events WHERE productId = " + str(self.get_product_id(user_identifier)) + \
+                        " AND attackerIP = \'" + ip_address + "\';"
+        self.db_cursor.execute(sql_statement)
+        rows = self.db_cursor.fetchall()
+        print(rows)
+        return len(rows) > 0
 
 
 def main():
     a = DatabaseManager(db_file_name=config.DB_FILE_NAME)
     # a.insert_user("dghjg", "12341")
-    print(a.get_anomalies(8))
+    # print(a.is_rule_exist(6, "45.23.12.24"))
 
 
 if __name__ == '__main__':
