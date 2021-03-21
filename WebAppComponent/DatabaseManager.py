@@ -27,7 +27,7 @@ class DatabaseManager:
 
     def insert_user(self, username, password):
 
-        #does username exist
+        # does username exist
 
         exist = True
         try:
@@ -38,7 +38,6 @@ class DatabaseManager:
         if exist:
             raise Exception("user exists")
 
-        
         product_time = self.__insert_product()
 
         enc_password = hashlib.md5(password.encode()).hexdigest()
@@ -48,13 +47,11 @@ class DatabaseManager:
 
         sql_statement = "INSERT INTO Users (username, password, productId) VALUES (\'" + username + "\', \'" + \
                         enc_password + "\', " + str(rows[0][0]) + ")"
-    
 
         self.db_cursor.execute(sql_statement)
         self.db.commit()
         self.db_cursor.execute("PRAGMA wal_checkpoint(FULL);")
         print("ok")
-
 
         return self.get_user_id(username)
 
@@ -180,11 +177,12 @@ class DatabaseManager:
         :return: True or False if the rule exists
         :rtype: bool
         """
-        sql_statement = "SELECT * FROM Events WHERE productId = " + str(self.get_product_id(user_identifier)) + \
-                        " AND attackerIP = \'" + ip_address + "\';"
+        product_identifier = self.get_product_id(user_identifier)
+        sql_statement = "SELECT id FROM Events WHERE productId = {} AND attackerIP = '{}';"\
+            .format(str(product_identifier), ip_address)
         self.db_cursor.execute(sql_statement)
         rows = self.db_cursor.fetchall()
-        print(rows)
+
         return len(rows) > 0
 
 
