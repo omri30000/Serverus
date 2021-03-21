@@ -164,7 +164,6 @@ class DatabaseManager:
 
         self.__insert_block(user_identifier, event_id)
 
-
     def remove_rule(self, user_identifier, rule_identifier):
         product_id = self.get_product_id(user_identifier)
         sql_statement = "DELETE FROM Events WHERE id = " + str(rule_identifier) + \
