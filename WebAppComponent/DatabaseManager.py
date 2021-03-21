@@ -143,19 +143,20 @@ class DatabaseManager:
 
         """
         if self.__is_rule_exist(user_identifier, rule):
-            return None
+            return False
 
         product_id = self.get_product_id(user_identifier)
 
+        time_string = str(datetime.datetime.now())
         sql_statement = "INSERT INTO Events (productId, attackerIP, blockLevel, date) VALUES ({},'{}',{},'{}')"\
-            .format(str(product_id), rule, str(BLOCK_LEVEL), str(datetime.datetime.now()))
+            .format(str(product_id), rule, str(BLOCK_LEVEL), time_string)
 
         self.db_cursor.execute(sql_statement)
         self.db.commit()
         self.db_cursor.execute("PRAGMA wal_checkpoint(FULL);")
 
-        # get event_id
-        sql_statement = "SELECT id FROM Events WHERE date = '{}'".format(str(event.get_date()))
+        #get event_id
+        sql_statement = "SELECT id FROM Events WHERE date = '{}'".format(time_string)
         self.db_cursor.execute(sql_statement)
         rows = self.db_cursor.fetchall()
         # todo cancel action
@@ -192,8 +193,7 @@ class DatabaseManager:
         :rtype: bool
         """
         product_identifier = self.get_product_id(user_identifier)
-        sql_statement = "SELECT id FROM Events WHERE productId = {} AND attackerIP = '{}';"\
-            .format(str(product_identifier), ip_address)
+        sql_statement = "SELECT id FROM Events WHERE productId = {} AND attackerIP = '{}';".format(str(product_identifier), ip_address)
         self.db_cursor.execute(sql_statement)
         rows = self.db_cursor.fetchall()
 
