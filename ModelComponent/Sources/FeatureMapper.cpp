@@ -65,7 +65,7 @@ void FeatureMapper::calcInitialDistanceMatrix()
 
             _initialDistanceMatrix[i][j] = 1 - (_correlation[i][j]/sqrt_val);
             if(_initialDistanceMatrix[i][j] <0 || std::isnan(_initialDistanceMatrix[i][j]))
-                _initialDistanceMatrix[i][j] = pow(10,10);
+                _initialDistanceMatrix[i][j] = pow(10,-10);
 
         }
         _initialDistanceMatrix[i][i] = 0;
