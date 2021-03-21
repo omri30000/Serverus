@@ -155,11 +155,11 @@ class DatabaseManager:
         self.db.commit()
         self.db_cursor.execute("PRAGMA wal_checkpoint(FULL);")
 
-        #get event_id
+        # get event_id
         sql_statement = "SELECT id FROM Events WHERE date = '{}'".format(str(event.get_date()))
         self.db_cursor.execute(sql_statement)
         rows = self.db_cursor.fetchall()
-        #todo cancel action
+        # todo cancel action
         event_id = rows[0][0]
 
         self.__insert_block(user_identifier, event_id)
@@ -217,6 +217,7 @@ class DatabaseManager:
         self.db_cursor.execute(sql_statement)
         self.db.commit()
         self.db_cursor.execute("PRAGMA wal_checkpoint(FULL)")
+
 
 def main():
     a = DatabaseManager(db_file_name=config.DB_FILE_NAME)
