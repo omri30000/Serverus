@@ -139,7 +139,13 @@ class DatabaseManager:
         return self.db_cursor.fetchall()[0][0]
 
     def add_rule(self, user_identifier, rule):
-        print(user_identifier, rule)
+        """
+        This function adds a rule to the database by user request
+        Args:
+            user_identifier (int): id of the user
+            rule (str): ip to block
+
+        """
         if self.__is_rule_exist(user_identifier, rule):
             return None
 
@@ -151,6 +157,16 @@ class DatabaseManager:
         self.db_cursor.execute(sql_statement)
         self.db.commit()
         self.db_cursor.execute("PRAGMA wal_checkpoint(FULL);")
+
+        #get event_id
+        sql_statement = "SELECT id FROM Events WHERE date = '{}'".format(str(event.get_date()))
+        self.db_cursor.execute(sql_statement)
+        rows = self.db_cursor.fetchall()
+        #todo cancel action
+        event_id = rows[0][0]
+
+        self.__insert_block(user_identifier, event_id)
+
 
     def remove_rule(self, user_identifier, rule_identifier):
         product_id = self.get_product_id(user_identifier)
@@ -187,11 +203,27 @@ class DatabaseManager:
         print(rows)
         return len(rows) > 0
 
+    def __insert_block(self, product_id, event_id):
+        """
+        The method will insert a new block to the database
+        :param self: the instance of manager
+        :type self: DatabaseManager
+        :param product_id: the identifier of the product that the block should relate to
+        :type product_id: int
+        :param event_id: the identifier of the event that the block should relate to
+        :type event_id: int
+        :return: nothing
+        :rtype: None
+        """
+        sql_statement = "INSERT INTO Blocks (productId, eventId) VALUES (" + str(product_id) + ", " + str(event_id) + ")"
+        self.db_cursor.execute(sql_statement)
+        self.db.commit()
+        self.db_cursor.execute("PRAGMA wal_checkpoint(FULL)")        
 
 def main():
     a = DatabaseManager(db_file_name=config.DB_FILE_NAME)
     # a.insert_user("dghjg", "12341")
-    # print(a.is_rule_exist(6, "45.23.12.24"))
+    print(a.add_rule(6, "45.23.12.21"))
 
 
 if __name__ == '__main__':
