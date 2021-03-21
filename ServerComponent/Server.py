@@ -75,6 +75,7 @@ class Server:
         
         self.db_manager_lock.acquire()
         outer_events = self.db_manager.get_dangerous_events(computer_id, last_date)
+        outer_events += self.db_manager.get_rules_by_level_and_time(computer_id, last_date,5)
         self.db_manager_lock.release()
         
         msg = bytearray([0])
