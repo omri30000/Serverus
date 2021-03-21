@@ -61,11 +61,12 @@ void FeatureMapper::calcInitialDistanceMatrix()
         for (int j = 0; j < i; ++j)
         {
             float sqrt_val = sqrt(_crs[i]) * sqrt(_crs[j]);
-            sqrt_val = sqrt_val ==0? pow(10,-8) :sqrt_val;
+            sqrt_val = sqrt_val ==0 ? pow(10,-10) :sqrt_val;
 
             _initialDistanceMatrix[i][j] = 1 - (_correlation[i][j]/sqrt_val);
-            if(_initialDistanceMatrix[i][j] <0)
-                _initialDistanceMatrix[i][j] = 0;
+            if(_initialDistanceMatrix[i][j] <0 || std::isnan(_initialDistanceMatrix[i][j]))
+                _initialDistanceMatrix[i][j] = pow(10,10);
+
         }
         _initialDistanceMatrix[i][i] = 0;
     }
@@ -126,10 +127,6 @@ vector<vector<int>> FeatureMapper::cluster() {
             vec.erase(vec.begin() + indexes.first.first);
             //find two minimum - merge
             this->calcCurrentDistanceMatrix(vec, currDistance, indexes.first);
-            if(vec.size() <= 10)
-            {
-                int a = 0;
-            }
         }
         catch(std::exception e)
         {
