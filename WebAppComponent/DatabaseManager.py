@@ -27,8 +27,7 @@ class DatabaseManager:
 
     def insert_user(self, username, password):
 
-        # does username exist
-
+        # check username existence
         exist = True
         try:
             a = self.get_user_id(username)
