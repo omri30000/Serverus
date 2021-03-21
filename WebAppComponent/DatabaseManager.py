@@ -136,15 +136,14 @@ class DatabaseManager:
         return self.db_cursor.fetchall()[0][0]
 
     def add_rule(self, user_identifier, rule):
-        print(user_identifier, rule)
         if self.__is_rule_exist(user_identifier, rule):
             return None
 
         product_id = self.get_product_id(user_identifier)
 
-        sql_statement = "INSERT INTO Events (productId, attackerIP, blockLevel) VALUES (" + str(product_id) + \
-                        ", \'" + rule + "\', " + str(BLOCK_LEVEL) + ")"
-
+        sql_statement = "INSERT INTO Events (productId, attackerIP, blockLevel, date) VALUES ({},'{}',{},'{}')"\
+            .format(str(product_id), rule, str(BLOCK_LEVEL), str(datetime.datetime.now()))
+        
         self.db_cursor.execute(sql_statement)
         self.db.commit()
         self.db_cursor.execute("PRAGMA wal_checkpoint(FULL);")
@@ -190,6 +189,7 @@ def main():
     a = DatabaseManager(db_file_name=config.DB_FILE_NAME)
     # a.insert_user("dghjg", "12341")
     # print(a.is_rule_exist(6, "45.23.12.24"))
+    a.add_rule(11, "1.2.31.1")
 
 
 if __name__ == '__main__':
