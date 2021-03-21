@@ -168,6 +168,9 @@ class DatabaseManager:
         self.db_cursor.execute("PRAGMA wal_checkpoint(FULL);")
         return d
 
+    def __is_rule_exist(self):
+        pass
+
 
 def main():
     a = DatabaseManager(db_file_name=config.DB_FILE_NAME)
