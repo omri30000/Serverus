@@ -27,7 +27,8 @@ class DatabaseManager:
 
     def insert_user(self, username, password):
 
-        # check username existence
+        # does username exist
+
         exist = True
         try:
             a = self.get_user_id(username)
@@ -50,7 +51,6 @@ class DatabaseManager:
         self.db_cursor.execute(sql_statement)
         self.db.commit()
         self.db_cursor.execute("PRAGMA wal_checkpoint(FULL);")
-        print("ok")
 
         return self.get_user_id(username)
 
@@ -110,7 +110,7 @@ class DatabaseManager:
         :return: the amount of anomalies per day
         :rtype: Dict(date: amount of anomalies)
         """
-        sql_statement = "SELECT date FROM Events WHERE productId = " + str(self.get_product_id(user_id))
+        sql_statement = "SELECT date FROM Events WHERE productId = {} AND blockLevel != 5".format(str(self.get_product_id(user_id)))        
         self.db_cursor.execute(sql_statement)
         rows = self.db_cursor.fetchall()
         for i in range(len(rows)):
@@ -159,10 +159,11 @@ class DatabaseManager:
         sql_statement = "SELECT id FROM Events WHERE date = '{}'".format(time_string)
         self.db_cursor.execute(sql_statement)
         rows = self.db_cursor.fetchall()
-        # todo cancel action
+        #todo cancel action
         event_id = rows[0][0]
 
         self.__insert_block(user_identifier, event_id)
+
 
     def remove_rule(self, user_identifier, rule_identifier):
         product_id = self.get_product_id(user_identifier)
@@ -216,12 +217,8 @@ class DatabaseManager:
         self.db.commit()
         self.db_cursor.execute("PRAGMA wal_checkpoint(FULL)")
 
-
 def main():
     a = DatabaseManager(db_file_name=config.DB_FILE_NAME)
-    # a.insert_user("dghjg", "12341")
-    # print(a.is_rule_exist(6, "45.23.12.24"))
-
 
 if __name__ == '__main__':
     main()
