@@ -157,25 +157,34 @@ class DatabaseManager:
         :return: list of the relevant events
         :rtype: list[Event]
         """
+        sql_statement = "SELECT attackerIP, date FROM Events INNER JOIN Blocks ON Blocks.eventId = Events.Id WHERE Events.productId != {} AND blockLevel = 4 AND Blocks.productId = {} AND Events.date >= '{}'".format(product_id,product_id,time)
+        self.db_cursor.execute(sql_statement)
+
+        rows = self.db_cursor.fetchall()
         
-        return self.get_rules_by_level_and_time(product_id, time, 4)
+        events = []
+        
+        for i in range(0, len(rows)):
+            row = list(rows[i])
+            single_event = Event.Event.create_from_list([row[0],level,row[1]])
+            events += [single_event]
+
+        return events
+        
     
     def get_rules_by_level_and_time(self,product_id,time,level):
-        sql_statement = "SELECT attackerIP, date FROM Events INNER JOIN Blocks ON Blocks.eventId = Events.Id WHERE Events.productId != {} AND blockLevel = {} AND Blocks.productId = {}".format(product_id,str(level),product_id)
-        #sql_statement = "SELECT attackerIP, date FROM Events INNER JOIN Blocks ON Blocks.eventId = Events.Id WHERE Events.productId != {} AND blockLevel = {} AND Blocks.productId = {} AND Events.date  > {}".format(product_id,str(level),product_id,str(time))
+        sql_statement = "SELECT attackerIP, date FROM Events INNER JOIN Blocks ON Blocks.eventId = Events.Id WHERE blockLevel = {} AND Blocks.productId = {} AND Events.date >= '{}'".format(str(level),product_id,time)
+        print(sql_statement)
 
         
         self.db_cursor.execute(sql_statement)
 
         rows = self.db_cursor.fetchall()
-
         events = []
         for i in range(0, len(rows)):
-            rows[i] = list(rows[i])
-            single_event = Event.Event(rows[0],level,rows[1])
-            print(single_event)
-            if time is None or time < single_event.get_date():
-                events += [single_event]
+            row = list(rows[i])
+            single_event = Event.Event.create_from_list([row[0],level,row[1]])
+            events += [single_event]
 
         return events
 

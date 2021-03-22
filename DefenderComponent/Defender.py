@@ -162,8 +162,6 @@ class Defender:
             start = datetime.now()
             while not self.emerge and (datetime.now() - start).seconds <= 30:
                 time.sleep(1)  # sleep 10 seconds
-
-            print("enter")
             
             self.emerge = False
 

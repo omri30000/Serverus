@@ -145,6 +145,7 @@ class DatabaseManager:
         if self.__is_rule_exist(user_identifier, rule):
             return False
 
+
         product_id = self.get_product_id(user_identifier)
 
         time_string = str(datetime.datetime.now())
@@ -162,8 +163,7 @@ class DatabaseManager:
         #todo cancel action
         event_id = rows[0][0]
 
-        self.__insert_block(user_identifier, event_id)
-
+        self.__insert_block(product_id, event_id)
 
     def remove_rule(self, user_identifier, rule_identifier):
         product_id = self.get_product_id(user_identifier)
