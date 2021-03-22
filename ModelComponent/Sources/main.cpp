@@ -29,7 +29,7 @@ int main(int argc, char **argv) {
     srand(time(NULL));
     std::cout << "Hello, World!" << std::endl;
 
-    json config = readConfig("../../Configuration.json");
+    json config = readConfig("/home/ofir/Configuration.json");
 
     string filePath = "";
     TimeManager timeManager(false);
@@ -103,7 +103,7 @@ int main(int argc, char **argv) {
     std::ofstream file("values.txt");
     std::ofstream fileAnom("Anom.txt");
 
-    Communicator communicator(config["Communication"]["Defender_port"]);
+    Communicator communicator(config["Communication"]["DefenderListenPort"]);
 
 
     bool cond = true;

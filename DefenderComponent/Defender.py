@@ -41,9 +41,9 @@ class Defender:
 
         data = json.load(f)
 
-        self.computer_id = data['ProductID']
-        self.server_domain = data['ServerDomain']
-        self.server_port = data['ServerPort']
+        self.computer_id = data["General"]["ProductID']
+        self.server_domain = data["Communication"]['ServerDomain']
+        self.server_port = data["Communication"]['ServerPort']
 
         f.close()
 
@@ -195,7 +195,7 @@ def main():
         
     data = json.load(f)
 
-    listening_port = data['DefenderListenPort']
+    listening_port = data["Communication"]['DefenderListenPort']
 
     f.close()
 

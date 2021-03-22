@@ -95,11 +95,26 @@ class Server:
         """
         The function will create a string that can be added to a json file.
         """
-        data = {"ProductID": product_id,
-        "ServerDomain": SERVER_DOMAIN,
-        "ServerPort": LISTENING_PORT,
-        "DefenderListenPort": 4123}
-
+        data = {
+                "General" : {
+                    "ProductID": product_id,
+                },   
+                "Model" :
+                {
+                    "FM_Limit": 5000,
+                    "M": 7,
+                    "AD_Limit":50000,
+                    "Learning_Rate": 0.01,
+                    "Hidden_Layer_Ratio": 0.75
+                },
+            "Communication" :
+            {
+                "ServerDomain": SERVER_DOMAIN,
+                "ServerPort": LISTENING_PORT,
+                "DefenderListenPort": 4123
+            }
+        }
+        
         with open('Configuration.json', 'w') as json_file:
             json.dump(data, json_file)
 
