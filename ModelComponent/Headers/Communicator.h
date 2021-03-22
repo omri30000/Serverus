@@ -12,9 +12,9 @@ class Communicator{
     protected:
         ClientSocket openSocket(int port); // open with local host
         ClientSocket openSocket(string host, int port);
-
+        int _port;
     public:
-        Communicator();
+        Communicator(int port);
         ~Communicator() = default;
 
         void sendMessage(Event event);

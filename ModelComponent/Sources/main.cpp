@@ -15,13 +15,21 @@
 #include "../Headers/TimeManager.h"
 #include "../Headers/PacketsReaderMQ.h"
 
+#include "../json.hpp"
+
+
+using json = nlohmann::json;
+
 void killProcesses(const vector<string>& pNames);
 void printUsage();
+json readConfig(string filePath);
 
 // NOTE: Make sure to run program with sudo in order to be able to delete data from db
 int main(int argc, char **argv) {
     srand(time(NULL));
     std::cout << "Hello, World!" << std::endl;
+
+    json config = readConfig("../../Configuration.json");
 
     string filePath = "";
     TimeManager timeManager(false);
@@ -82,20 +90,20 @@ int main(int argc, char **argv) {
 
     system(("cd ../.. && sudo python3 SnifferComponent/SnifferToMQ.py "+ filePath+" > /dev/null &").c_str());
     //if(!forensics)
-    system("cd ../.. && sudo python3 DefenderComponent/Defender.py &");
+        system("cd ../.. && sudo python3 DefenderComponent/Defender.py &");
 
     PacketsReaderMQ reader = PacketsReaderMQ();
 
     FeatureExtractor extractor(pTimeManager);
 
-    FeatureMapper mapper(5000,7,85);
+    FeatureMapper mapper(config["Model"]["FM_Limit"],config["Model"]["M"],85);
     Parser* p = nullptr;
     AnomalyDetector* ad = nullptr;
 
     std::ofstream file("values.txt");
     std::ofstream fileAnom("Anom.txt");
 
-    Communicator communicator;
+    Communicator communicator(config["Communication"]["Defender_port"]);
 
 
     bool cond = true;
@@ -144,9 +152,7 @@ int main(int argc, char **argv) {
                 {
                     size.push_back(vec[i].size());
                 }
-                ad = &AnomalyDetector::getInstance(85, 40000, 0.1, 0.75, size);
-
-
+                ad = &AnomalyDetector::getInstance(85, config["Model"]["AD_Limit"], config["Model"]["Learning_Rate"], config["Model"]["Hidden_Layer_Ratio"], size);
             }
         }
         else
@@ -177,6 +183,7 @@ int main(int argc, char **argv) {
     }
     return 0;
 }
+
 void printUsage()
 {
     std::cout << "usage: model.exe [options]\n"
@@ -192,4 +199,14 @@ void killProcesses(const vector<string>& pNames)
         system(("pkill -9 " +name).c_str());
     }
 
+}
+
+json readConfig(string filePath)
+{
+    json data;
+    std::ifstream fileData(filePath);
+
+    fileData >> data;
+
+    return data;
 }

@@ -7,7 +7,10 @@
 /*
 Constructor
 */
-Communicator::Communicator(){}
+Communicator::Communicator(int port)
+{
+    _port = port;
+}
 
 /*
 The function will open a conversation socket with the defender
@@ -43,7 +46,7 @@ output: none
 void Communicator::sendMessage(Event event)
 {
     try{
-        ClientSocket sock = this->openSocket(4123); // Defender's port, get from config file
+        ClientSocket sock = this->openSocket(_port); // Defender's port, get from config file
         sock << event.castToBinMessage();
     }
     catch (SocketException& e)
