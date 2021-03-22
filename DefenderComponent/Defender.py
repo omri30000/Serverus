@@ -131,16 +131,11 @@ class Defender:
 
         if rule.is_temp():
             time_to_delete = rule.get_date() + timedelta(minutes=2)  # time to disable blocking
-            # print("hello")
             rule_to_write = "/sbin/iptables -D INPUT %s -j DROP" % (rule.write_rule())
 
             job = self.cron.new(command=rule_to_write + "; sudo crontab -l | grep \"" + rule_to_write + "\" | crontab -r")
             job.setall("%d %d * * *" % (time_to_delete.minute, time_to_delete.hour))
             self.cron.write(user='root')
-
-            # self.log.add_block_record(event, 2)
-        # else:
-        #   self.log.add_block_record(event, 3)
 
         os.system("/sbin/iptables -A INPUT %s -j DROP" % (rule.write_rule()))
 
@@ -165,7 +160,7 @@ class Defender:
 
         while True:
             start = datetime.now()
-            while not self.emerge and (datetime.now() - start).seconds <= 1*30:
+            while not self.emerge and (datetime.now() - start).seconds <= 1*15:
                 time.sleep(10)  # sleep 10 seconds
 
             

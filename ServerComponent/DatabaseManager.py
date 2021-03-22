@@ -62,6 +62,8 @@ class DatabaseManager:
         sql_statement = "Update Products set lastSeenDate = '{}' WHERE id = {}".format(now_date,computer_id)
         self.db_cursor.execute(sql_statement)
 
+        self.db.commit()
+        self.db_cursor.execute("PRAGMA wal_checkpoint(FULL)")
 
     def get_last_date(self,computer_id):
         """
@@ -96,9 +98,9 @@ class DatabaseManager:
         :return: nothing
         :rtype: None
         """
-        sql_statement = "INSERT INTO Events (productId, attackerIp, blockLevel, date, data) VALUES (" + str(
+        sql_statement = "INSERT INTO Events (productId, attackerIp, blockLevel, date) VALUES (" + str(
             product_id) + ", \'" + event.get_ip_add() + "\', " + str(event.get_level()) + ", \'" + str(
-            event.get_date()) + "\', \'" + event.get_ip_add() + "\')"
+            event.get_date()) + "\')"
         self.db_cursor.execute(sql_statement)
         self.db.commit()
         self.db_cursor.execute("PRAGMA wal_checkpoint(FULL)")

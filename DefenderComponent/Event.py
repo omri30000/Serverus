@@ -30,6 +30,7 @@ class Event:
         
         level = msg[0]
         ip_add = ".".join([str(i) for i in msg[1:5]])
+        print(ip_add)
         print(len(msg))
         temp = sum([pow(256, 3-i) * int(msg[5+i]) for i in range(4)])
         today = datetime.datetime.now()

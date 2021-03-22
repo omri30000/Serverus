@@ -57,6 +57,7 @@ class Server:
         product_message = bytearray(sock.recv(1024))
         events = []
         computer_id = int(product_message[0])
+        print(computer_id)
         for i in range(1, len(product_message), EVENT_SIZE_BYTES):
             event = Event.Event.create_from_msg(product_message[i: i + EVENT_SIZE_BYTES])
             
@@ -67,7 +68,10 @@ class Server:
         # save to sql - events
 
         try:
+            self.db_manager_lock.acquire()
             last_date = db_manager.get_last_date(computer_id)
+            self.db_manager_lock.release()
+
         except Exception as e:
             last_date = None
 
@@ -82,10 +86,13 @@ class Server:
 
         for eve in outer_events:
             msg += eve.to_packet()
+            print(eve.get_ip_add())
         
         sock.sendall(msg)
 
+        self.db_manager_lock.release()
         self.db_manager.set_last_date(computer_id)
+        self.db_manager_lock.release()
 
         time.sleep(2)
         sock.close()
