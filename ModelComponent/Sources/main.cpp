@@ -86,7 +86,7 @@ int main(int argc, char **argv) {
     else
         pTimeManager = &timeManager;
 
-    killProcesses({"sniffer","defender"});
+    killProcesses({"SnifferTo","Defender"});
 
     system(("cd ../.. && sudo python3 SnifferComponent/SnifferToMQ.py "+ filePath+" > /dev/null &").c_str());
     //if(!forensics)
@@ -196,7 +196,7 @@ void killProcesses(const vector<string>& pNames)
 {
     for(string name : pNames)
     {
-        system(("pkill -9 " +name).c_str());
+        system(("pkill -f -9 " +name).c_str());
     }
 
 }
