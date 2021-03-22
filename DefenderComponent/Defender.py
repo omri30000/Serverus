@@ -160,9 +160,10 @@ class Defender:
 
         while True:
             start = datetime.now()
-            while not self.emerge and (datetime.now() - start).seconds <= 1*15:
-                time.sleep(10)  # sleep 10 seconds
+            while not self.emerge and (datetime.now() - start).seconds <= 30:
+                time.sleep(1)  # sleep 10 seconds
 
+            print("enter")
             
             self.emerge = False
 
@@ -178,13 +179,12 @@ class Defender:
                 s.connect((self.server_domain, self.server_port))
                 s.sendall(message)
                 data = s.recv(1024)
-
             if len(data) >= 2:  # there are external events
                 msg_code = int(data[0])
                 # block events from global server
                 for i in range(1, len(data), 9):
                     self.defend(Event.Event.create_from_msg(bytearray(data[i:i+9])), local=True)  # at level 3
-
+            
 
 def main():    
     defender = Defender()

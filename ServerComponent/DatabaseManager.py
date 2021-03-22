@@ -75,15 +75,15 @@ class DatabaseManager:
         :return: the date of the last access
         :rtype: datetime.datetime
         """
-        sql_statement = "SELECT lastSeenDate FROM Products WHERE computerId = " + str(computer_id)
+        sql_statement = "SELECT lastSeenDate FROM Products WHERE id = " + str(computer_id)
         self.db_cursor.execute(sql_statement)
 
+        rows = self.db_cursor.fetchall()
+        
         if len(rows) != 1:
             raise Exception("couldn't find computer id")
 
-        rows = self.db_cursor.fetchall()
-
-        time = datetime.datetime.strptime(list(rows[0][0]), '%Y-%m-%d %H:%M:%S.%f')
+        time = datetime.datetime.strptime(rows[0][0], '%Y-%m-%d %H:%M:%S.%f')
         return time
 
     def insert_event(self, event, product_id):
@@ -173,6 +173,7 @@ class DatabaseManager:
         for i in range(0, len(rows)):
             rows[i] = list(rows[i])
             single_event = Event.Event(rows[0],level,rows[1])
+            print(single_event)
             if time is None or time < single_event.get_date():
                 events += [single_event]
 

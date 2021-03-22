@@ -48,9 +48,6 @@ class Server:
 
         self.listening_sock.close()
 
-    def add_product(self):
-        pass
-
     def __manage_conversation(self, sock):
         EVENT_SIZE_BYTES = 9
 
@@ -67,34 +64,30 @@ class Server:
 
         # save to sql - events
 
-        try:
-            self.db_manager_lock.acquire()
-            last_date = db_manager.get_last_date(computer_id)
-            self.db_manager_lock.release()
-
-        except Exception as e:
-            last_date = None
+        self.db_manager_lock.acquire()
+        last_date = self.db_manager.get_last_date(computer_id)
+        self.db_manager_lock.release()
 
         # read from sql
-        
+        print
         self.db_manager_lock.acquire()
         outer_events = self.db_manager.get_dangerous_events(computer_id, last_date)
         outer_events += self.db_manager.get_rules_by_level_and_time(computer_id, last_date,5)
         self.db_manager_lock.release()
-        
-        msg = bytearray([0])
+        print("hey")
+        msg = bytearray([computer_id])
 
         for eve in outer_events:
             msg += eve.to_packet()
             print(eve.get_ip_add())
-        
+        print("ok")
         sock.sendall(msg)
-
-        self.db_manager_lock.release()
+        print("finished")
+        self.db_manager_lock.acquire()
         self.db_manager.set_last_date(computer_id)
         self.db_manager_lock.release()
 
-        time.sleep(2)
+        #time.sleep(2)
         sock.close()
 
 
