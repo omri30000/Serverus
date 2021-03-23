@@ -35,9 +35,9 @@
 
         <div class="container">
             <div class="row">
-                <!--<div class="col-sm">
+                <div class="col-sm">
                     <h2>Rule's Number</h2>
-                </div>-->
+                </div>
                 <div class="col-sm">
                     <h2>Rule's Data</h2>
                 </div>
@@ -51,14 +51,14 @@
         <div class="container" style="overflow-y:auto;height:250px;">
             {% for id, data in content %}
                 <div class="row">
-                    <!--<div class="col-sm">
+                    <div class="col-sm">
                         <h5>{{ id }}</h5>
-                    </div>-->
+                    </div>
                     <div class="col-sm" >
                         <h5>{{ data }}</h5>
                     </div>
                     <div class="col-sm" >
-                        <button id="{{ id }}" class="btn btn-outline-dark" onClick="onClick(this.id)">Remove</button>
+                        <button id="{{ data }}" class="btn btn-outline-dark" onClick="onClick(this.id)">Remove</button>
                     </div>
                     <div class="column">
                         <br>

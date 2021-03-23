@@ -114,12 +114,12 @@ def add_rule_page():
         return redirect(url_for("login_page"))
 
 
-@app.route("/removeRule/<identifier>")
-def remove_rule(identifier):
+@app.route("/removeRule/<data>")
+def remove_rule(data):
     if "userID" not in session:  # user is not connected
         return redirect(url_for("login_page"))
 
-    db_manager.remove_rule(session["userID"], identifier)
+    db_manager.remove_rule_by_data(session["userID"], data)
     return redirect(url_for("rule_management_page"))
 
 

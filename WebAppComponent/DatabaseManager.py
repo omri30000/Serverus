@@ -74,14 +74,17 @@ class DatabaseManager:
         """
         The function will provide all the data of Rule table in the db
         :return: all the data of Rule table
-        :rtype: list(list(rule_id, rule_data))
+        :rtype: list(list(relative rule_id, rule_data))
         """
-        sql_statement = "SELECT id, attackerIP FROM Events WHERE productId = " + str(self.get_product_id(user_id))
+        sql_statement = "SELECT id, attackerIP FROM Events WHERE productId = {};"\
+            .format(str(self.get_product_id(user_id)))
+
         self.db_cursor.execute(sql_statement)
         rows = self.db_cursor.fetchall()
 
         for i in range(len(rows)):
             rows[i] = list(rows[i])
+            rows[i][0] = i + 1
 
         return rows
 
@@ -130,7 +133,7 @@ class DatabaseManager:
         return count
 
     def get_product_id(self, user_id):
-        sql_statement = "SELECT productId FROM Users WHERE id = " + str(user_id) + ";"
+        sql_statement = "SELECT productId FROM Users WHERE id = {};".format(str(user_id))
         self.db_cursor.execute(sql_statement)
         return self.db_cursor.fetchall()[0][0]
 
@@ -155,19 +158,20 @@ class DatabaseManager:
         self.db.commit()
         self.db_cursor.execute("PRAGMA wal_checkpoint(FULL);")
 
-        #get event_id
+        # get event_id
         sql_statement = "SELECT id FROM Events WHERE date = '{}'".format(time_string)
         self.db_cursor.execute(sql_statement)
         rows = self.db_cursor.fetchall()
-        #todo cancel action
+        # todo cancel action
         event_id = rows[0][0]
 
         self.__insert_block(product_id, event_id)
 
-    def remove_rule(self, user_identifier, rule_identifier):
+    def remove_rule_by_data(self, user_identifier, rule_data):
         product_id = self.get_product_id(user_identifier)
-        sql_statement = "DELETE FROM Events WHERE id = " + str(rule_identifier) + \
-                        " AND productId = " + str(product_id)
+
+        sql_statement = "DELETE FROM Events WHERE attackerIP = '{}' AND productId = {};"\
+            .format(str(rule_data), str(product_id))
 
         self.db_cursor.execute(sql_statement)
         self.db.commit()
