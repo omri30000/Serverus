@@ -1,6 +1,21 @@
 {
-    "ProductID": 15,
-    "ServerDomain": "localhost",
-    "ServerPort": 443,
-    "DefenderListenPort": 4123
+   "General":
+   {
+	"ProductId" :15
+   },
+   "Model":
+   {
+	"FM_Limit": 5000,
+	"M": 7,
+	"AD_Limit":50000,
+	"Learning_Rate": 0.01,
+	"Hidden_Layer_Ratio": 0.75
+   },
+
+   "Communication":
+   {
+      "ServerDomain": "localhost",
+      "ServerPort": 443,
+      "DefenderListenPort": 4123
+   }
 }

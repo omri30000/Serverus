@@ -41,9 +41,9 @@ class Defender:
 
         data = json.load(f)
 
-        self.computer_id = data["General"]["ProductID']
-        self.server_domain = data["Communication"]['ServerDomain']
-        self.server_port = data["Communication"]['ServerPort']
+        self.computer_id = data["General"]["ProductId"]
+        self.server_domain = data["Communication"]["ServerDomain"]
+        self.server_port = data["Communication"]["ServerPort"]
 
         f.close()
 
@@ -204,7 +204,7 @@ def main():
 
     while True:
         
-            # Create a new conversation socket
+        # Create a new conversation socket
         model_soc, model_address = listening_sock.accept()
         
         msg_answer = model_soc.recv(1024)
