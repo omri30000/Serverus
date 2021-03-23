@@ -145,7 +145,6 @@ class DatabaseManager:
         if self.__is_rule_exist(user_identifier, rule):
             return False
 
-
         product_id = self.get_product_id(user_identifier)
 
         time_string = str(datetime.datetime.now())

@@ -97,13 +97,16 @@ def rule_management_page():
 def add_rule_page():
     if "userID" in session:  # the user is connected
         if request.method == "POST":
-            first = request.form["rule data1"]
-            second = request.form["rule data2"]
-            third = request.form["rule data3"]
-            fourth = request.form["rule data4"]
+            # get numbers and avoid pre-zeros (0003 -> 3)
+            first = str(int(request.form["rule data1"]))
+            second = str(int(request.form["rule data2"]))
+            third = str(int(request.form["rule data3"]))
+            fourth = str(int(request.form["rule data4"]))
 
             rule = first + '.' + second + '.' + third + '.' + fourth
-            db_manager.add_rule(session["userID"], rule)
+
+            if Utils.validate_ip_address(rule):
+                db_manager.add_rule(session["userID"], rule)
             return redirect(url_for("rule_management_page"))
         else:  # GET request
             return render_template("addRule.html")
