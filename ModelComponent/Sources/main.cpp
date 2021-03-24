@@ -27,8 +27,8 @@ json readConfig(string filePath);
 // NOTE: Make sure to run program with sudo in order to be able to delete data from db
 int main(int argc, char **argv) {
     srand(time(NULL));
-    std::cout << "Hello, World!" << std::endl;
-
+    std::cout << "\t\tCatch & Shoot | 2021" << std::endl<<std::endl;
+    //todo::fix this
     json config = readConfig("/home/ofir/Configuration.json");
 
     string filePath = "";
@@ -38,6 +38,11 @@ int main(int argc, char **argv) {
     bool disableOutgoing = true;
     bool threadExist = true;
 
+    //check for sudo
+    if(getuid() != 0) {
+        std::cout << "Please run with root mode only!" << std::endl;
+        exit(0);
+    }
     for (int i = 0; i < argc; ++i) {
         std::cout<<i<<". "<<argv[i]<<std::endl;
     }
@@ -89,8 +94,8 @@ int main(int argc, char **argv) {
     killProcesses({"SnifferTo","Defender"});
 
     system(("cd ../.. && sudo python3 SnifferComponent/SnifferToMQ.py "+ filePath+" > /dev/null &").c_str());
-    //if(!forensics)
-        system("cd ../.. && sudo python3 DefenderComponent/Defender.py &");
+    if(!forensics)
+        system("cd ../.. && sudo python3 DefenderComponent/Defender.py > /dev/null &");
 
     PacketsReaderMQ reader = PacketsReaderMQ();
 
@@ -188,9 +193,9 @@ void printUsage()
 {
     std::cout << "usage: model.exe [options]\n"
                 <<"options:\n"
-                <<" -f, for forenics - add file path after\n"
+                <<"-f. for forenics - add file path after\n"
                 <<"-d. cancel defence thread\n"
-                <<"-o = enable outgoing packet\n";
+                <<"-o. enable outgoing packet\n";
 }
 void killProcesses(const vector<string>& pNames)
 {
