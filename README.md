@@ -1,5 +1,5 @@
 # Serverus
-Serverus is an intrusion detection and prevention system which uses deep learning tools in order to identify and avoid attacks on servers (based on ubuntu OS).
+Serverus is an behavior-based intrusion detection and prevention system which uses deep learning model in order to identify attacks by anomaly behavior on the server transportation and block it. (based on ubuntu OS).
 
 The name "Serverus" is influenced by the great Cerberus from the greek mythology. A Cerberus (often referred to as the hound of Hades) is a creature which resembles to a multi-headed dog, and guards the gates of the Underworld. Since our product's main goal is defending servers from attack, we've found it exteremely similar to the Cerberus.  
 
@@ -11,15 +11,24 @@ Created by *Ofir Shapira* and *Omri Zaiman* as a final project of Magshimim - th
 ## Installation
 1. Register to our website [here](http://defence.rocks/), it will provide you the project files with a uniqe identifier that was generated especially for you. 
 
-## Requirements
+### Requirements
 Make sure you have the following technologies installed in your machine:
+#### Linux software
+- [ZeroMQ](https://zeromq.org/download/) 
 #### Python modules
-- scapy (for sniffing) --> `sudo pip install scapy`
-- pika (for message queue) --> `pip install pika`
-- Json --> built in module
+- [scapy](https://pypi.org/project/scapy/) (for sniffing) --> `sudo pip install scapy`
+- [pika](https://pypi.org/project/pika/) (for message queue) --> `sudo pip install pika`
 
-## Instructions
-todo
+###Compile
+For Compiling there are 2 main options:
+- using `build.sh` - script that compiles and executes the project (on us, without a charge)
+- compile by yourself
+```
+mkdir build
+cmake -B build   #generate the make file
+cd build
+make .   #compile the project
+sudo ./idps   #execute the script
 
 ## Main components
 
