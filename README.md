@@ -14,8 +14,9 @@ Created by *Ofir Shapira* and *Omri Zaiman* as a final project of Magshimim - th
 ## Requirements
 Make sure you have the following technologies installed in your machine:
 #### Python modules
-- pika (for message queue)
-- Json
+- scapy (for sniffing) --> `sudo pip install scapy`
+- pika (for message queue) --> `pip install pika`
+- Json --> built in module
 
 ## Instructions
 todo
