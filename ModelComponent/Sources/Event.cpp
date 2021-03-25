@@ -31,7 +31,6 @@ vector<byte> Event::castToBinMessage() const throw()
     data.insert(data.end(), ipVec.begin(), ipVec.end());
     //insert the date to the next 4 bytes
     data.insert(data.end(), dateVec.begin(), dateVec.end());
-    std::cout<<"size:::: "<<data.size()<<std::endl;
     return data;
 }
 

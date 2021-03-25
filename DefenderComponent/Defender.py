@@ -5,6 +5,7 @@ import socket
 import time
 import threading
 import json
+import os
 
 from datetime import datetime, timedelta
 
@@ -53,8 +54,8 @@ class Defender:
         self.emerge = False  # level 4 has been found
         
         try:
-            # self.log = Log.Log(input("Enter log file name: "))
-            self.log = Log.Log("Loglog.txt")
+            os.makedirs("logs", exist_ok=True)
+            self.log = Log.Log("logs/log.txt")
         except Exception as e:
             raise e
 
@@ -66,8 +67,10 @@ class Defender:
         Args:
             event ({event}): The hostile event the defend from
         """
-        # print(type(event))
-        # print("cululululu")
+
+        print("hello world")
+        self.log.add_block_record(event.get_ip_add(),event.get_level())
+
 
         if not local:
             self.events += [event]
@@ -96,7 +99,7 @@ class Defender:
         msg = ""
         while str(msg).find(ERROR_CODE) < 0:
             msg = os.system("iptables -D INPUT %s -j DROP" % (Rule.Rule(event, 3).write_rule()))
-        self.log.add_unblock_record(event)
+        self.log.add_unblock_record(event.get_ip_add())
 
     def __close_socket(self, event):
         """The function closes a specific socket
@@ -106,8 +109,6 @@ class Defender:
         """
         # terminates all sockets with event
         os.system("ss --kill -nt dst %s " % (event.get_ip_add()))
-        # os.system("tcpkill ip host %s"%(event.get_ip_add()))
-        self.log.add_block_record(event, 1)
 
     def __block(self, rule):
 
@@ -160,7 +161,7 @@ class Defender:
 
         while True:
             start = datetime.now()
-            while not self.emerge and (datetime.now() - start).seconds <= 30:
+            while not self.emerge and (datetime.now() - start).seconds <= 60:
                 time.sleep(1)  # sleep 10 seconds
             
             self.emerge = False

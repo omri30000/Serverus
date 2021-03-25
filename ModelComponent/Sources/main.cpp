@@ -26,7 +26,7 @@ json readConfig(string filePath);
 // NOTE: Make sure to run program with sudo in order to be able to delete data from db
 int main(int argc, char **argv) {
     srand(time(NULL));
-    std::cout << "\t\tCatch & Shoot | 2021" << std::endl<<std::endl;
+    std::cout << "Catch & Shoot | 2021" << std::endl<<std::endl;
     //todo::fix this
     json config = readConfig("/home/ofir/Configuration.json");
 
@@ -148,7 +148,7 @@ int main(int argc, char **argv) {
                 mapper.update(stats);
             else {
                 vector<vector<int>> vec = mapper.cluster();
-                //std::cout << "Clusters amount: " << vec.size() << std::endl;
+                std::cout << "Clusters amount: " << vec.size() << std::endl;
                 p = new Parser(vec);
                 vector<int> size;
 
@@ -176,11 +176,11 @@ int main(int argc, char **argv) {
                 int val = manipulator->calcLevel(result.first);
                 if (val != 0) {
                     fileAnom << "Anomaly: " << val << " Num: " << a << std::endl;
-                    //if (!forensics) {
+                    if (!forensics) {
                         extractor.deleteFromIncStats(pack);
                         communicator.sendMessage(Event(pack.getSourceIP(), val, pack.getArrivalTime()));
 
-                    //}
+                    }
                 }
             }
         }
