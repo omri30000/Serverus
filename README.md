@@ -1,11 +1,13 @@
-# Catch & Shoot
-Catch & Shoot is an intrusion detection and prevention system which uses deep learning tools in order to identify and avoid attacks on servers (based on ubuntu OS).
+# Serverus
+Serverus is an intrusion detection and prevention system which uses deep learning tools in order to identify and avoid attacks on servers (based on ubuntu OS).
 
 Created by *Ofir Shapira* and *Omri Zaiman*
 
 ## Table of contents
 Make sure you have the following technologies installed in your machine:
-- 
+#### Python modules
+- pika (for message queue)
+- crontab (for IPTables)
 
 ## Installation
 todo
