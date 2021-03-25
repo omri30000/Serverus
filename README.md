@@ -1,7 +1,18 @@
 # Catch & Shoot
-Catch & Shoot is an intrusion detection and prevention system which uses deep learning tools in order to identify and avoid attacks on servers.
+Catch & Shoot is an intrusion detection and prevention system which uses deep learning tools in order to identify and avoid attacks on servers (based on ubuntu OS).
 
 Created by *Ofir Shapira* and *Omri Zaiman*
+
+## Table of contents
+- [Installation] (#Installation)
+- [Requirements] (#Requirements)
+- [Main components] (#Main components)
+
+## Installation
+todo
+
+## Requirements
+todo
 
 ## Main components
 
@@ -16,3 +27,5 @@ todo
 
 ### Server component
 todo
+
+
