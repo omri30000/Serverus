@@ -9,7 +9,7 @@ Created by *Ofir Shapira* and *Omri Zaiman* as a final project of Magshimim - th
 [[_TOC_]]
 
 ## Installation
-1. Register to our website [here](http://defence.rocks/), it will provide you the project files with a uniqe identifier that was generated especially for you. 
+First you have to register to our website [here](http://defence.rocks/), it will provide you the project files with a uniqe identifier that was generated especially for you by us. 
 
 ### Requirements
 Make sure you have the following technologies installed in your machine:
