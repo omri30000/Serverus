@@ -3,7 +3,6 @@
 #include <cstdlib>
 #include <algorithm>
 
-#include "../Headers/PacketsReaderSQLITE.h"
 #include "../Headers/FeatureExtractor.h"
 #include "../Headers/FeatureMapper.h"
 #include "../Headers/Parser.h"
@@ -15,7 +14,7 @@
 #include "../Headers/TimeManager.h"
 #include "../Headers/PacketsReaderMQ.h"
 
-#include "../json.hpp"
+#include "../Headers/json.hpp"
 
 
 using json = nlohmann::json;

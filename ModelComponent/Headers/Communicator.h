@@ -5,8 +5,8 @@
 #pragma once
 
 #include "Event.h"
-#include "../ClientSocket.h"
-#include "../SocketException.h"
+#include "ClientSocket.h"
+#include "SocketException.h"
 
 class Communicator{
     protected:

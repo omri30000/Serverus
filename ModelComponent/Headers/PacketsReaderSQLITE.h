@@ -1,6 +1,6 @@
 #pragma oncePacketsReaderSQLITE
 
-#include "../sqlite3.h"
+#include "sqlite3.h"
 #include "PacketsReader.h"
 
 //use these in terminal before compiling: 
