@@ -17,7 +17,6 @@ class Log():
 
 
     def add_block_record(self, ip_add, level):
-        print("hi")
         st = "Entity in IP address " + str(ip_add) + ", is blocked in blocking level " + str(level) + "!\n"
         self.log_file.write(st)
         self.log_file.flush()

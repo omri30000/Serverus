@@ -6,11 +6,18 @@ from flask import request
 from flask import redirect, url_for
 from flask import session
 from flask import flash
+from flask import send_from_directory
+
+import zipfile
+import json
+import shutil
+import os
 
 import DatabaseManager
 import config
 import Utils
 
+ZIP_FILE ="Example/base.zip"
 
 app = Flask(__name__)
 app.secret_key = "secretKey"
@@ -122,11 +129,32 @@ def remove_rule(data):
     db_manager.remove_rule_by_data(session["userID"], data)
     return redirect(url_for("rule_management_page"))
 
+@app.route("/download")
+def download():
+    if "userID" not in session:  # user is not connected
+        return redirect(url_for("login_page"))
+    product_id = db_manager.get_product_id(session["userID"])
+    
+    make_config_file(product_id)
+    config_tmp = "Example/Configuration{}_tmp.json".format(product_id)
+
+    new_zip = "Example/{}.zip".format(product_id)
+
+    shutil.copy(ZIP_FILE,new_zip)
+    zipped = zipfile.ZipFile(new_zip,"a")
+    zipped.write(config_tmp,"Configuration.json",zipfile.ZIP_DEFLATED)
+    os.remove(config_tmp)
+    
+    return send_from_directory(directory='Example/', filename=new_zip.split("/")[1])
+
+
 
 @app.route("/logout")
 def logout():
     session.pop("userID", None)
     return redirect(url_for("login_page"))
+
+
 
 
 def order_by_third(arr, rev=False):
@@ -146,6 +174,33 @@ def order_by_third(arr, rev=False):
         return a
     else:
         return sorted(temp, key=lambda temp: temp[2])
+
+def make_config_file(product_id):
+    """
+    The function will create a string that can be added to a json file.
+    """
+    data = {
+            "General" : {
+                "ProductID": product_id,
+            },   
+            "Model" :
+            {
+                "FM_Limit": 5000,
+                "M": 7,
+                "AD_Limit":50000,
+                "Learning_Rate": 0.01,
+                "Hidden_Layer_Ratio": 0.75
+            },
+        "Communication" :
+        {
+            "ServerDomain": "defence.rocks",
+            "ServerPort": 80,
+            "DefenderListenPort": 4123
+        }
+    }
+    
+    with open('Example/Configuration{}_tmp.json'.format(product_id), 'w') as json_file:
+        json.dump(data, json_file)
 
 
 if __name__ == '__main__':

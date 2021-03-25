@@ -28,7 +28,7 @@ int main(int argc, char **argv) {
     srand(time(NULL));
     std::cout << "Catch & Shoot | 2021" << std::endl<<std::endl;
     //todo::fix this
-    json config = readConfig("/home/ofir/Configuration.json");
+    json config = readConfig("../../Configuration.json");
 
     string filePath = "";
     TimeManager timeManager(false);

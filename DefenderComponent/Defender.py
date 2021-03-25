@@ -68,7 +68,6 @@ class Defender:
             event ({event}): The hostile event the defend from
         """
 
-        print("hello world")
         self.log.add_block_record(event.get_ip_add(),event.get_level())
 
 
