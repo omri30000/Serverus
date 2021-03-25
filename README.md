@@ -12,7 +12,7 @@ Created by *Ofir Shapira* and *Omri Zaiman* as a final project of Magshimim - th
 First you have to register to our website [here](http://defence.rocks/), it will provide you the project files with a uniqe identifier that was generated especially for you by us. 
 
 ### Requirements
-Make sure you have the following technologies installed in your machine:
+Make sure you have the following technologies installed on your machine:
 #### Linux software
 - [ZeroMQ](https://zeromq.org/download/) 
 #### Python modules
