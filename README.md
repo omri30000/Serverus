@@ -4,15 +4,14 @@ Catch & Shoot is an intrusion detection and prevention system which uses deep le
 Created by *Ofir Shapira* and *Omri Zaiman*
 
 ## Table of contents
-- [Installation] (#Installation)
-- [Requirements] (#Requirements)
-- [Main components] (#Main components)
+Make sure you have the following technologies installed in your machine:
+- 
 
 ## Installation
 todo
 
 ## Requirements
-todo
+In order rfor
 
 ## Main components
 
@@ -27,5 +26,6 @@ todo
 
 ### Server component
 todo
+
 
 
