@@ -19,7 +19,7 @@ Make sure you have the following technologies installed in your machine:
 - [scapy](https://pypi.org/project/scapy/) (for sniffing) --> `sudo pip install scapy`
 - [pika](https://pypi.org/project/pika/) (for message queue) --> `sudo pip install pika`
 
-###Compile
+### Compile
 For Compiling there are 2 main options:
 - using `build.sh` - script that compiles and executes the project (on us, without a charge)
 - compile by yourself
@@ -29,7 +29,7 @@ cmake -B build   #generate the make file
 cd build
 make .   #compile the project
 sudo ./idps   #execute the script
-
+``` 
 ## Main components
 
 ### Sniffing unit
