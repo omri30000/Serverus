@@ -1,7 +1,9 @@
 # Serverus
 Serverus is an intrusion detection and prevention system which uses deep learning tools in order to identify and avoid attacks on servers (based on ubuntu OS).
 
-Created by *Ofir Shapira* and *Omri Zaiman*
+The name "Serverus" is influenced by the great Cerberus from the greek mythology. A Cerberus (often referred to as the hound of Hades) is a creature which resembles to a multi-headed dog, and guards the gates of the Underworld. Since our product's main goal is defending servers from attack, we've found it exteremely similar to the Cerberus.  
+
+Created by *Ofir Shapira* and *Omri Zaiman* as a final project of Magshimim - the Israeli national cyber program. 
 
 ## Table of contents
 todo
