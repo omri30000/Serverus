@@ -6,7 +6,7 @@ The name "Serverus" is influenced by the great Cerberus from the greek mythology
 Created by *Ofir Shapira* and *Omri Zaiman* as a final project of Magshimim - the Israeli national cyber program. 
 
 ## Table of contents
-todo
+[[_TOC_]]
 
 ## Installation
 1. Register to our website [here](http://defence.rocks/), it will provide you the project files with a uniqe identifier that was generated especially for you. 
