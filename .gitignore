@@ -1,5 +1,6 @@
 /.vscode
 /cmake-build-debug
+/build
 /.idea
 *.txt
 TestLog.py
@@ -14,3 +15,6 @@ CMakeLists.txt
 *.db
 *.sqlite
 *.xml
+*.o
+*.out
+*.make
