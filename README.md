@@ -19,7 +19,7 @@ Make sure you have the following technologies installed on your machine:
 - [scapy](https://pypi.org/project/scapy/) (for sniffing) --> `sudo pip install scapy`
 - [pika](https://pypi.org/project/pika/) (for message queue) --> `sudo pip install pika`
 
-It is also possible to install using `requirements.txt` file <br><br>
+It is also possible to install the modules using `requirements.txt` file <br><br>
 `sudo pip3 install -r requirements.txt`
 
 ### Compile
