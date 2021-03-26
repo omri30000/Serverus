@@ -19,6 +19,9 @@ Make sure you have the following technologies installed on your machine:
 - [scapy](https://pypi.org/project/scapy/) (for sniffing) --> `sudo pip install scapy`
 - [pika](https://pypi.org/project/pika/) (for message queue) --> `sudo pip install pika`
 
+It is also possible to install using `requirements.txt` file <br><br>
+`sudo pip3 install -r requirements.txt`
+
 ### Compile
 For Compiling there are 2 main options:
 - using `build.sh` - script that compiles and executes the project (on us, without a charge)
