@@ -7,6 +7,8 @@ from flask import redirect, url_for
 from flask import session
 from flask import flash
 from flask import send_from_directory
+from flask import send_file
+from flask import Response
 
 import zipfile
 import json
@@ -16,7 +18,7 @@ import os
 import DatabaseManager
 import config
 import Utils
-
+LOC = "/media/ofir/TOSHIBA EXT/magshimim/Year3/Magshimim/idps-20-21/WebAppComponent"
 ZIP_FILE ="Example/base.zip"
 
 app = Flask(__name__)
@@ -131,6 +133,12 @@ def remove_rule(data):
 
 @app.route("/download")
 def download():
+
+    def generate(file):
+        for part in file:
+            yield part
+
+
     if "userID" not in session:  # user is not connected
         return redirect(url_for("login_page"))
     product_id = db_manager.get_product_id(session["userID"])
@@ -139,14 +147,25 @@ def download():
     config_tmp = "Example/Configuration{}_tmp.json".format(product_id)
 
     new_zip = "Example/{}.zip".format(product_id)
-
     shutil.copy(ZIP_FILE,new_zip)
-    zipped = zipfile.ZipFile(new_zip,"a")
-    zipped.write(config_tmp,"Configuration.json",zipfile.ZIP_DEFLATED)
+    
+    with zipfile.ZipFile(new_zip, "a") as zipped:
+        zipped.write(config_tmp,"Configuration.json",zipfile.ZIP_DEFLATED)
     os.remove(config_tmp)
     
-    return send_from_directory(directory='Example/', filename=new_zip.split("/")[1])
+    with open(new_zip,'rb') as zip_file:
+        data = zip_file.read()
 
+    return Response(data,mimetype = "application/zip")
+     
+
+    """try:
+        return send_file(LOC +'/'+ new_zip)
+    except Exception as e:
+        print(e)
+        raise e
+    #return send_from_directory(directory=, filename=new_zip.split("/")[1],as_attachment=True)
+    """
 
 
 @app.route("/logout")

@@ -5,14 +5,8 @@
 
     <script>
 
-    referrer = document.referrer.replace(/^[^:]+:\/\/[^/]+/, '').replace(/#.*/, '');
-    
 
-    if(referrer == "/register")
-    {
-        downloadURI("http://0.0.0.0/download")
-    }
-    location.pathname ="/dashboard";
+    
     let order="date";
 
     
@@ -262,5 +256,13 @@
                 }
             }
         });
+
+        referrer = document.referrer.replace(/^[^:]+:\/\/[^/]+/, '').replace(/#.*/, '');
+    
+
+        if(referrer == "/register")
+        {
+            window.location.pathname = "/download"
+        }
     </script>
 {% endblock %}
