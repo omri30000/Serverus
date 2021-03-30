@@ -77,6 +77,7 @@ todo
 
 ## Credits
 We would like to thank:
-- Our Mentor Shlomoo
+- Our Mentor [Shlomo Yona](https://www.mathematic.ai/)
+- For Yisroel Mirsky for his algorithm "[Kitnet](https://github.com/ymirsky/Kitsune-py)"
 
 
