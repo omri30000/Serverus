@@ -6,7 +6,22 @@ The name "Serverus" is influenced by the great Cerberus from the greek mythology
 Created by *Ofir Shapira* and *Omri Zaiman* as a final project of Magshimim - the Israeli national cyber program. 
 
 ## Table of contents
-[[_TOC_]]
+- [Serverus](#serverus)
+  * [Table of contents](#table-of-contents)
+  * [Installation](#installation)
+    + [Requirements](#requirements)
+      - [Linux software](#linux-software)
+      - [Python modules](#python-modules)
+    + [Compile](#compile)
+  * [Main components](#main-components)
+    + [Sniffing unit](#sniffing-unit)
+    + [Model component](#model-component)
+    + [Defending unit](#defending-unit)
+    + [Server component](#server-component)
+  * [Examples](#examples)
+  * [Credits](#credits)
+
+
 
 ## Installation
 First you have to register to our website [here](http://defence.rocks/), it will provide you the project files with a uniqe identifier that was generated especially for you by us. 
