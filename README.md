@@ -1,5 +1,5 @@
 # Serverus
-Serverus is an behavior-based intrusion detection and prevention system which uses deep learning model in order to identify attacks by anomaly behavior on the server transportation and block it. (based on ubuntu OS).
+Serverus is an behavior-based intrusion detection and prevention system for linux-based servers which uses deep learning model in order to identify attacks by anomaly behavior on the server transportation and block it. 
 
 The name "Serverus" is influenced by the great Cerberus from the greek mythology. A Cerberus (often referred to as the hound of Hades) is a creature which resembles to a multi-headed dog, and guards the gates of the Underworld. Since our product's main goal is defending servers from attack, we've found it exteremely similar to the Cerberus.  
 
@@ -48,24 +48,35 @@ cd build
 make .   #compile the project
 sudo ./idps   #execute the script
 ``` 
-## Main components
+## Main Components
 
-### Sniffing unit
-The Sniffing unit is a sniffer-like python program. It uses Scapy module for packets' sniffing, and sends the packets to the model using message queuing.
+### Sniffing Component
+The Sniffing unit is a sniffer-like python program.
+It uses Scapy module for packets' sniffing, and sends the packets to the model using messages queue.
 
-### Model component
-The model component (implemented in C++ language) is based on an ensemble of autoencoders. It analyzes metadata (jitter, packets' sizes, etc...) and determines whether each packet is considered an anomaly with respect to the server's normal behaviour.
+### Model Component
+The model component (implemented in C++ language) is based on an ensemble of autoencoders. It analyzes metadata (jitter and packets' size) and determines whether each packet is considered an anomaly with respect to the server's normal behaviour.
+The model will output a score between [0-4] whereas 0 is a normal behavior.
+*describe model parts -> FE + FM + AD
+*add a image describing the parts
+*good also to 
+### Defending Component
+The defending component communicates with the model and the server,<br> it will block an hostile entities according 
+to the anomaly level the model provided:
+1. Closing socket
+2. Blocking entity temporaly
+3. Blocking entity permanently
+4. Inform other servers about the hostile entity 
 
-### Defending unit
-todo
-
-### Server component
+The blocking is made using linux `iptables` and requires a root permission.
+## Server component
 todo
 
 ## Examples
 todo
 
 ## Credits
-todo
+We would like to thank:
+- Our Mentor Shlomoo
 
 
