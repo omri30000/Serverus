@@ -76,7 +76,7 @@ The server component is responsible for supplying data to the database (all data
 Moreover, the server is responsible for informing each defending unit about `level 4` events that another defenders has reported on. 
 
 ### Web application
-Our web application here, was built using `Flask` module in python language. it uses `Nginx` and `Gunicorn` in order to run in production. 
+Our web application [here](http://defence.rocks/), was built using `Flask` module in python language. it uses `Nginx` and `Gunicorn` in order to run in production. 
 The app was developed with many tools to make the website accessible, such as: `Chart.js`, `bootstrap`, etc...
 
 In order to use our services, one has to sign up to the website. As a registered user, a zip file containing the product's file becomes availiable.
