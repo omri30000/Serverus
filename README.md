@@ -60,24 +60,29 @@ The model will output a score between [0-4] whereas 0 is a normal behavior.
 *describe model parts -> FE + FM + AD
 *add a image describing the parts
 *good also to 
+
 ### Defending Component
 The defending component communicates with the model and the server,<br> it will block an hostile entities according 
 to the anomaly level the model provided:
-1. Closing socket
-2. Blocking entity temporaly
-3. Blocking entity permanently
-4. Inform other servers about the hostile entity 
+1. Closing socket.
+2. Blocking entity temporaly.
+3. Blocking entity permanently.
+4. Inform other machines (which uses Serverus) about the hostile entity. 
 
 The blocking is made using linux `iptables` and requires a root permission.
-## Server component
-todo
+
+### Server component
+The server component is responsible for supplying data to the database (all data which is not related to the web application). The defender on each machine sends data to the server, this data describes the events that the specific machine has encountered with (those events are considered as attacks). The server documents the events in the database. 
+Moreover, the server is responsible for informing each defending unit about `level 4` events that another defenders has reported on. 
 
 ## Examples
 todo
 
 ## Credits
 We would like to thank:
-- Our Mentor [Shlomo Yona](https://www.mathematic.ai/)
-- For Yisroel Mirsky for his algorithm "[Kitnet](https://github.com/ymirsky/Kitsune-py)"
+- Our Mentor [Shlomo Yona](https://www.mathematic.ai/).
+- Our team leader Arad Kotzer.
+- Yisroel Mirsky for his algorithm "[Kitnet](https://github.com/ymirsky/Kitsune-py)".
+
 
 
