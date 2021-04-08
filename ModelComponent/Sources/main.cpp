@@ -27,7 +27,7 @@ json readConfig(string filePath);
 int main(int argc, char **argv) {
     srand(time(NULL));
     std::cout << "Catch & Shoot | 2021" << std::endl<<std::endl;
-    //todo::fix this
+
     json config = readConfig("../../Configuration.json");
 
     string filePath = "";
@@ -83,7 +83,6 @@ int main(int argc, char **argv) {
         }
     }
 
-    //todo: if forensics dont run defender and don't run communicator - > how to block it
     TimeManager* pTimeManager;
     if(threadExist)
         pTimeManager = nullptr;
