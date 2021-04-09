@@ -26,12 +26,9 @@ class Event:
         :return: an Event object made by the binary message
         :rtype: Event
         """
-        print(msg)
         
         level = msg[0]
         ip_add = ".".join([str(i) for i in msg[1:5]])
-        print(ip_add)
-        print(len(msg))
         temp = sum([pow(256, 3-i) * int(msg[5+i]) for i in range(4)])
         today = datetime.datetime.now()
 
@@ -64,7 +61,6 @@ class Event:
             date = datetime.datetime.strptime(event_params[2], '%Y-%m-%d %H:%M:%S.%f')
         except Exception:
             date = datetime.datetime.strptime(event_params[2], '%Y-%m-%d %H:%M:%S')
-        print(date,type(date))
         return cls(ip_add, level, date)
 
     # getters functions
