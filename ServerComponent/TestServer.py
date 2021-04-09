@@ -1,13 +1,9 @@
 #!/usr/bin/env python3
 
-import Server
-import DatabaseManager
-import Defender
-import Config
 import socket
 
 HOST = '127.0.0.1'  # The defender's IP address
-PORT = 4784  # The port used by the defender
+PORT = 4123  # The port used by the defender
 
 
 def main():

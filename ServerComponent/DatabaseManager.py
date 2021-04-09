@@ -1,4 +1,4 @@
-gimport sqlite3
+import sqlite3
 import Event
 import datetime
 
@@ -18,8 +18,11 @@ class DatabaseManager:
         :return: no return value
         :rtype: None
         """
-        self.db.commit()
-        self.db.close()
+        try:
+                self.db.commit()
+                self.db.close()
+        except Exception as e:
+                pass
 
     # -----------to be moved to the http server---------------------
     def insert_user(self, username, password, product_id):
@@ -40,9 +43,6 @@ class DatabaseManager:
         sql_statement = "SELECT * FROM Products"  # WHERE joinDate=\'" + str(datetime.datetime.now()) + "\'"
         self.db_cursor.execute(sql_statement)
         rows = self.db_cursor.fetchall()
-
-        for row in rows:
-            print(row)
 
     # --------------------------------------------------------------
 
@@ -174,8 +174,7 @@ class DatabaseManager:
     
     def get_rules_by_level_and_time(self,product_id,time,level):
         sql_statement = "SELECT attackerIP, date FROM Events INNER JOIN Blocks ON Blocks.eventId = Events.Id WHERE blockLevel = {} AND Blocks.productId = {} AND Events.date >= '{}'".format(str(level),product_id,time)
-        print(sql_statement)
-
+        
         
         self.db_cursor.execute(sql_statement)
 

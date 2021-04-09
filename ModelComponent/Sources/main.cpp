@@ -61,7 +61,7 @@ int main(int argc, char **argv) {
                 return 0;
             }
             filePath = argv[i + 1];
-            forensics = true;
+            //forensics = true;
             disableOutgoing = false;
             timeManager= TimeManager(true);
             i++;
@@ -93,7 +93,7 @@ int main(int argc, char **argv) {
 
     system(("cd ../.. && sudo python3 SnifferComponent/SnifferToMQ.py "+ filePath+" > /dev/null &").c_str());
     if(!forensics)
-        system("cd ../.. && sudo python3 DefenderComponent/Defender.py > /dev/null &");
+        system("cd ../.. && sudo python3 DefenderComponent/Defender.py &");
 
     PacketsReaderMQ reader = PacketsReaderMQ();
 
