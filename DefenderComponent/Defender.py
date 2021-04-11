@@ -68,6 +68,10 @@ class Defender:
             event ({event}): The hostile event the defend from
         """
 
+        if event.get_level() == 6:
+            self.__canecl_action(event)
+            self.log.add_ublock_record(event.get_ip_add())
+
         self.log.add_block_record(event.get_ip_add(),event.get_level())
 
 
@@ -88,7 +92,7 @@ class Defender:
         if event.get_level() == 4 and not local:
             self.emerge = True
 
-    def cancel_action(self, event):
+    def __cancel_action(self, event):
         """This function cancel fire-wall blocking
 
         Args:
