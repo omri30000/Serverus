@@ -1,3 +1,7 @@
+<div align="center">
+  <img  align="center" src="images/serverus_logo.png" />
+</div>
+
 # Serverus
 Serverus is an behavior-based intrusion detection and prevention system for linux-based servers which uses deep learning model in order to identify attacks by anomaly behavior on the server transportation and block it. 
 
@@ -50,6 +54,10 @@ sudo ./idps   #execute the script
 ``` 
 ## Main Components
 
+<div align="center">
+  <img src="images/components.jpeg" />
+</div>
+
 ### Sniffing Component
 The Sniffing unit is a sniffer-like python program.
 It uses Scapy module for packets' sniffing, and sends the packets to the model using messages queue.
@@ -57,9 +65,23 @@ It uses Scapy module for packets' sniffing, and sends the packets to the model u
 ### Model Component
 The model component (implemented in C++ language) is based on an ensemble of autoencoders. It analyzes metadata (jitter and packets' size) and determines whether each packet is considered an anomaly with respect to the server's normal behaviour.
 The model will output a score between [0-4] whereas 0 is a normal behavior.
-*describe model parts -> FE + FM + AD
-*add a image describing the parts
-*good also to 
+
+#### Feature extractor (FE)
+The feature extractor generates a vector of statistics from each new arriving packet. It uses statistics such as weight, mean, standard deviation, magnitude, radius, covariance, and correlation.
+The FE uses Damped Incremental Statistics as a method of feature generating. 
+
+#### Feature mapper (FM)
+*describe
+
+#### Anomaly detector (AD)
+The anomaly detector is the part which is based on an ensemble of autoencoders. It composed of 2 layers of autoencoders:
+* 1st --> the ensemble, each autoencoder receives a cluster from the Feature Mapper, and produces an RMSE (Root Mean Squared Error).
+* 2nd --> the output layer, recieves the 1st layer's autoencoders' outputs (RMSEs) and produces an anomaly score for the specific packet given. 
+
+Than, it manipulates the anomaly score into a number between [0-4], represents the blocking level for the packet's sender.
+
+
+*add an image describing the parts
 
 ### Defending Component
 The defending component communicates with the model and the server,<br> it will block an hostile entities according 
@@ -71,6 +93,10 @@ to the anomaly level the model provided:
 
 The blocking is made using linux `iptables` and requires a root permission.
 
+<div align="center">
+  <img src="images/blockLevels.jpeg" />
+</div>
+
 ### Server component
 The server component is responsible for supplying data to the database (all data which is not related to the web application). The defender on each machine sends data to the server, this data describes the events that the specific machine has encountered with (those events are considered as attacks). The server documents the events in the database. 
 Moreover, the server is responsible for informing each defending unit about `level 4` events that another defenders has reported on. 
@@ -80,9 +106,6 @@ Our web application [here](http://defence.rocks/), was built using `Flask` modul
 The app was developed with many tools to make the website accessible, such as: `Chart.js`, `bootstrap`, etc...
 
 In order to use our services, one has to sign up to the website. As a registered user, a zip file containing the product's file becomes availiable.
-
-## Examples
-todo
 
 ## Credits
 We would like to thank:
