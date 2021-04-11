@@ -3,7 +3,7 @@ import datetime
 
 
 class Event:
-    def __init__(self, _ip, _level, _date,_state = True):
+    def __init__(self, _ip, _level, _date):
         """
         Constructor
 
@@ -13,7 +13,6 @@ class Event:
         self.ip_add = _ip
         self.level = _level
         self.date = _date
-        self.state = _state
 
     @classmethod
     def create_from_msg(cls, msg):
@@ -41,8 +40,7 @@ class Event:
         
         date = today + datetime.timedelta(milliseconds=temp)
 
-        state = bool(msg[-1])
-        a = cls(ip_add, level, date,state)
+        a = cls(ip_add, level, date)
         return a
 
     @classmethod
@@ -74,9 +72,6 @@ class Event:
     def get_date(self):
         return self.date
     
-    def get_state(self):
-        return self.state
-
     @staticmethod
     def calc_date_param(time):
         return time.hour * 60*60 * 1000 + time.minute * 60 * 1000 + time.second * 1000 + int(time.microsecond / 1000)
@@ -119,5 +114,4 @@ class Event:
         for val in vals:
             mes.append(val)
             
-        mes.append(int(state))
         return mes

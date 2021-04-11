@@ -187,6 +187,35 @@ class DatabaseManager:
 
         return events
 
+    def get_deleted_rules(self,product_id):
+        DELETED_RULE_LEVEL = 6 
+        
+        sql_statement = "SELECT Blocks.id ,attackerIP, date FROM Events INNER JOIN Blocks ON Blocks.eventId = Events.Id WHERE Blocks.productId = {} AND BLocks.state = 1 ;".format(product_id)
+        self.db_cursor.execute(sql_statement)
+
+        rows = self.db_cursor.fetchall()
+
+        rules = []
+        ids =[]
+        for i in range(len(rows)):
+            row = list(rows[i])
+            single_event = Event.Event.create_from_list([row[1],DELETED_RULE_LEVEL,row[2]])
+            rules += [single_event]
+
+            ids += [row[0]]
+        print(ids)
+        for block_id in ids:
+
+            sql = "DELETE FROM Blocks WHERE id = {};".format(block_id)
+            self.db_cursor.execute(sql)
+        
+            self.db.commit()
+            self.db_cursor.execute("PRAGMA wal_checkpoint(FULL)")
+
+        return rules
+
+
+
     def __is_block_exists(self,product_id,ip_to_block):
         """
         This function checks if a block to an ip is already exists to this product in the database.

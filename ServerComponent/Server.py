@@ -24,7 +24,7 @@ class Server:
 
         self.threads = []
 
-        self.db_manager = DatabaseManager.DatabaseManager("/home/magshimim/idps-20-21/database.sqlite")
+        self.db_manager = DatabaseManager.DatabaseManager("/home/ofir/database.sqlite")
         self.db_manager_lock = threading.Lock()
 
     def serve(self):
@@ -72,6 +72,8 @@ class Server:
         self.db_manager_lock.acquire()
         outer_events = self.db_manager.get_dangerous_events(computer_id, last_date)
         outer_events += self.db_manager.get_rules_by_level_and_time(computer_id, last_date,5)
+        outer_events += self.db_manager.get_deleted_rules(computer_id)
+
         self.db_manager_lock.release()
 
         

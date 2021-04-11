@@ -13,8 +13,8 @@ import Rule
 import Event
 import Log
 
-CONFIG_PATH_OUT = "./DefenderComponent/Configuration.json"
-CONFIG_PATH_IN = "Configuration.json"
+CONFIG_PATH_IN = "../Configuration.json"
+CONFIG_PATH_OUT = "Configuration.json"
 
 
 class Defender:
@@ -36,9 +36,9 @@ class Defender:
             Defender.count += 1
 
         try:
-            f = open(CONFIG_PATH_IN, 'r')
-        except Exception as e:
             f = open(CONFIG_PATH_OUT, 'r')
+        except Exception as e:
+            f = open(CONFIG_PATH_IN, 'r')
 
         data = json.load(f)
 
@@ -69,8 +69,8 @@ class Defender:
         """
 
         if event.get_level() == 6:
-            self.__canecl_action(event)
-            self.log.add_ublock_record(event.get_ip_add())
+            self.__cancel_action(event)
+            return
 
         self.log.add_block_record(event.get_ip_add(),event.get_level())
 
@@ -92,17 +92,22 @@ class Defender:
         if event.get_level() == 4 and not local:
             self.emerge = True
 
+
     def __cancel_action(self, event):
         """This function cancel fire-wall blocking
 
         Args:
             event ({Event}): which event to cancel the block for
         """
+
         ERROR_CODE = "256"
         msg = ""
         while str(msg).find(ERROR_CODE) < 0:
-            msg = os.system("iptables -D INPUT %s -j DROP" % (Rule.Rule(event, 3).write_rule()))
+            command = "/sbin/iptables -D INPUT {} -j DROP".format(Rule.Rule(event).write_rule())
+            msg = os.system(command)
+
         self.log.add_unblock_record(event.get_ip_add())
+
 
     def __close_socket(self, event):
         """The function closes a specific socket
@@ -124,7 +129,7 @@ class Defender:
         RULE_NOT_FOUND = 256
         # check if rule already exists
         try:
-            if int(os.system("iptables -C INPUT %s -j DROP" % (rule.write_rule()))) != RULE_NOT_FOUND:
+            if int(os.system("/sbin/iptables -C INPUT %s -j DROP" % (rule.write_rule()))) != RULE_NOT_FOUND:
                 # rule already exists
                 if not rule.is_temp():
                     self.__delete_cron(rule.write_rule())
@@ -164,7 +169,7 @@ class Defender:
 
         while True:
             start = datetime.now()
-            while not self.emerge and (datetime.now() - start).seconds <= 60:
+            while not self.emerge and (datetime.now() - start).seconds <= 5:
                 time.sleep(1)  # sleep 10 seconds
             
             self.emerge = False
