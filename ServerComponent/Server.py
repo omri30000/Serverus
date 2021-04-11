@@ -24,7 +24,7 @@ class Server:
 
         self.threads = []
 
-        self.db_manager = DatabaseManager.DatabaseManager("/home/ofir/database.sqlite")
+        self.db_manager = DatabaseManager.DatabaseManager("/home/magshimim/idps-20-21/database.sqlite")
         self.db_manager_lock = threading.Lock()
 
     def serve(self):
