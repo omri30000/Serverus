@@ -4,7 +4,7 @@ import hashlib
 
 import config
 
-BLOCK_LEVEL = 5
+USER_ADDED_BLOCK_LEVEL = 5
 
 
 class DatabaseManager:
@@ -76,16 +76,15 @@ class DatabaseManager:
         :return: all the data of Rule table
         :rtype: list(list(relative rule_id, rule_data))
         """
-        sql_statement = "SELECT id, attackerIP FROM Events WHERE productId = {};"\
+        sql_statement = "SELECT Blocks.id,Events.attackerIP FROM Events INNER JOIN Blocks ON Blocks.eventID = Events.id WHERE Blocks.state = 0 AND Blocks.productId = {}  ORDER BY Blocks.id ASC"\
             .format(str(self.get_product_id(user_id)))
-
         self.db_cursor.execute(sql_statement)
         rows = self.db_cursor.fetchall()
 
         for i in range(len(rows)):
             rows[i] = list(rows[i])
             rows[i][0] = i + 1
-
+        print(len(rows))
         return rows
 
     def get_all_events(self, user_id):
@@ -152,7 +151,7 @@ class DatabaseManager:
 
         time_string = str(datetime.datetime.now())
         sql_statement = "INSERT INTO Events (productId, attackerIP, blockLevel, date) VALUES ({},'{}',{},'{}')"\
-            .format(str(product_id), rule, str(BLOCK_LEVEL), time_string)
+            .format(str(product_id), rule, str(USER_ADDED_BLOCK_LEVEL), time_string)
 
         self.db_cursor.execute(sql_statement)
         self.db.commit()
@@ -167,11 +166,21 @@ class DatabaseManager:
 
         self.__insert_block(product_id, event_id)
 
+    def remove_rule_by_place(self,user_identifier,place):
+        product_id = self.get_product_id(user_identifier)
+        
+        sql_statement = "UPDATE BLOCKS set state = 1 where productId = {} and state = 0 ORDER BY id ASC LIMIT 1 OFFSET {};".format(product_id,place)
+        print(sql_statement)
+        self.db_cursor.execute(sql_statement)
+        self.db.commit()
+        self.db_cursor.execute("PRAGMA wal_checkpoint(FULL);")
+        
+
     def remove_rule_by_data(self, user_identifier, rule_data):
         product_id = self.get_product_id(user_identifier)
 
         sql_statement = "DELETE FROM Events WHERE attackerIP = '{}' AND productId = {};"\
-            .format(str(rule_data), str(product_id))
+           .format(str(rule_data), str(product_id))
 
         self.db_cursor.execute(sql_statement)
         self.db.commit()

@@ -128,7 +128,7 @@ def remove_rule(data):
     if "userID" not in session:  # user is not connected
         return redirect(url_for("login_page"))
 
-    db_manager.remove_rule_by_data(session["userID"], data)
+    db_manager.remove_rule_by_place(session["userID"], int(data)-1)
     return redirect(url_for("rule_management_page"))
 
 @app.route("/download")
