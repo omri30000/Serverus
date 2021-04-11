@@ -203,7 +203,6 @@ class DatabaseManager:
             rules += [single_event]
 
             ids += [row[0]]
-        print(ids)
         for block_id in ids:
 
             sql = "DELETE FROM Blocks WHERE id = {};".format(block_id)
