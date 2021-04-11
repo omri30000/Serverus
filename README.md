@@ -85,6 +85,10 @@ to the anomaly level the model provided:
 
 The blocking is made using linux `iptables` and requires a root permission.
 
+<p align="center">
+  <img src="images/blockLevels.jpeg" />
+</p>
+
 ### Server component
 The server component is responsible for supplying data to the database (all data which is not related to the web application). The defender on each machine sends data to the server, this data describes the events that the specific machine has encountered with (those events are considered as attacks). The server documents the events in the database. 
 Moreover, the server is responsible for informing each defending unit about `level 4` events that another defenders has reported on. 
