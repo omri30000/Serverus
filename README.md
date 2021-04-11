@@ -1,3 +1,7 @@
+<div align="center">
+  <img  align="center" src="images/serverus_logo.png" />
+</div>
+
 # Serverus
 Serverus is an behavior-based intrusion detection and prevention system for linux-based servers which uses deep learning model in order to identify attacks by anomaly behavior on the server transportation and block it. 
 
@@ -50,6 +54,10 @@ sudo ./idps   #execute the script
 ``` 
 ## Main Components
 
+<div align="center">
+  <img src="images/components.jpeg" />
+</div>
+
 ### Sniffing Component
 The Sniffing unit is a sniffer-like python program.
 It uses Scapy module for packets' sniffing, and sends the packets to the model using messages queue.
@@ -85,9 +93,9 @@ to the anomaly level the model provided:
 
 The blocking is made using linux `iptables` and requires a root permission.
 
-<p align="center">
+<div align="center">
   <img src="images/blockLevels.jpeg" />
-</p>
+</div>
 
 ### Server component
 The server component is responsible for supplying data to the database (all data which is not related to the web application). The defender on each machine sends data to the server, this data describes the events that the specific machine has encountered with (those events are considered as attacks). The server documents the events in the database. 
@@ -98,9 +106,6 @@ Our web application [here](http://defence.rocks/), was built using `Flask` modul
 The app was developed with many tools to make the website accessible, such as: `Chart.js`, `bootstrap`, etc...
 
 In order to use our services, one has to sign up to the website. As a registered user, a zip file containing the product's file becomes availiable.
-
-## Examples
-todo
 
 ## Credits
 We would like to thank:
