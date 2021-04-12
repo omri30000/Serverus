@@ -190,7 +190,7 @@ class DatabaseManager:
     def get_deleted_rules(self,product_id):
         DELETED_RULE_LEVEL = 6 
         
-        sql_statement = "SELECT Blocks.id ,attackerIP, date FROM Events INNER JOIN Blocks ON Blocks.eventId = Events.Id WHERE Blocks.productId = {} AND BLocks.state = 1 ;".format(product_id)
+        sql_statement = "SELECT Blocks.id ,attackerIP, date FROM Events INNER JOIN Blocks ON Blocks.eventId = Events.Id WHERE Blocks.productId = {} AND Blocks.state = 1 ;".format(product_id)
         self.db_cursor.execute(sql_statement)
 
         rows = self.db_cursor.fetchall()
