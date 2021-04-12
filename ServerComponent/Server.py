@@ -99,7 +99,7 @@ class Server:
         """
         data = {
                 "General" : {
-                    "ProductID": product_id,
+                    "ProductId": product_id,
                 },   
                 "Model" :
                 {
