@@ -139,7 +139,7 @@ class DatabaseManager:
         :return: nothing
         :rtype: None
         """
-        sql_statement = "INSERT INTO Blocks (productId, eventId) VALUES (" + str(product_id) + ", " + str(event_id) + ")"
+        sql_statement = "INSERT INTO Blocks (productId, eventId,state) VALUES (" + str(product_id) + ", " + str(event_id) + ",0)"
         self.db_cursor.execute(sql_statement)
         self.db.commit()
         self.db_cursor.execute("PRAGMA wal_checkpoint(FULL)")
