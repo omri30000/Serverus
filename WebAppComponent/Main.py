@@ -200,7 +200,7 @@ def make_config_file(product_id):
     """
     data = {
             "General" : {
-                "ProductID": product_id,
+                "ProductId": product_id,
             },   
             "Model" :
             {
