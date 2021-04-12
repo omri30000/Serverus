@@ -25,6 +25,9 @@ class Server:
         self.threads = []
 
         self.db_manager = DatabaseManager.DatabaseManager("/home/magshimim/idps-20-21/database.sqlite")
+        
+        # self.db_manager = DatabaseManager.DatabaseManager("../database.sqlite")
+        
         self.db_manager_lock = threading.Lock()
 
     def serve(self):
@@ -57,6 +60,8 @@ class Server:
         print(computer_id)
         for i in range(1, len(product_message), EVENT_SIZE_BYTES):
             event = Event.Event.create_from_msg(product_message[i: i + EVENT_SIZE_BYTES])
+            
+            print(event.get_level())
             
             self.db_manager_lock.acquire()
             self.db_manager.insert_event(event, computer_id)
