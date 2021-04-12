@@ -64,12 +64,17 @@ class Server:
 
         # save to sql - events
 
+        
         self.db_manager_lock.acquire()
+       
         last_date = self.db_manager.get_last_date(computer_id)
+        self.db_manager.set_last_date(computer_id)
+        
         self.db_manager_lock.release()
 
         # read from sql
         self.db_manager_lock.acquire()
+        
         outer_events = self.db_manager.get_dangerous_events(computer_id, last_date)
         outer_events += self.db_manager.get_rules_by_level_and_time(computer_id, last_date,5)
         outer_events += self.db_manager.get_deleted_rules(computer_id)
@@ -83,9 +88,6 @@ class Server:
             msg += eve.to_packet()
         sock.sendall(msg)
 
-        self.db_manager_lock.acquire()
-        self.db_manager.set_last_date(computer_id)
-        self.db_manager_lock.release()
 
         #time.sleep(2)
         sock.close()
